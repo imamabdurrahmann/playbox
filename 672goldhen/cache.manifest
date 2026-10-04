@@ -1,5 +1,7 @@
 CACHE MANIFEST 
 
+../
+../index.html
 ../img.jpg
 ../style.css 
 exp_loader.js
