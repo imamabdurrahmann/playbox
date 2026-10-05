@@ -1,10 +1,14 @@
 CACHE MANIFEST
-# Version: 2026-10-04-v2
+# Version: 2026-10-05-v3
+CACHE:
 ../
 ../index.html
 ../img.jpg
-../style.css 
+../style.css
 exp_loader.js
 goldhen_2.4b18.12.bin
 index.html
 jb.js
+
+NETWORK:
+*

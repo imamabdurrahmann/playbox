@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version: 2026-10-04-v2
+# Version: 2026-10-05-v3
 CACHE: 
 ../
 ../index.html
@@ -7,7 +7,7 @@ CACHE:
 ../style.css
 goldhen_2.4b18.12.bin
 index.html
-505\exploit.js
+505/exploit.js
 
 NETWORK: 
 * 

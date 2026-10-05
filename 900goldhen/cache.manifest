@@ -1,6 +1,6 @@
 CACHE MANIFEST
-# Version: 2026-10-04-v2
-CACHE: 
+# Version: 2026-10-05-v3
+CACHE:
 ../
 ../index.html
 ../img.jpg
@@ -11,3 +11,6 @@ int64.js
 kexploit.js
 rop.js
 webkit.js
+
+NETWORK:
+*
