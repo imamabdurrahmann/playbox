@@ -13,7 +13,7 @@ function startExploit() {
         var m = document.getElementById("menu"); if (m) m.style.display = "block";
         var msg = document.getElementById("msgs"); if (msg) msg.innerHTML = "Playbox Bengkulu - PS4 5.05 FW Host v2.5 <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>";
     } else {
-        if (window.applicationCache.status=='0'){window.location.replace("cache.html");}
+        if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
         setTimeout(exploit, 50);
     }
 }
@@ -21,7 +21,7 @@ function startExploit() {
 </head>
 <body onload="startExploit();">
 <script>
-if (window.applicationCache.status=='0'){window.location.replace("cache.html");}
+if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
 </script>
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">

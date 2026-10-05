@@ -10,7 +10,7 @@
 </head>
 <body onload="setTimeout(poc, 50);">
 <script>
-if (window.applicationCache.status=='0'){window.location.replace("cache.html");}
+if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
 </script>
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">

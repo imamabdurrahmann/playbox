@@ -67,7 +67,7 @@ if (!isPS4) {
         m.style.color = "#ff6b6b";
     }
 } else {
-    if (window.applicationCache.status == '0') {
+    if ((window.applicationCache && window.applicationCache.status == 0)) {
         if (fwNum == 5.05 || fwNum == 5.07) {
             window.location.replace("cache505.html");
         } else if (fwNum >= 7.00 && fwNum <= 8.52) {

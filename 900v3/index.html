@@ -16,7 +16,7 @@ function startPoc() {
         var m = document.getElementById("menu"); if (m) m.style.display = "block";
         var msg = document.getElementById("msgs"); if (msg) msg.innerHTML = "Playbox Bengkulu - PS4 9.00 FW Host v3.0 <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>";
     } else {
-        if (window.applicationCache.status=='0'){window.location.replace("cache.html");}
+        if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
         setTimeout(poc, 50);
     }
 }
@@ -24,7 +24,7 @@ function startPoc() {
 </head>
 <body onload="startPoc();">
 <script>
-if (window.applicationCache.status=='0'){window.location.replace("cache.html");}
+if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
 </script>
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">
