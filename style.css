@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Rajdhani:wght@500;600;700&display=swap');
+/* Fonts loaded locally / fallback to system fonts for 100% offline silence */
 
 * {
     box-sizing: border-box;
