@@ -19,6 +19,10 @@
 <div id="menu">
     <div style="padding: 15px 10px;">
         <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Memulai Host... Mohon Tunggu</h1>
+        <div id="progress-container" style="display: none; width: 420px; max-width: 90%; background: rgba(3, 14, 34, 0.85); border: 1px solid rgba(0, 229, 255, 0.4); border-radius: 20px; height: 18px; margin: 18px auto 6px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.6), inset 0 2px 4px rgba(0,0,0,0.7);">
+            <div id="progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #0099ff, #00ffcc); border-radius: 20px; transition: width 0.25s ease;"></div>
+        </div>
+        <div id="progress-percent" style="display: none; font-size: 15px; color: #00e5ff; font-weight: bold; margin-top: 6px;">0%</div>
     </div>
 </div>
 
@@ -28,6 +32,24 @@ var match = uaFull.match(/PlayStation 4[ /]([\d.]+)/i);
 var isPS4 = match !== null;
 var fwVersion = isPS4 ? match[1] : "Unknown";
 var fwNum = parseFloat(fwVersion);
+
+function setProgress(percent, statusText) {
+    var m = document.getElementById("msgs");
+    var bar = document.getElementById("progress-bar");
+    var container = document.getElementById("progress-container");
+    var percentText = document.getElementById("progress-percent");
+    if (m && statusText) {
+        m.innerHTML = statusText;
+        if (percent >= 100) m.style.color = "#00ff88";
+    }
+    if (bar) bar.style.width = percent + "%";
+    if (percentText) {
+        percentText.innerHTML = percent + "%";
+        percentText.style.display = "block";
+    }
+    if (container) container.style.display = "block";
+}
+window.setProgress = setProgress;
 
 function updateStatus(msg, isError) {
     var m = document.getElementById("msgs");
@@ -96,7 +118,7 @@ if (!isPS4) {
             updateStatus("Firmware Tidak Didukung: " + fwVersion + " (Mendukung 5.05 & 7.00 - 13.52)", true);
         }
     } else {
-        updateStatus("Memuat Exploit untuk FW " + fwVersion + "... Harap Tunggu");
+        setProgress(10, "Menyiapkan Exploit FW " + fwVersion + "...");
         setTimeout(function() {
             if (fwNum == 5.05 || fwNum == 5.07) {
                 var script = document.createElement('script');

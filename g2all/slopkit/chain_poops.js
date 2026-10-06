@@ -39,9 +39,14 @@ const params = new URLSearchParams(location.search);
 const STOP_BEFORE_DOUBLE = params.get("stop") === "beforedouble";
 
 function hostOk() {
-    var m = document.getElementById("msgs");
-    if (m) {
-        m.innerHTML = "GoldHEN v2.4b18.10 Loaded ...";
+    if (typeof window.setProgress === "function") {
+        window.setProgress(100, "GoldHEN v2.4b18.10 Loaded! ✔");
+    } else {
+        var m = document.getElementById("msgs");
+        if (m) {
+            m.innerHTML = "GoldHEN v2.4b18.10 Loaded! ✔";
+            m.style.color = "#00ff88";
+        }
     }
 }
 
@@ -89,6 +94,25 @@ function mark(tag, detail) {
         return c ? '<span class="' + c + '">' + l + "</span>" : l;
     }).join("\n");
     outEl.scrollTop = outEl.scrollHeight;
+
+    if (typeof window.setProgress === "function") {
+        if (tag === "PRIMITIVE-OK") {
+            window.setProgress(20, "Memulai WebKit Exploit...");
+        } else if (tag === "BASES" || tag === "STUB-SCAN") {
+            window.setProgress(35, "Membaca Offset Kernel...");
+        } else if (tag === "WORKER-READY" || tag === "BUFFERS") {
+            window.setProgress(50, "Menyiapkan Worker Thread...");
+        } else if (tag === "ARMED" || tag === "WIDEN") {
+            window.setProgress(65, "Mempersiapkan Kernel UMA...");
+        } else if (tag === "DOUBLE-FREE-ACHIEVED" || tag === "TWIN-CLOSED") {
+            window.setProgress(80, "Mengeksekusi Kernel Exploit...");
+        } else if (tag === "ROOT" || tag === "ALREADY-ROOT") {
+            window.setProgress(90, "Mendapatkan Hak Akses Root...");
+        } else if (tag === "PAYLOAD-RUNNING") {
+            window.setProgress(100, "GoldHEN v2.4b18.10 Loaded! ✔");
+        }
+    }
+
     post(tag, raw);
 }
 
