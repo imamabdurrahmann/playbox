@@ -18,7 +18,7 @@
 
 <div id="menu">
     <div style="padding: 15px 10px;">
-        <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Loading GoldHEN v2.4b18.12... Please Wait</h1>
+        <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Memulai Host... Mohon Tunggu</h1>
     </div>
 </div>
 
@@ -29,16 +29,24 @@ var isPS4 = match !== null;
 var fwVersion = isPS4 ? match[1] : "Unknown";
 var fwNum = parseFloat(fwVersion);
 
+function updateStatus(msg, isError) {
+    var m = document.getElementById("msgs");
+    if (m) {
+        m.innerHTML = msg;
+        m.style.color = isError ? "#ff5566" : "#ffd700";
+    }
+}
+
 function detectDevice() {
     var devText = document.getElementById("detected-text");
     var devBox = document.getElementById("device-info");
     if (devText && devBox) {
         if (isPS4) {
-            devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + fwVersion + ")";
+            devText.innerHTML = "&#127918; Konsol Terdeteksi: PlayStation 4 (FW " + fwVersion + ")";
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
         } else {
-            devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
+            devText.innerHTML = "&#128187; Perangkat Terdeteksi: PC / Laptop (Preview Mode)";
             devText.style.color = "#ffd700";
             devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
         }
@@ -47,86 +55,98 @@ function detectDevice() {
 detectDevice();
 
 function onScriptError() {
-    var m = document.getElementById("msgs");
-    if (m) m.innerHTML = "Content not Found! - Clear Browser Data and Re-Install Cache ...";
+    updateStatus("File Exploit Tidak Ditemukan! Bersihkan Data Browser & Pasang Ulang Cache...", true);
 }
 
 if (!isPS4) {
-    var m = document.getElementById("msgs");
+    updateStatus("Mode Preview PC / Laptop Aktif");
     var menu = document.getElementById("menu");
-    if (m) {
-        m.innerHTML = "Mode Preview PC / Laptop Aktif";
-        m.style.color = "#00e5ff";
-    }
     if (menu) {
         var previewHtml = '<div style="margin-top: 15px; font-size: 14px; color: #8cb4db; line-height: 1.6;">'
-            + 'Di konsol PS4, sistem akan <b>otomatis mendeteksi firmware</b> dan masuk ke runner.<br>'
-            + 'Klik tombol di bawah ini untuk menguji dan melihat halaman runner steril:'
+            + 'Di konsol PS4, sistem akan <b>otomatis mendeteksi firmware</b> dan menjalankan exploit secara offline.<br>'
+            + 'Pilih salah satu menu di bawah ini untuk menguji instalasi cache atau eksekusi runner:'
             + '</div>'
             + '<div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; align-items: center;">'
-            + '<a href="run_lapse.html" class="btn btn-multi" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#9889; Runner Lapse (FW 11.50 - 12.02)</a>'
-            + '<a href="run_poops.html" class="btn" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#9889; Runner Poops (FW 12.50 - 13.00)</a>'
-            + '<a href="run_13xx.html" class="btn" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#9889; Runner SlopKit v19 (FW 13.02 - 13.52)</a>'
+            + '<a href="cacheslopkit.html" class="btn btn-multi" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#128190; Installer Cache (FW 11.50 - 13.52)</a>'
+            + '<a href="cachecss.html" class="btn" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#128190; Installer Cache (FW 10.00 - 11.02)</a>'
+            + '<a href="cache900.html" class="btn" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#128190; Installer Cache (FW 9.00 - 9.60)</a>'
             + '</div>';
         menu.insertAdjacentHTML('beforeend', previewHtml);
     }
 } else {
-    if ((window.applicationCache && window.applicationCache.status == 0)) {
+    var cacheReady = window.applicationCache && window.applicationCache.status !== 0;
+
+    if (!cacheReady) {
         if (fwNum == 5.05 || fwNum == 5.07) {
-            window.location.replace("cache505.html");
+            updateStatus("Memasang Cache Offline FW " + fwVersion + "...");
+            setTimeout(function() { window.location.replace("cache505.html"); }, 600);
         } else if (fwNum >= 7.00 && fwNum <= 8.52) {
-            window.location.replace("cache700.html");
+            updateStatus("Memasang Cache Offline FW " + fwVersion + "...");
+            setTimeout(function() { window.location.replace("cache700.html"); }, 600);
         } else if (fwNum >= 9.00 && fwNum <= 9.60) {
-            window.location.replace("cache900.html");
+            updateStatus("Memasang Cache Offline FW " + fwVersion + "...");
+            setTimeout(function() { window.location.replace("cache900.html"); }, 600);
         } else if (fwNum >= 10.00 && fwNum <= 11.02) {
-            window.location.replace("cachecss.html");
+            updateStatus("Memasang Cache Offline FW " + fwVersion + "...");
+            setTimeout(function() { window.location.replace("cachecss.html"); }, 600);
         } else if (fwNum >= 11.50 && fwNum <= 13.52) {
-            window.location.replace("cacheslopkit.html");
+            updateStatus("Memasang Cache Offline FW " + fwVersion + "...");
+            setTimeout(function() { window.location.replace("cacheslopkit.html"); }, 600);
         } else {
-            var m = document.getElementById("msgs");
-            if (m) m.innerHTML = 'Unsupported Firmware: <span style="color: red;">' + fwVersion + '</span>';
+            updateStatus("Firmware Tidak Didukung: " + fwVersion + " (Mendukung 5.05 & 7.00 - 13.52)", true);
         }
     } else {
-        if (fwNum == 5.05 || fwNum == 5.07) {
-            var script = document.createElement('script');
-            script.src = "505/exploit.js";
-            script.onerror = onScriptError;
-            document.head.appendChild(script);
-        }
-        else if (fwNum >= 7.00 && fwNum <= 8.52) {
-            var script = document.createElement('script');
-            script.type = 'module';
-            script.src = "700/alert.js";
-            script.onerror = onScriptError;
-            document.head.appendChild(script);
-        }
-        else if (fwNum >= 9.00 && fwNum <= 9.60) {
-            var script = document.createElement('script');
-            script.type = 'module';
-            script.src = "900/alert.js";
-            script.onerror = onScriptError;
-            document.head.appendChild(script);
-        }
-        else if (fwNum >= 10.00 && fwNum <= 11.02) {
-            var script = document.createElement('script');
-            script.src = "css/main.js";
-            script.onerror = onScriptError;
-            script.onload = function () {
-                setTimeout(function () {
-                    doJb();
-                }, 500);
-            };
-            document.head.appendChild(script);
-        }
-        else if (fwNum >= 11.50 && fwNum <= 12.02) {
-            window.location.replace("run_lapse.html");
-        }
-        else if (fwNum >= 12.50 && fwNum <= 13.00) {
-            window.location.replace("run_poops.html");
-        }
-        else if (fwNum >= 13.02 && fwNum <= 13.52) {
-            window.location.replace("run_13xx.html");
-        }
+        updateStatus("Memuat Exploit untuk FW " + fwVersion + "... Harap Tunggu");
+        setTimeout(function() {
+            if (fwNum == 5.05 || fwNum == 5.07) {
+                var script = document.createElement('script');
+                script.src = "505/exploit.js";
+                script.onerror = onScriptError;
+                document.head.appendChild(script);
+            } else if (fwNum >= 7.00 && fwNum <= 8.52) {
+                var script = document.createElement('script');
+                script.type = 'module';
+                script.src = "700/alert.js";
+                script.onerror = onScriptError;
+                document.head.appendChild(script);
+            } else if (fwNum >= 9.00 && fwNum <= 9.60) {
+                var script = document.createElement('script');
+                script.type = 'module';
+                script.src = "900/alert.js";
+                script.onerror = onScriptError;
+                document.head.appendChild(script);
+            } else if (fwNum >= 10.00 && fwNum <= 11.02) {
+                var script = document.createElement('script');
+                script.src = "css/main.js";
+                script.onerror = onScriptError;
+                script.onload = function() {
+                    setTimeout(function() {
+                        if (typeof doJb !== 'undefined') doJb();
+                    }, 500);
+                };
+                document.head.appendChild(script);
+            } else if (fwNum >= 11.50 && fwNum <= 12.02) {
+                var script = document.createElement('script');
+                script.type = 'module';
+                script.src = "slopkit/chain_lapse.js";
+                script.onerror = onScriptError;
+                document.head.appendChild(script);
+            } else if (fwNum >= 12.50 && fwNum <= 13.00) {
+                var script = document.createElement('script');
+                script.type = 'module';
+                script.src = "slopkit/chain_poops.js";
+                script.onerror = onScriptError;
+                document.head.appendChild(script);
+            } else if (fwNum >= 13.02 && fwNum <= 13.52) {
+                var script = document.createElement('script');
+                script.type = 'module';
+                script.src = "slopkit/jb.js";
+                script.onerror = onScriptError;
+                document.head.appendChild(script);
+            } else {
+                updateStatus("Firmware Tidak Didukung: " + fwVersion, true);
+            }
+        }, 1000);
     }
 }
 </script>

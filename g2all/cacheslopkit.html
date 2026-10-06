@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Playbox Bengkulu - Offline Cache Installation</title>
+<link rel="stylesheet" href="../style.css">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -38,7 +39,7 @@ body {
 </head>
 <body>
 <h1 style="font-size: 28px; letter-spacing: 2px; color: #ffffff; text-transform: uppercase;">PLAYBOX <span style="color:#00e5ff;">BENGKULU</span></h1>
-<div style="font-size: 14px; color: #00ffcc; margin-top: 5px; font-weight: bold;">Multi Firmware Offline Cache Installer</div>
+<div style="font-size: 14px; color: #00ffcc; margin-top: 5px; font-weight: bold;">Multi Firmware Offline Cache Installer (FW 11.50 - 13.52)</div>
 
 <div class="box">
     <h2 id="msgs">Mengunduh Cache Offline... 0%</h2>
@@ -46,6 +47,8 @@ body {
 </div>
 
 <script>
+history.replaceState(null, null, 'index.html');
+
 function DLProgress(e) {
     var percent = Math.round((e.loaded / e.total) * 100);
     var m = document.getElementById("msgs");
@@ -74,7 +77,7 @@ if (window.applicationCache) {
     window.applicationCache.onerror = function(e) {
         var m = document.getElementById("msgs");
         if (m) {
-            m.innerHTML = "Gagal Memasang Cache!";
+            m.innerHTML = "Gagal Memasang Cache! Clear Browser Data & Coba Lagi...";
             m.style.color = "#ff5566";
         }
     };

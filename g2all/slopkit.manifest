@@ -1,23 +1,18 @@
 CACHE MANIFEST
-# Version: 2026-10-06-v4
+# Version: 2026-10-07-mustafs-v1
+
 CACHE:
-../
-../index.html
-../img.jpg
 ../style.css
+goldhen_2.4b18.10.bin
 goldhen_2.4b18.12.bin
 payload.bin
 index.html
-run_lapse.html
-run_poops.html
-run_13xx.html
 slopkit/chain_lapse.js
 slopkit/chain_poops.js
+slopkit/jb.js
 slopkit/core.js?v=10
 slopkit/core.js
 slopkit/int64.js
-slopkit/jb.js
-slopkit/jb.js?v=19
 slopkit/mem.js
 slopkit/ps4_offsets.js
 slopkit/rpc_worker.js

