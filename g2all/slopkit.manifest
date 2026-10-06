@@ -1,8 +1,9 @@
 CACHE MANIFEST
-# Version: 2026-10-07-mustafs-v1
+# Version: 2026-10-07-mustafs-v3
 
 CACHE:
 ../style.css
+../img.jpg
 goldhen_2.4b18.10.bin
 goldhen_2.4b18.12.bin
 payload.bin
