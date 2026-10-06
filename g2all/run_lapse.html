@@ -3,105 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playbox Bengkulu - Lapse Exploit (11.50 - 12.02)</title>
-<link rel="stylesheet" href="../style.css">
+<title>Playbox Bengkulu - Lapse Exploit</title>
 <style>
-.runner-card {
-    position: relative;
-    z-index: 2;
-    width: min(92%, 680px);
-    margin: 20px auto;
-    padding: 35px 30px 25px;
-    background: rgba(3, 14, 34, 0.88);
-    border: 1px solid rgba(0, 200, 255, 0.35);
-    border-radius: 22px;
-    box-shadow: 0 0 45px rgba(0, 180, 255, 0.12), inset 0 0 50px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html, body {
+    width: 100%;
+    min-height: 100%;
+    background: radial-gradient(circle at 50% 0%, rgba(0, 210, 255, .12), transparent 35%),
+                linear-gradient(135deg, #05070b 0%, #0a1018 48%, #030507 100%);
+    color: #e8faff;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
     text-align: center;
 }
-.version-pill {
+.container {
+    position: relative;
+    width: min(92%, 620px);
+    margin: 12vh auto 0;
+    padding: 45px 35px 35px;
+    background: rgba(7, 13, 20, .88);
+    border: 1px solid rgba(0, 210, 255, .28);
+    border-radius: 22px;
+    box-shadow: 0 0 45px rgba(0, 180, 255, .08);
+}
+.brand {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+.brand span {
+    color: #00e5ff;
+}
+.badge {
     display: inline-block;
-    margin: 12px auto;
-    padding: 6px 18px;
-    border: 1px solid rgba(0, 229, 255, 0.45);
+    margin-top: 15px;
+    padding: 6px 16px;
+    border: 1px solid rgba(0, 217, 255, .35);
     border-radius: 30px;
-    color: #00ffcc;
-    background: rgba(0, 229, 255, 0.08);
-    font-size: 13px;
-    font-weight: 700;
+    color: #00d9ff;
+    background: rgba(0, 217, 255, .055);
+    font-size: 12px;
+    font-weight: bold;
     letter-spacing: 1.5px;
 }
-.status-box {
+.status-bar {
     position: relative;
-    margin: 25px auto 15px;
+    margin: 30px auto 10px;
     width: 100%;
-    min-height: 80px;
+    min-height: 70px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(0, 200, 255, 0.2);
-    border-radius: 14px;
-    padding: 15px 20px;
-}
-.status-box::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 90px;
-    height: 2px;
-    transform: translateX(-50%);
-    background: #00e5ff;
-    box-shadow: 0 0 10px #00e5ff;
+    background: rgba(0, 0, 0, .35);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 12px;
+    padding: 12px;
 }
 #msgs {
-    font-size: 22px;
+    font-size: 18px;
+    font-weight: bold;
     color: #ffd700;
-    margin: 0;
-    font-weight: 700;
-    letter-spacing: 1px;
 }
 #state {
-    margin-top: 8px;
     font-size: 13px;
-    letter-spacing: 0.8px;
-    color: #00e5ff;
-    font-weight: 600;
+    color: #a9c4ce;
+    margin-top: 6px;
+    letter-spacing: 0.5px;
 }
-#state.ok { color: #00ff88; font-weight: 700; }
-#state.bad { color: #ff5566; font-weight: 700; }
+#state.ok { color: #00ff88; font-weight: bold; }
+#state.bad { color: #ff6675; font-weight: bold; }
 #state.warn { color: #ffbb00; }
+.footer-text {
+    margin-top: 25px;
+    font-size: 11px;
+    color: #526b77;
+}
 </style>
 </head>
 <body>
 
-<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
-<div class="contact-box">
-    <div class="wa-badge">WhatsApp: 0821-7277-220</div>
-    <div class="ig-badge">Instagram: playbox_gamingps</div>
-</div>
+<div class="container">
+    <h1 class="brand">PLAYBOX <span>BENGKULU</span></h1>
+    <div class="badge">&#9889; LAPSE EXPLOIT (FW 11.50 - 12.02)</div>
 
-<div class="runner-card">
-    <div class="version-pill">&#9889; LAPSE CHAIN &bull; FW 11.50 - 12.02</div>
-    <div style="font-size: 14px; color: #8cb4db; margin-top: 4px;">Memory-Isolated High Stability Runner</div>
-
-    <div class="status-box">
-        <h2 id="msgs">Memulai Exploit... Mohon Tunggu</h2>
-        <div id="state">Menyiapkan heap memori bersih...</div>
+    <div class="status-bar">
+        <div id="msgs">Memuat Exploit...</div>
+        <div id="state">Menyiapkan heap memori steril...</div>
     </div>
 
     <pre id="out" style="display:none;"></pre>
 
-    <div style="margin-top: 15px;">
-        <a href="index.html" style="color: #00e5ff; font-size: 13px; text-decoration: none; font-weight: 600;">&larr; Kembali ke Menu Multi FW</a>
+    <div class="footer-text">
+        High Stability Isolated Runner &bull; Special Thanks to Scene Devs
     </div>
-</div>
-
-<div class="credits-box">
-    <span class="credits-title">Designed by: <span class="credits-names">Michael Joanes, Andree Garshia J and Imam Abdurrahman</span></span>
-    <span class="credits-sub">A special thanks to all the devs on the scene.</span>
 </div>
 
 <script type="module">
@@ -124,7 +125,7 @@ if (!isPS4Console) {
         var st = document.getElementById("state");
         if (m) {
             m.innerHTML = "Gagal Memuat Exploit!";
-            m.style.color = "#ff5566";
+            m.style.color = "#ff6675";
         }
         if (st) {
             st.textContent = "Restart PS4 Anda lalu coba lagi.";
