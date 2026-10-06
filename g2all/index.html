@@ -62,9 +62,22 @@ function onScriptError() {
 
 if (!isPS4) {
     var m = document.getElementById("msgs");
+    var menu = document.getElementById("menu");
     if (m) {
-        m.innerHTML = "Only for PS4 with Firmware 5.05 and 7.00 to 13.52";
-        m.style.color = "#ff6b6b";
+        m.innerHTML = "Mode Preview PC / Laptop Aktif";
+        m.style.color = "#00e5ff";
+    }
+    if (menu) {
+        var previewHtml = '<div style="margin-top: 15px; font-size: 14px; color: #8cb4db; line-height: 1.6;">'
+            + 'Di konsol PS4, sistem akan <b>otomatis mendeteksi firmware</b> dan masuk ke runner.<br>'
+            + 'Pilih salah satu runner di bawah untuk melihat tampilan & menguji halaman langsung di browser PC:'
+            + '</div>'
+            + '<div style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px; align-items: center;">'
+            + '<a href="run_lapse.html" class="btn btn-multi" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#9889; Runner Lapse (FW 11.50 - 12.02)</a>'
+            + '<a href="run_poops.html" class="btn" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#9889; Runner Poops (FW 12.50 - 13.00)</a>'
+            + '<a href="run_13xx.html" class="btn" style="text-decoration:none; display:inline-block; width: 340px; padding: 12px 20px; font-weight:700;">&#9889; Runner SlopKit v19 (FW 13.02 - 13.52)</a>'
+            + '</div>';
+        menu.insertAdjacentHTML('beforeend', previewHtml);
     }
 } else {
     if ((window.applicationCache && window.applicationCache.status == 0)) {

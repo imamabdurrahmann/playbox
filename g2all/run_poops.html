@@ -95,7 +95,7 @@
     <pre id="out" style="display:none;"></pre>
 
     <div style="margin-top: 15px;">
-        <a href="index.html" style="color: #637c89; font-size: 12px; text-decoration: none;">&larr; Kembali ke Menu Multi FW</a>
+        <a href="index.html" style="color: #00e5ff; font-size: 13px; text-decoration: none; font-weight: 600;">&larr; Kembali ke Menu Multi FW</a>
     </div>
 </div>
 
@@ -105,18 +105,33 @@
 </div>
 
 <script type="module">
-import("./slopkit/chain_poops.js").catch(function(e) {
+var ua = navigator.userAgent;
+var isPS4Console = /PlayStation 4/i.test(ua);
+if (!isPS4Console) {
     var m = document.getElementById("msgs");
     var st = document.getElementById("state");
     if (m) {
-        m.innerHTML = "Gagal Memuat Exploit!";
-        m.style.color = "#ff5566";
+        m.innerHTML = "Preview Mode (PC / Browser)";
+        m.style.color = "#00e5ff";
     }
     if (st) {
-        st.textContent = "Restart PS4 Anda lalu coba lagi.";
-        st.className = "bad";
+        st.textContent = "Halaman runner ini siap & aktif untuk PS4 FW 12.50 - 13.00";
+        st.className = "ok";
     }
-});
+} else {
+    import("./slopkit/chain_poops.js").catch(function(e) {
+        var m = document.getElementById("msgs");
+        var st = document.getElementById("state");
+        if (m) {
+            m.innerHTML = "Gagal Memuat Exploit!";
+            m.style.color = "#ff5566";
+        }
+        if (st) {
+            st.textContent = "Restart PS4 Anda lalu coba lagi.";
+            st.className = "bad";
+        }
+    });
+}
 </script>
 </body>
 </html>
