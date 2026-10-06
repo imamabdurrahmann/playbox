@@ -1,25 +1,84 @@
 <!DOCTYPE html>
 <html manifest="slopkit.manifest">
 <head>
-<title>Playbox Bengkulu - PS4 [5.05] 7.00 - 13.52 FW GoldHEN Host</title>
-<link rel="stylesheet" href="../style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox Bengkulu - Offline Cache Installation</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background: radial-gradient(circle at 50% 0%, rgba(0, 210, 255, .12), transparent 35%),
+                linear-gradient(135deg, #05070b 0%, #0a1018 48%, #030507 100%);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+}
+.box {
+    background: rgba(4, 18, 42, 0.85);
+    border: 1px solid rgba(0, 200, 255, 0.35);
+    border-radius: 20px;
+    padding: 35px 25px;
+    max-width: 580px;
+    margin: 50px auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+#msgs {
+    font-size: 22px;
+    color: #ffd700;
+    margin-bottom: 12px;
+}
+.sub {
+    font-size: 14px;
+    color: #8cb4db;
+    line-height: 1.6;
+}
+</style>
 </head>
 <body>
-<script>
-history.replaceState(null,null,'index.html');var histlength=history.length;history.go(-histlength);
-function DLProgress(e){Percent=(Math.round(e.loaded / e.total * 100));window.msgs.innerHTML="Installing Offline Cache: " + Percent + "%";}
-function DisplayCacheProgress(){window.msgs.innerHTML="Cache Installed Successfully ✔";setTimeout(function(){window.msgs.innerHTML="Now Close And Re-Open Your Browser ...";},1500);}
-window.applicationCache.addEventListener("progress",DLProgress,false);
-window.applicationCache.oncached=function(e){DisplayCacheProgress();};
-window.applicationCache.onupdateready=function(e){DisplayCacheProgress();};
-window.applicationCache.onerror=function(e){window.msgs.innerHTML="Error Installing Cache! - Clear and Re-Open Your Browser ...";};
-</script>
-<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
-<div class="fw-title">[5.05] 7.00 - 13.52 FW GoldHEN Host</div>
-<hr>
-<br>
-<div style="background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 35px 25px; max-width: 550px; margin: 40px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
-    <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Starting Cache Installation...</h1>
+<h1 style="font-size: 28px; letter-spacing: 2px; color: #ffffff; text-transform: uppercase;">PLAYBOX <span style="color:#00e5ff;">BENGKULU</span></h1>
+<div style="font-size: 14px; color: #00ffcc; margin-top: 5px; font-weight: bold;">Multi Firmware Offline Cache Installer</div>
+
+<div class="box">
+    <h2 id="msgs">Mengunduh Cache Offline... 0%</h2>
+    <div id="sub" class="sub">Mohon tunggu hingga proses 100% selesai. Jangan matikan konsol.</div>
 </div>
+
+<script>
+function DLProgress(e) {
+    var percent = Math.round((e.loaded / e.total) * 100);
+    var m = document.getElementById("msgs");
+    if (m) m.innerHTML = "Mengunduh Cache: " + percent + "%";
+}
+
+function DisplayCacheProgress() {
+    var m = document.getElementById("msgs");
+    var s = document.getElementById("sub");
+    if (m) {
+        m.innerHTML = "Cache Terpasang Sukses! ✔";
+        m.style.color = "#00ff88";
+    }
+    if (s) {
+        s.innerHTML = '<b style="color: #ffd700; font-size: 16px;">TUTUP BROWSER SEKARANG!</b><br><br>'
+            + '1. Tekan tombol <b>PS</b> pada stik & tutup browser.<br>'
+            + '2. Masuk ke <b>Settings &gt; Network</b> & matikan internet.<br>'
+            + '3. Buka browser kembali & GoldHEN akan berjalan otomatis 100% offline!';
+    }
+}
+
+if (window.applicationCache) {
+    window.applicationCache.addEventListener("progress", DLProgress, false);
+    window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
+    window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
+    window.applicationCache.onerror = function(e) {
+        var m = document.getElementById("msgs");
+        if (m) {
+            m.innerHTML = "Gagal Memasang Cache!";
+            m.style.color = "#ff5566";
+        }
+    };
+}
+</script>
 </body>
 </html>
