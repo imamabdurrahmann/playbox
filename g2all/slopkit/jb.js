@@ -3003,8 +3003,11 @@ let allDone = false,
             }
             if (DO_PAYLOAD) {
               try {
-                const r = await fetch(PAYLOAD_FILE);
-                if (r.ok) payloadBlob = new Uint8Array(await r.arrayBuffer());
+                let r = await fetch("payload.bin").catch(function() { return null; });
+                if (!r || !r.ok) {
+                  r = await fetch(PAYLOAD_FILE);
+                }
+                if (r && r.ok) payloadBlob = new Uint8Array(await r.arrayBuffer());
               } catch (e) {
                 mark("PAYLOAD-FETCH-THREW", (e && e.message) || String(e));
               }

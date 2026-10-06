@@ -1,12 +1,16 @@
 CACHE MANIFEST
-# Version: 2026-10-05-v3
+# Version: 2026-10-06-v4
 CACHE:
 ../
 ../index.html
 ../img.jpg
 ../style.css
 goldhen_2.4b18.12.bin
+payload.bin
 index.html
+run_lapse.html
+run_poops.html
+run_13xx.html
 slopkit/chain_lapse.js
 slopkit/chain_poops.js
 slopkit/core.js?v=10

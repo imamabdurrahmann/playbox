@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id" manifest="slopkit.manifest">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox Bengkulu - Poops Exploit (12.50 - 13.00)</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+.runner-card {
+    position: relative;
+    z-index: 2;
+    width: min(92%, 680px);
+    margin: 20px auto;
+    padding: 35px 30px 25px;
+    background: rgba(3, 14, 34, 0.88);
+    border: 1px solid rgba(0, 200, 255, 0.35);
+    border-radius: 22px;
+    box-shadow: 0 0 45px rgba(0, 180, 255, 0.12), inset 0 0 50px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    text-align: center;
+}
+.version-pill {
+    display: inline-block;
+    margin: 12px auto;
+    padding: 6px 18px;
+    border: 1px solid rgba(0, 229, 255, 0.45);
+    border-radius: 30px;
+    color: #00ffcc;
+    background: rgba(0, 229, 255, 0.08);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+.status-box {
+    position: relative;
+    margin: 25px auto 15px;
+    width: 100%;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0, 200, 255, 0.2);
+    border-radius: 14px;
+    padding: 15px 20px;
+}
+.status-box::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 90px;
+    height: 2px;
+    transform: translateX(-50%);
+    background: #00e5ff;
+    box-shadow: 0 0 10px #00e5ff;
+}
+#msgs {
+    font-size: 22px;
+    color: #ffd700;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+#state {
+    margin-top: 8px;
+    font-size: 13px;
+    letter-spacing: 0.8px;
+    color: #00e5ff;
+    font-weight: 600;
+}
+#state.ok { color: #00ff88; font-weight: 700; }
+#state.bad { color: #ff5566; font-weight: 700; }
+#state.warn { color: #ffbb00; }
+</style>
+</head>
+<body>
+
+<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
+<div class="contact-box">
+    <div class="wa-badge">WhatsApp: 0821-7277-220</div>
+    <div class="ig-badge">Instagram: playbox_gamingps</div>
+</div>
+
+<div class="runner-card">
+    <div class="version-pill">&#9889; POOPS CHAIN &bull; FW 12.50 - 13.00</div>
+    <div style="font-size: 14px; color: #8cb4db; margin-top: 4px;">Memory-Isolated High Stability Runner</div>
+
+    <div class="status-box">
+        <h2 id="msgs">Memulai Exploit... Mohon Tunggu</h2>
+        <div id="state">Menyiapkan heap memori bersih...</div>
+    </div>
+
+    <pre id="out" style="display:none;"></pre>
+
+    <div style="margin-top: 15px;">
+        <a href="index.html" style="color: #637c89; font-size: 12px; text-decoration: none;">&larr; Kembali ke Menu Multi FW</a>
+    </div>
+</div>
+
+<div class="credits-box">
+    <span class="credits-title">Designed by: <span class="credits-names">Michael Joanes, Andree Garshia J and Imam Abdurrahman</span></span>
+    <span class="credits-sub">A special thanks to all the devs on the scene.</span>
+</div>
+
+<script type="module">
+import("./slopkit/chain_poops.js").catch(function(e) {
+    var m = document.getElementById("msgs");
+    var st = document.getElementById("state");
+    if (m) {
+        m.innerHTML = "Gagal Memuat Exploit!";
+        m.style.color = "#ff5566";
+    }
+    if (st) {
+        st.textContent = "Restart PS4 Anda lalu coba lagi.";
+        st.className = "bad";
+    }
+});
+</script>
+</body>
+</html>

@@ -277,8 +277,11 @@ function makeRpc(worker) {
 
         let payload = null;
         try {
-            const prsp = await fetch("goldhen_2.4b18.12.bin");
-            if (prsp.ok) payload = new Uint8Array(await prsp.arrayBuffer());
+            let prsp = await fetch("payload.bin").catch(function() { return null; });
+            if (!prsp || !prsp.ok) {
+                prsp = await fetch("goldhen_2.4b18.12.bin");
+            }
+            if (prsp && prsp.ok) payload = new Uint8Array(await prsp.arrayBuffer());
         } catch (e) {
             mark("PAYLOAD-FETCH-FAILED", (e && e.message) ? e.message : String(e));
         }
