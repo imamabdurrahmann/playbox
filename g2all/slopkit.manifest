@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version: 2026-10-07-mustafs-v3
+# Version: 2026-10-18-v4-anti-freeze
 
 CACHE:
 ../style.css
@@ -11,7 +11,6 @@ index.html
 slopkit/chain_lapse.js
 slopkit/chain_poops.js
 slopkit/jb.js
-slopkit/core.js?v=10
 slopkit/core.js
 slopkit/int64.js
 slopkit/mem.js

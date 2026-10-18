@@ -13,16 +13,16 @@ function startExploit() {
         var m = document.getElementById("menu"); if (m) m.style.display = "block";
         var msg = document.getElementById("msgs"); if (msg) msg.innerHTML = "Playbox Bengkulu - PS4 5.05 FW Host v2.5 <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>";
     } else {
-        if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
-        setTimeout(exploit, 50);
+        if (window.applicationCache && window.applicationCache.status === 0) {
+            window.location.replace("cache.html");
+            return;
+        }
+        setTimeout(exploit, 100);
     }
 }
 </script>
 </head>
 <body onload="startExploit();">
-<script>
-if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
-</script>
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">
     <div class="wa-badge">WhatsApp: 0821-7277-220</div>

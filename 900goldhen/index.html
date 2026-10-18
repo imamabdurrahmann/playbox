@@ -7,11 +7,25 @@
 <script src="rop.js"></script>
 <script src="kexploit.js"></script>
 <script src="webkit.js"></script>
-</head>
-<body onload="setTimeout(poc, 50);">
 <script>
-if ((window.applicationCache && window.applicationCache.status == 0)){window.location.replace("cache.html");}
+var ua = navigator.userAgent;
+var isPS4 = /PlayStation 4/i.test(ua);
+
+function runHost() {
+    if (!isPS4) {
+        var m = document.getElementById("msgs");
+        if (m) m.innerHTML = "Playbox Bengkulu - PS4 9.00 FW GoldHEN <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>";
+        return;
+    }
+    if (window.applicationCache && window.applicationCache.status === 0) {
+        window.location.replace("cache.html");
+        return;
+    }
+    setTimeout(poc, 100);
+}
 </script>
+</head>
+<body onload="runHost();">
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">
     <div class="wa-badge">WhatsApp: 0821-7277-220</div>

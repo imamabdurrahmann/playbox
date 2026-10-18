@@ -1,33 +1,64 @@
 <!DOCTYPE html>
 <html manifest="cache.manifest">
 <head>
-<title>Playbox Bengkulu - PS4 5.05 FW Host v2.5</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox Bengkulu - PS4 PS4 5.05 FW Host v2.5 (Offline Cache)</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<script>
-history.replaceState(null,null,'index.html');var histlength=history.length;history.go(-histlength);
-function DLProgress(e){Percent=(Math.round(e.loaded / e.total * 100));window.msgs.innerHTML="Installing Offline Cache: " + Percent + "%";}
-function DisplayCacheProgress(){window.msgs.innerHTML="Cache Installed Successfully ✔";setTimeout(function(){window.msgs.innerHTML="Now Close And Re-Open Your Browser ...";},1500);}
-window.applicationCache.addEventListener("progress",DLProgress,false);
-window.applicationCache.oncached=function(e){DisplayCacheProgress();};
-window.applicationCache.onupdateready=function(e){DisplayCacheProgress();};
-window.applicationCache.onerror=function(e){window.msgs.innerHTML="Error Installing Cache! - Clear and Re-Open Your Browser ...";};
-</script>
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">
     <div class="wa-badge">WhatsApp: 0821-7277-220</div>
     <div class="ig-badge">Instagram: playbox_gamingps</div>
 </div>
-<div class="fw-title">PS4 5.05 FW Host v2.5</div>
+<div class="fw-title">PS4 5.05 FW Host v2.5 Offline Cache</div>
 <hr>
 <br>
-<div style="background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 35px 25px; max-width: 550px; margin: 40px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
-    <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Starting Cache Installation...</h1>
+<div style="background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 14px; padding: 35px 25px; max-width: 560px; margin: 30px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+    <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Mengunduh Cache Offline... 0%</h1>
+    <div id="sub" style="font-size: 14px; color: #8cb4db; margin-top: 15px; line-height: 1.6;">Mohon tunggu hingga proses 100% selesai. Jangan matikan konsol.</div>
 </div>
+
 <div class="credits-box">
     <span class="credits-title">Designed by: <span class="credits-names">Michael Joanes, Andree Garshia J and Imam Abdurrahman</span></span>
     <span class="credits-sub">A special thanks to all the devs on the scene.</span>
 </div>
+
+<script>
+function DLProgress(e) {
+    var percent = (e.total > 0) ? Math.round((e.loaded / e.total) * 100) : 0;
+    var m = document.getElementById("msgs");
+    if (m) m.innerHTML = "Mengunduh Cache Offline: " + percent + "%";
+}
+
+function DisplayCacheProgress() {
+    var m = document.getElementById("msgs");
+    var s = document.getElementById("sub");
+    if (m) {
+        m.innerHTML = "Cache Terpasang Sukses! ✔";
+        m.style.color = "#00ff88";
+    }
+    if (s) {
+        s.innerHTML = '<b style="color: #ffd700; font-size: 16px;">TUTUP BROWSER SEKARANG!</b><br><br>'
+            + '1. Tekan tombol <b>PS</b> pada stik & tutup browser.<br>'
+            + '2. Masuk ke <b>Settings &gt; Network</b> & matikan internet.<br>'
+            + '3. Buka browser kembali & GoldHEN akan berjalan otomatis 100% offline!';
+    }
+}
+
+if (window.applicationCache) {
+    window.applicationCache.addEventListener("progress", DLProgress, false);
+    window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
+    window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
+    window.applicationCache.onerror = function(e) {
+        var m = document.getElementById("msgs");
+        if (m) {
+            m.innerHTML = "Gagal Memasang Cache! Periksa Koneksi Internet & Coba Lagi...";
+            m.style.color = "#ff5566";
+        }
+    };
+}
+</script>
 </body>
 </html>

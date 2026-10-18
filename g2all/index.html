@@ -74,7 +74,7 @@ if (!isPS4) {
         menu.insertAdjacentHTML('beforeend', previewHtml);
     }
 } else {
-    var cacheReady = window.applicationCache && window.applicationCache.status !== 0;
+    var cacheReady = window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4);
 
     if (!cacheReady) {
         if (fwNum == 5.05 || fwNum == 5.07) {
