@@ -1,4 +1,4 @@
-﻿import { establishPrimitive } from "./core.js?v=10";
+﻿import { establishPrimitive } from "./core.js";
 
 import { installWindowP, pairStatus } from "./mem.js";
 
