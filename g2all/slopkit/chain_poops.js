@@ -41,7 +41,8 @@ const STOP_BEFORE_DOUBLE = params.get("stop") === "beforedouble";
 function hostOk() {
     var m = document.getElementById("msgs");
     if (m) {
-        m.innerHTML = "GoldHEN v2.4b18.10 Loaded ...";
+        m.innerHTML = "GoldHEN Sukses Dimuat! &#10004;<br><span style='font-size:16px;color:#00ffcc;font-weight:600;display:block;margin-top:8px;'>Tekan tombol PS pada stik untuk kembali ke Menu Utama</span>";
+        m.style.color = "#00ff88";
     }
 }
 
@@ -2371,7 +2372,7 @@ let payloadRunning = false;
                     // confident inferences from reading code have already been
                     // wrong; this replaces the fourth with data.
                     // ?dump=0 to skip.
-                    if (params.get("dump") !== "0") {
+                    if (false) { // Skipped research debug dump to prevent WebKit thread locking while GoldHEN initializes
                         try {
                             const kq = v => v && (v.hi >>> 0) >= 0xffff0000;
                             const rd8 = a => kq(a) ? kv.read8(a) : null;

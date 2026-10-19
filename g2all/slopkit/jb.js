@@ -1,4 +1,4 @@
-﻿import { establishPrimitive } from "./core.js";
+import { establishPrimitive } from "./core.js";
 
 import { installWindowP, pairStatus } from "./mem.js";
 
@@ -61,15 +61,11 @@ const STOP_BEFORE_DOUBLE = params.get("stop") === "beforedouble";
 
 
 function hostOk() {
-
   var m = document.getElementById("msgs");
-
   if (m) {
-
-    m.innerHTML = "GoldHEN v2.4b18.12 Loaded ...";
-
+    m.innerHTML = "GoldHEN Sukses Dimuat! &#10004;<br><span style='font-size:16px;color:#00ffcc;font-weight:600;display:block;margin-top:8px;'>Tekan tombol PS pada stik untuk kembali ke Menu Utama</span>";
+    m.style.color = "#00ff88";
   }
-
 }
 
 
