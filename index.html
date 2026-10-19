@@ -38,7 +38,10 @@
 </div>
 </div>
 <script>
+var _deviceDetected = false;
 function detectDevice() {
+    if (_deviceDetected) return;
+    _deviceDetected = true;
     var ua = navigator.userAgent;
     var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
     var devText = document.getElementById("detected-text");
@@ -47,9 +50,23 @@ function detectDevice() {
     if (devText && devBox) {
         if (match) {
             var fw = match[1];
+            var fwNum = parseFloat(fw);
             devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + fw + ")";
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
+            
+            if (fwNum >= 11.50 && fwNum <= 13.52) {
+                var cd = 2;
+                var msgEl = document.getElementById("msgs");
+                var cdInterval = setInterval(function() {
+                    if (msgEl) msgEl.innerHTML = "Memuat GoldHEN Multi FW dalam " + cd + " detik... <button onclick='clearInterval(" + cdInterval + "); msgs.innerHTML=\"PS4 Exploit &amp; Multi Firmware Host\";' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Batal</button>";
+                    cd--;
+                    if (cd < 0) {
+                        clearInterval(cdInterval);
+                        location.replace('g2all/index.html');
+                    }
+                }, 1000);
+            }
         } else {
             devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
             devText.style.color = "#ffd700";

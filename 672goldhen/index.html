@@ -19,6 +19,9 @@ window.applicationCache.oncached=function(){
     localStorage.cached672="yes";
 };
 window.applicationCache.onnoupdate=function(){localStorage.cached672="yes";};
+if (window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4)) {
+    localStorage.cached672 = "yes";
+}
 window.applicationCache.onerror=function(){
     var m = document.getElementById("msgs");
     if (m) m.innerHTML="Gagal Mengunduh Cache! Periksa Internet & Refresh Halaman...";

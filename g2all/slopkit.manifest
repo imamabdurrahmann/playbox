@@ -1,13 +1,17 @@
 CACHE MANIFEST
-# Version: 2026-10-19-v7-fix
+# Version: 2026-10-19-v8-root-fix
 
 CACHE:
-../style.css
+../
+../index.html
 ../img.jpg
+../style.css
+./
+index.html
+cacheslopkit.html
 goldhen_2.4b18.10.bin
 goldhen_2.4b18.12.bin
 payload.bin
-index.html
 slopkit/chain_lapse.js
 slopkit/chain_poops.js
 slopkit/jb.js
