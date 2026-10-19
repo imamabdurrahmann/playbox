@@ -83,7 +83,22 @@ if (!isPS4) {
         menu.insertAdjacentHTML('beforeend', previewHtml);
     }
 } else {
-    var cacheReady = window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4);
+    function checkCacheInstalled(fw) {
+        if (window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4)) {
+            return true;
+        }
+        try {
+            if (fw >= 11.50 && fw <= 13.52 && localStorage.getItem('playbox_cached_slopkit') === '1') return true;
+            if (fw >= 10.00 && fw <= 11.02 && localStorage.getItem('playbox_cached_css') === '1') return true;
+            if (fw >= 9.00 && fw <= 9.60 && localStorage.getItem('playbox_cached_900') === '1') return true;
+            if (fw >= 7.00 && fw <= 8.52 && localStorage.getItem('playbox_cached_700') === '1') return true;
+            if ((fw == 5.05 || fw == 5.07) && localStorage.getItem('playbox_cached_505') === '1') return true;
+            if (localStorage.getItem('playbox_cached_any') === '1') return true;
+        } catch (e) {}
+        return false;
+    }
+
+    var cacheReady = checkCacheInstalled(fwNum);
 
     if (!cacheReady) {
         if (fwNum == 5.05 || fwNum == 5.07) {

@@ -205,7 +205,7 @@ let payloadRunning = false;
               + " sites=" + KPATCH_JMP_SITES.length
             : "blob=" + kpatchName + " MISSING");
         try {
-            const r = await fetch("goldhen_2.4b18.10.bin");
+            const r = await fetch("goldhen_2.4b18.12.bin");
             if (r.ok) payload = new Uint8Array(await r.arrayBuffer());
         } catch (e) { mark("PAYLOAD-FETCH-THREW", e.message); }
         mark("PAYLOAD-BLOB", payload
@@ -2523,12 +2523,14 @@ let payloadRunning = false;
 
         if (uafSock) mark("UAF-SOCK-LEFT-OPEN", "fd=" + uafSock);
 
-        try {
-            if (restoreCtx) await restoreCtx.restore("finally");
-        } catch (e) { mark("THREAD-ATTRS-RESTORE-THREW", e.message); }
-        for (const w of workers) {
-            try { if (w.armed) { await w.rpc("disarm", 5000); w.armed = false; } }
-            catch (e) { mark("DISARM-THREW", w.name + " " + e.message); }
+        if (!payloadRunning) {
+            try {
+                if (restoreCtx) await restoreCtx.restore("finally");
+            } catch (e) { mark("THREAD-ATTRS-RESTORE-THREW", e.message); }
+            for (const w of workers) {
+                try { if (w.armed) { await w.rpc("disarm", 500); w.armed = false; } }
+                catch (e) { mark("DISARM-THREW", w.name + " " + e.message); }
+            }
         }
         for (const w of workers) {
             try {
