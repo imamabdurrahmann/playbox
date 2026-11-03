@@ -153,7 +153,7 @@ code { color: #9fb3d0; }
 </div>
 <p class="byline">Designed by Andree Garshia J &amp; Imam Abdurrahman &middot; Powered by Afterglow (well0nez/m0zz)</p>
 
-<script>
+<script type="module">
 function rerunExploit() {
   try {
     sessionStorage.removeItem("playbox_goldhen_loaded");
@@ -161,6 +161,7 @@ function rerunExploit() {
   } catch (e) {}
   location.href = "jb.html?force=1&log=1&afterglow=run&mode=goldhen";
 }
+window.rerunExploit = rerunExploit;
 
 var urlParams = new URLSearchParams(window.location.search);
 var forceRun = urlParams.get("force") === "1";
@@ -195,10 +196,7 @@ if (isAlreadyLoaded) {
       "re-run the exploit fresh, click the Re-Run button above.";
   }
 } else {
-  var s = document.createElement("script");
-  s.type = "module";
-  s.src = "jb.js";
-  document.body.appendChild(s);
+  import("./jb.js");
 }
 </script>
 </body>
