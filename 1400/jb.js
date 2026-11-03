@@ -199,7 +199,7 @@ function mark(tag, detail, synchronous = false) {
     );
   }
 
-  if (SHOW_LOG && outEl) {
+  if (outEl) {
     outEl.textContent =
       lines.join("\n");
 

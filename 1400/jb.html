@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -203,14 +203,23 @@
         var w = document.getElementById("wrap");
         var b = document.getElementById("logToggleBtn");
         var r = document.getElementById("ramBox");
+        var s = document.getElementById("spin");
+        var l = document.getElementById("loadingStatus");
+        var m = document.getElementById("msg");
         if (!w) return;
         if (w.style.display === "block") {
           w.style.display = "none";
           if (r) r.style.display = "none";
+          if (s) s.style.display = "";
+          if (l) l.style.display = "";
+          if (m && (document.body.className === "done" || document.body.className === "fail")) m.style.display = "block";
           if (b) b.textContent = "Lihat Detail Log";
         } else {
           w.style.display = "block";
           if (r) r.style.display = "block";
+          if (s) s.style.display = "none";
+          if (l) l.style.display = "none";
+          if (m) m.style.display = "none";
           if (b) b.textContent = "Sembunyikan Log";
         }
       }
