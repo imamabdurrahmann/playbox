@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version: 2026-11-03-v2-fw1400-goldhen
+# Version: 2026-11-03-v3-fw1400-goldhen
 
 CACHE:
 ../img.jpg
@@ -16,6 +16,7 @@ hx_kevent.js
 hx_tables.js
 hen.bin
 payload.bin
+goldhen.bin
 patches/1400.bin
 1400.bin
 
