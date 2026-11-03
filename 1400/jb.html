@@ -90,6 +90,9 @@
 </div>
 
 <script>
+if (location.search) {
+  try { history.replaceState(null, null, 'jb.html'); } catch (e) {}
+}
 function detectDevice() {
   var ua = navigator.userAgent;
   var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
