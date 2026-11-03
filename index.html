@@ -61,7 +61,7 @@ function detectDevice() {
                 var cd = 2;
                 var msgEl = document.getElementById("msgs");
                 var cdInterval = setInterval(function() {
-                    if (msgEl) msgEl.innerHTML = "Memuat GoldHEN FW 14.00 dalam " + cd + " detik... <button onclick='clearInterval(" + cdInterval + "); msgs.innerHTML=\"PS4 Exploit &amp; Multi Firmware Host\";' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Batal</button>";
+                    if (msgEl) msgEl.innerHTML = "Loading GoldHEN FW 14.00 in " + cd + " seconds... <button onclick='clearInterval(" + cdInterval + "); msgs.innerHTML=\"PS4 Exploit &amp; Multi Firmware Host\";' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Cancel</button>";
                     cd--;
                     if (cd < 0) {
                         clearInterval(cdInterval);
@@ -72,7 +72,7 @@ function detectDevice() {
                 var cd = 2;
                 var msgEl = document.getElementById("msgs");
                 var cdInterval = setInterval(function() {
-                    if (msgEl) msgEl.innerHTML = "Memuat GoldHEN Multi FW dalam " + cd + " detik... <button onclick='clearInterval(" + cdInterval + "); msgs.innerHTML=\"PS4 Exploit &amp; Multi Firmware Host\";' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Batal</button>";
+                    if (msgEl) msgEl.innerHTML = "Loading GoldHEN Multi FW in " + cd + " seconds... <button onclick='clearInterval(" + cdInterval + "); msgs.innerHTML=\"PS4 Exploit &amp; Multi Firmware Host\";' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Cancel</button>";
                     cd--;
                     if (cd < 0) {
                         clearInterval(cdInterval);

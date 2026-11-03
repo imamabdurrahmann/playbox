@@ -1,231 +1,127 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Playbox Bengkulu - PS4 14.00 FW GoldHEN</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        min-height: 100%;
-        background: #0b0d10;
-        color: #c8ced8;
-        font:
-          15px/1.45 "Segoe UI",
-          system-ui,
-          sans-serif;
-      }
-      #brand {
-        text-align: center;
-        padding: 8px 10px;
-        background: #0e1116;
-        border-bottom: 1px solid #1e2732;
-      }
-      #brand img {
-        width: 28px;
-        height: 28px;
-        margin-right: 8px;
-        border-radius: 50%;
-        vertical-align: middle;
-      }
-      #brand b {
-        font-size: 15px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        color: #e6ebf2;
-        vertical-align: middle;
-      }
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+.log-btn {
+  background: rgba(3, 14, 34, 0.85);
+  color: #8cb4db;
+  border: 1px solid rgba(0, 200, 255, 0.35);
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+.log-btn:hover {
+  color: #00e5ff;
+  border-color: #00e5ff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
+}
+#wrap {
+  display: none;
+  width: 92%;
+  max-width: 900px;
+  margin: 15px auto 30px;
+  text-align: left;
+}
+#state {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffd700;
+  margin-bottom: 6px;
+}
+#out {
+  white-space: pre-wrap;
+  font: 12px/1.45 Consolas, monospace;
+  background: rgba(10, 15, 25, 0.95);
+  border: 1px solid rgba(0, 200, 255, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  height: 260px;
+  overflow-y: auto;
+  color: #c8ced8;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+.ok, .safe { color: #00ff88; }
+.bad, .danger { color: #ff5566; }
+.warn { color: #ffd700; }
+</style>
+</head>
+<body>
+<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
+<div class="contact-box">
+  <div class="wa-badge">WhatsApp: 0821-7277-220</div>
+  <div class="ig-badge">Instagram: playbox_gamingps</div>
+</div>
+<div class="fw-title">PS4 14.00 FW GoldHEN Host</div>
+<hr>
+<br>
 
-      /* running: a spinner under the brand. jb.js sets body.done / body.fail / body.log. */
-      #spin {
-        position: fixed;
-        top: calc(50% + 20px);
-        left: 50%;
-        width: 46px;
-        height: 46px;
-        margin: -23px 0 0 -23px;
-        border: 4px solid #1e2732;
-        border-top-color: #00ff88;
-        border-radius: 50%;
-        animation: spin 0.9s linear infinite;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      #msg {
-        position: fixed;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        text-align: center;
-        font-size: 16px;
-        letter-spacing: 0.5px;
-        display: none;
-      }
-      #wrap {
-        padding: 0;
-      }
-      #state,
-      #out {
-        display: none;
-      }
+<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 5px auto 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+  <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
+</div>
+<br>
 
-      body.done #spin {
-        display: none;
-      }
-      body.fail #spin {
-        display: none;
-      }
-      body.fail #msg {
-        display: block;
-      }
-            body.done #loadingStatus,
-      body.fail #loadingStatus {
-        display: none;
-      }
-      body.done #msg {
-        display: block;
-        color: #7fd0a0;
-        font-weight: 700;
-        letter-spacing: 2px;
-      }
+<div id="menu">
+  <div style="padding: 15px 10px;">
+    <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Loading GoldHEN v2.4b18.13... Please Wait</h1>
+  </div>
+</div>
 
-      /* ?log=1 -- the full step log, styled like the landing. */
-      body.log #spin,
-      body.log #msg {
-        display: none;
-      }
-      body.log #wrap {
-        padding: 14px 18px;
-      }
-      body.log #state {
-        display: block;
-        font-size: 22px;
-        font-weight: 700;
-        margin: 0 0 8px;
-      }
-      body.log #out {
-        display: block;
-        white-space: pre-wrap;
-        font:
-          12px/1.45 Consolas,
-          monospace;
-        background: #11151b;
-        border: 1px solid #1e2732;
-        border-radius: 5px;
-        padding: 10px 12px;
-        height: calc(100vh - 141px);
-        overflow-y: auto;
-      }
-      .ok {
-        color: #7fd0a0;
-      }
-      .bad {
-        color: #d08a7f;
-      }
-      .warn {
-        color: #d8c07f;
-      }
-      .safe {
-        color: #7fd0a0;
-      }
-      .danger {
-        color: #d08a7f;
-      }
-      code {
-        color: #9fb3d0;
-      }
-    
-      #ramBox {
-        position: fixed;
+<div class="credits-box">
+  <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
+  <span class="credits-sub">A special thanks to all the devs on the scene.</span>
+</div>
 
-        top: 8px;
-        left: 8px;
-        z-index: 9999;
+<div style="text-align: center; margin-top: 20px;">
+  <button id="logToggleBtn" class="log-btn" onclick="toggleLog()">View Debug Log</button>
+</div>
 
-        padding: 6px 9px;
+<div id="wrap">
+  <div id="ramBox" style="display: inline-block; padding: 4px 10px; margin-bottom: 8px; font-family: Consolas, monospace; font-size: 12px; color: #00e5ff; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 6px;">RAM: checking...</div>
+  <div id="state"></div>
+  <div id="out"></div>
+</div>
 
-        color: #7fd0a0;
-        background: rgba(0, 0, 0, 0.78);
+<script>
+function detectDevice() {
+  var ua = navigator.userAgent;
+  var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
+  var devText = document.getElementById("detected-text");
+  var devBox = document.getElementById("device-info");
+  if (devText && devBox) {
+    if (match) {
+      devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
+      devText.style.color = "#00ffcc";
+      devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
+    } else {
+      devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
+      devText.style.color = "#ffd700";
+      devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
+    }
+  }
+}
+detectDevice();
 
-        border:
-          1px solid #1e2732;
-
-        border-radius: 4px;
-
-        font-family:
-          Consolas,
-          monospace;
-
-        font-size: 11px;
-
-        max-width: 92vw;
-        overflow: hidden;
-
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-    </style>
-  </head>
-  <body>
-    <div id="ramBox" style="display: none;">RAM: checking...</div>
-    <div id="brand" style="text-align: center; padding: 10px 10px; background: rgba(14, 17, 22, 0.95); border-bottom: 1px solid #1e2732;">
-      <h1 class="brand-title" style="margin: 4px 0; font-size: 20px;">Playbox Bengkulu GoldHen PS4</h1>
-      <div class="contact-box" style="margin-bottom: 6px;">
-        <div class="wa-badge" style="font-size: 11px; padding: 2px 10px;">WhatsApp: 0821-7277-220</div>
-        <div class="ig-badge" style="font-size: 11px; padding: 2px 10px;">Instagram: playbox_gamingps</div>
-      </div>
-      <div class="fw-title" style="font-size: 13px; margin: 4px 0; color: #00ff88;">PS4 14.00 FW GoldHEN Host (Offline)</div>
-    </div>
-    <div id="loadingStatus" style="position: fixed; top: calc(50% - 65px); left: 0; right: 0; text-align: center; font-size: 21px; color: #ffd700; font-weight: 700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">Memuat GoldHEN FW 14.00... Harap Tunggu</div>
-    <div id="spin"></div>
-    <div id="msg">Restart your console</div>
-    <div id="wrap" style="display: none;">
-      <div id="state"></div>
-      <div id="out"></div>
-    </div>
-    <div style="position: fixed; bottom: 45px; left: 0; right: 0; text-align: center;">
-      <button id="logToggleBtn" onclick="toggleLog()" style="background: rgba(30,39,50,0.6); color: #7c8798; border: 1px solid #1e2732; border-radius: 20px; padding: 4px 14px; font-size: 11px; cursor: pointer;">Lihat Detail Log</button>
-    </div>
-    <div class="credits-box" style="margin: 12px auto; font-size: 11px; text-align: center; position: fixed; bottom: 5px; left: 0; right: 0;">
-      <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span><br>
-      <span class="credits-sub" style="font-size: 10px; color: #8cb4db;">A special thanks to all the devs on the scene.</span>
-    </div>
-    <script>
-      function toggleLog() {
-        var w = document.getElementById("wrap");
-        var b = document.getElementById("logToggleBtn");
-        var r = document.getElementById("ramBox");
-        var s = document.getElementById("spin");
-        var l = document.getElementById("loadingStatus");
-        var m = document.getElementById("msg");
-        if (!w) return;
-        if (w.style.display === "block") {
-          w.style.display = "none";
-          if (r) r.style.display = "none";
-          if (s) s.style.display = "";
-          if (l) l.style.display = "";
-          if (m && (document.body.className === "done" || document.body.className === "fail")) m.style.display = "block";
-          if (b) b.textContent = "Lihat Detail Log";
-        } else {
-          w.style.display = "block";
-          if (r) r.style.display = "block";
-          if (s) s.style.display = "none";
-          if (l) l.style.display = "none";
-          if (m) m.style.display = "none";
-          if (b) b.textContent = "Sembunyikan Log";
-        }
-      }
-    </script>
-    <script type="module">
-      import "./jb.js";
-    </script>
-  </body>
+function toggleLog() {
+  var w = document.getElementById("wrap");
+  var b = document.getElementById("logToggleBtn");
+  if (!w) return;
+  if (w.style.display === "block") {
+    w.style.display = "none";
+    if (b) b.textContent = "View Debug Log";
+  } else {
+    w.style.display = "block";
+    if (b) b.textContent = "Hide Debug Log";
+  }
+}
+</script>
+<script type="module" src="jb.js"></script>
+</body>
 </html>

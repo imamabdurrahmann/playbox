@@ -163,20 +163,46 @@ if (ramBox) {
   );
 }
 
+let alreadyLoaded = false;
+
+function hostOk() {
+  const m = document.getElementById("msgs") || document.getElementById("msg");
+  if (m) {
+    m.innerHTML = "GoldHEN v2.4b18.13 Loaded ...";
+    m.style.color = "#00ff88";
+  }
+}
+
+function hostFail() {
+  const m = document.getElementById("msgs") || document.getElementById("msg");
+  if (m) {
+    m.innerHTML = armedEver ? "Restart Console Required" : "Exploit Failed! Please Refresh ...";
+    m.style.color = "#ff5566";
+  }
+}
+
+function hostAlready() {
+  const m = document.getElementById("msgs") || document.getElementById("msg");
+  if (m) {
+    m.innerHTML = "GoldHEN is Already Loaded ...";
+    m.style.color = "#00ff88";
+  }
+  const spin = document.getElementById("spin");
+  if (spin) spin.style.display = "none";
+  const ls = document.getElementById("loadingStatus");
+  if (ls) ls.style.display = "none";
+  if (document.body) document.body.className = "done";
+}
+
 if (SHOW_LOG && document.body) document.body.className = "log";
 function finishUI(ok) {
+  if (ok) hostOk();
+  else hostFail();
+  const spin = document.getElementById("spin");
+  if (spin) spin.style.display = "none";
+  const ls = document.getElementById("loadingStatus");
+  if (ls) ls.style.display = "none";
   if (SHOW_LOG || !document.body) return;
-  const m = document.getElementById("msg");
-  if (m) {
-    if (ok) {
-      m.innerHTML = '<span style="color: #00ff88; font-size: 22px; font-weight: 700; text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);">GoldHEN v2.4b18.13 Loaded! &#10004;</span><br><br>' +
-                    '<span style="color: #8cb4db; font-size: 15px;">Tekan tombol <b>PS</b> pada stik &amp; selamat bermain!</span>';
-    } else {
-      m.innerHTML = '<span style="color: #ff5566; font-size: 20px; font-weight: 700;">' +
-                    (armedEver ? 'Restart Konsol Diperlukan' : 'Gagal Memuat. Silakan Refresh Browser') +
-                    '</span><br><br><span style="color: #ffd700; font-size: 14px;">Buka kembali browser untuk mencoba lagi.</span>';
-    }
-  }
   document.body.className = ok ? "done" : "fail";
 }
 function mark(tag, detail, synchronous = false) {
@@ -1121,7 +1147,36 @@ let allDone = false,
       );
     }
 
-    
+    // Check if GoldHEN / root privilege is already active on this console
+    try {
+      const SETUID = 23;
+      if (!stubAddr.has(SETUID)) {
+        for (let o = 0; o < (off.k_scan_stage1 || 0x20000); o += 16) {
+          const v = p.read8(libkernelBase.add32(o));
+          if ((v.low & 0x00ffffff) !== 0xc0c748 || v.hi >>> 24 !== 0x49) continue;
+          const num = ((v.low >>> 24) | ((v.hi & 0x00ffffff) << 8)) >>> 0;
+          if (num === SETUID) {
+            stubAddr.set(SETUID, libkernelBase.add32(o));
+            break;
+          }
+        }
+      }
+      const uidNow = sc(SYS.getuid).i32;
+      const suRv = stubAddr.has(SETUID) ? sc(SETUID, 0).i32 : -1;
+      mark("JB-PROBE", "getuid=" + uidNow + " setuid=" + suRv);
+      if (uidNow === 0 || suRv === 0) {
+        alreadyLoaded = true;
+        jailbroken = true;
+        payloadRunning = true;
+        allDone = true;
+        mark("JB-ALREADY", "GoldHEN already active in kernel (uid=" + uidNow + ", su=" + suRv + ") - race skipped");
+        hostAlready();
+        return;
+      }
+    } catch (probeErr) {
+      mark("JB-PROBE-ERR", String(probeErr));
+    }
+
     if (params.get("mini_only") === "1") {
       try {
         const mini = await import("./hx_kevent.js");
@@ -1296,6 +1351,7 @@ const pid = sc(SYS.getpid).i32;
         const uidNow = sc(SYS.getuid).i32;
         mark("JB-PROBE", "setuid=" + suRv + " uid=" + uidNow);
         if (suRv === 0 && uidNow === 0) {
+          alreadyLoaded = true;
           jailbroken = true;
           mark(
             "JB-ALREADY",
@@ -1311,6 +1367,7 @@ const pid = sc(SYS.getpid).i32;
               " armings=0 reused=1",
           );
           allDone = true;
+          hostAlready();
           return;
         }
       }
@@ -4547,7 +4604,7 @@ const pid = sc(SYS.getpid).i32;
         (allDone ? "" : "  INCOMPLETE"),
     );
     try {
-      finishUI(payloadRunning);
+      if (!alreadyLoaded) finishUI(payloadRunning);
     } catch (eUI) {}
   }
 })();
