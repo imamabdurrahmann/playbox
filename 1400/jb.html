@@ -1,167 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
-    <link rel="stylesheet" href="../style.css">
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        min-height: 100%;
-        background: #0b0d10;
-        color: #c8ced8;
-        font:
-          15px/1.45 "Segoe UI",
-          system-ui,
-          sans-serif;
-      }
-      #brand {
-        text-align: center;
-        padding: 8px 10px;
-        background: rgba(14, 17, 22, 0.95);
-        border-bottom: 1px solid #1e2732;
-      }
-      #spin {
-        position: fixed;
-        top: calc(50% + 20px);
-        left: 50%;
-        width: 46px;
-        height: 46px;
-        margin: -23px 0 0 -23px;
-        border: 4px solid #1e2732;
-        border-top-color: #7fd0a0;
-        border-radius: 50%;
-        animation: spin 0.9s linear infinite;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      #msg {
-        position: fixed;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        text-align: center;
-        font-size: 16px;
-        letter-spacing: 0.5px;
-        display: none;
-      }
-      #wrap {
-        padding: 0;
-      }
-      #state,
-      #out {
-        display: none;
-      }
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
+<link rel="stylesheet" href="../style.css">
+<style>
+#wrap {
+  width: 94%;
+  max-width: 950px;
+  margin: 0 auto 15px;
+  text-align: left;
+}
+#state {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffd700;
+  text-align: center;
+  margin: 8px 0 10px;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+#out {
+  white-space: pre-wrap;
+  font: 12px/1.45 Consolas, monospace;
+  background: rgba(10, 15, 25, 0.95);
+  border: 1px solid rgba(0, 200, 255, 0.35);
+  border-radius: 8px;
+  padding: 12px;
+  height: 380px;
+  overflow-y: auto;
+  color: #c8ced8;
+  box-shadow: 0 4px 25px rgba(0,0,0,0.7);
+}
+.ok, .safe { color: #00ff88; }
+.bad, .danger { color: #ff5566; }
+.warn { color: #ffd700; }
+</style>
+</head>
+<body>
+<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
+<div class="contact-box">
+  <div class="wa-badge">WhatsApp: 0821-7277-220</div>
+  <div class="ig-badge">Instagram: playbox_gamingps</div>
+</div>
+<div class="fw-title">PS4 14.00 FW GoldHEN Host (Offline)</div>
+<hr>
 
-      body.done #spin {
-        display: none;
-      }
-      body.fail #spin {
-        display: none;
-      }
-      body.fail #msg {
-        display: block;
-      }
-      body.done #msg {
-        display: block;
-        color: #7fd0a0;
-        font-weight: 700;
-        letter-spacing: 2px;
-      }
+<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 6px 20px; font-size: 14px; margin: 5px auto 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+  <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
+</div>
 
-      /* ?log=1 -- the full step log, styled like the landing. */
-      body.log #spin,
-      body.log #msg {
-        display: none;
-      }
-      body.log #wrap {
-        padding: 10px 18px 5px;
-      }
-      body.log #state {
-        display: block;
-        font-size: 22px;
-        font-weight: 700;
-        margin: 0 0 8px;
-        text-align: center;
-      }
-      body.log #out {
-        display: block;
-        white-space: pre-wrap;
-        font:
-          12px/1.45 Consolas,
-          monospace;
-        background: #11151b;
-        border: 1px solid #1e2732;
-        border-radius: 5px;
-        padding: 10px 12px;
-        height: calc(100vh - 195px);
-        overflow-y: auto;
-      }
-      .ok {
-        color: #7fd0a0;
-      }
-      .bad {
-        color: #d08a7f;
-      }
-      .warn {
-        color: #d8c07f;
-      }
-      .safe {
-        color: #7fd0a0;
-      }
-      .danger {
-        color: #d08a7f;
-      }
-      code {
-        color: #9fb3d0;
-      }
-    
-      #ramBox {
-        position: fixed;
-        top: 8px;
-        left: 8px;
-        z-index: 9999;
-        padding: 5px 9px;
-        color: #7fd0a0;
-        background: rgba(0, 0, 0, 0.85);
-        border: 1px solid #1e2732;
-        border-radius: 4px;
-        font-family: Consolas, monospace;
-        font-size: 11px;
-        max-width: 92vw;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    </style>
-  </head>
-  <body class="log">
-    <div id="ramBox">RAM: checking...</div>
-    <div id="brand">
-      <h1 class="brand-title" style="margin: 4px 0; font-size: 20px; color: #ffd700;">Playbox Bengkulu GoldHen PS4</h1>
-      <div class="contact-box" style="margin-bottom: 4px;">
-        <div class="wa-badge" style="font-size: 11px; padding: 2px 10px;">WhatsApp: 0821-7277-220</div>
-        <div class="ig-badge" style="font-size: 11px; padding: 2px 10px;">Instagram: playbox_gamingps</div>
-      </div>
-      <div class="fw-title" style="font-size: 13px; margin: 2px 0; color: #00ff88;">PS4 14.00 FW GoldHEN Host (Offline)</div>
-    </div>
-    <div id="spin"></div>
-    <div id="msg">Restart your console</div>
-    <div id="wrap">
-      <div id="state" class="warn">running the primitive...</div>
-      <div id="out"></div>
-    </div>
-    <div class="credits-box" style="margin: 6px auto; font-size: 11px; text-align: center; position: fixed; bottom: 4px; left: 0; right: 0;">
-      <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span> &bull; 
-      <span class="credits-sub" style="font-size: 10px; color: #8cb4db;">A special thanks to all the devs on the scene.</span>
-    </div>
-    <script type="module" src="jb.js"></script>
-  </body>
+<div id="state" class="warn">running the primitive...</div>
+<div id="msgs" style="display: none;"></div>
+
+<div id="wrap">
+  <div id="ramBox" style="display: inline-block; padding: 4px 10px; margin-bottom: 6px; font-family: Consolas, monospace; font-size: 12px; color: #00e5ff; background: rgba(3, 14, 34, 0.85); border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 6px;">RAM: checking...</div>
+  <div id="out"></div>
+</div>
+
+<div class="credits-box" style="margin-top: 10px;">
+  <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
+  <span class="credits-sub">A special thanks to all the devs on the scene.</span>
+</div>
+
+<script>
+function detectDevice() {
+  var ua = navigator.userAgent;
+  var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
+  var devText = document.getElementById("detected-text");
+  var devBox = document.getElementById("device-info");
+  if (devText && devBox) {
+    if (match) {
+      devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
+      devText.style.color = "#00ffcc";
+      devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
+    } else {
+      devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
+      devText.style.color = "#ffd700";
+      devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
+    }
+  }
+}
+detectDevice();
+</script>
+<script type="module" src="jb.js"></script>
+</body>
 </html>
