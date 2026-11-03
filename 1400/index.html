@@ -5,53 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
 <link rel="stylesheet" href="../style.css">
-<style>
-.log-btn {
-  background: rgba(3, 14, 34, 0.85);
-  color: #8cb4db;
-  border: 1px solid rgba(0, 200, 255, 0.35);
-  border-radius: 20px;
-  padding: 6px 18px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-}
-.log-btn:hover {
-  color: #00e5ff;
-  border-color: #00e5ff;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
-}
-#wrap {
-  display: none;
-  width: 92%;
-  max-width: 900px;
-  margin: 15px auto 30px;
-  text-align: left;
-}
-#state {
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffd700;
-  margin-bottom: 6px;
-}
-#out {
-  white-space: pre-wrap;
-  font: 12px/1.45 Consolas, monospace;
-  background: rgba(10, 15, 25, 0.95);
-  border: 1px solid rgba(0, 200, 255, 0.3);
-  border-radius: 8px;
-  padding: 12px;
-  height: 260px;
-  overflow-y: auto;
-  color: #c8ced8;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-}
-.ok, .safe { color: #00ff88; }
-.bad, .danger { color: #ff5566; }
-.warn { color: #ffd700; }
-</style>
 <script>
 var ua = navigator.userAgent;
 var isPS4 = /PlayStation 4/i.test(ua);
@@ -62,10 +15,6 @@ function updateStatus(msg, isError) {
         m.innerHTML = msg;
         m.style.color = isError ? "#ff5566" : "#ffd700";
     }
-}
-
-function onScriptError() {
-    updateStatus("Exploit Files Not Found! Clear Browser Data & Reinstall Cache...", true);
 }
 
 function runHost() {
@@ -109,12 +58,8 @@ function runHost() {
     updateStatus("Loading GoldHEN v2.4b18.13... Please Wait");
 
     setTimeout(function() {
-        var script = document.createElement('script');
-        script.type = 'module';
-        script.src = "jb.js";
-        script.onerror = onScriptError;
-        document.head.appendChild(script);
-    }, 200);
+        location.replace("jb.html");
+    }, 150);
 }
 </script>
 </head>
@@ -140,30 +85,5 @@ function runHost() {
     <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
     <span class="credits-sub">A special thanks to all the devs on the scene.</span>
 </div>
-
-<div style="text-align: center; margin-top: 20px;">
-  <button id="logToggleBtn" class="log-btn" onclick="toggleLog()">View Debug Log</button>
-</div>
-
-<div id="wrap">
-  <div id="ramBox" style="display: inline-block; padding: 4px 10px; margin-bottom: 8px; font-family: Consolas, monospace; font-size: 12px; color: #00e5ff; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 6px;">RAM: checking...</div>
-  <div id="state"></div>
-  <div id="out"></div>
-</div>
-
-<script>
-function toggleLog() {
-  var w = document.getElementById("wrap");
-  var b = document.getElementById("logToggleBtn");
-  if (!w) return;
-  if (w.style.display === "block") {
-    w.style.display = "none";
-    if (b) b.textContent = "View Debug Log";
-  } else {
-    w.style.display = "block";
-    if (b) b.textContent = "Hide Debug Log";
-  }
-}
-</script>
 </body>
 </html>
