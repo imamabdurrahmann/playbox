@@ -19,13 +19,12 @@ let lastMark = Date.now();
 let retryShown = false;
 
 function showNotice(text) {
-  try {
-    const box = document.createElement("div");
-    box.className = "notice";
-    box.textContent = text;
-    (document.getElementById("out") || document.body).appendChild(box);
-    document.body.classList.add("fail");
-  } catch (e) {}
+  const m = document.getElementById("msgs");
+  if (m) {
+    m.innerHTML = text;
+    m.style.color = "#ff5566";
+    m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+  }
 }
 
 function showRetry() {
@@ -47,52 +46,8 @@ const watchdog = setInterval(function () {
    of the screen, so arming requires a step from this folder's landing page.
    The guard lives here rather than in the server, so it holds however the
    files are served. */
-const FROM_LANDING = (function () {
-  try {
-    if (params.get("direct") === "1" || params.get("force") === "1") return true;
-    if (!document.referrer) return true;
-    const r = new URL(document.referrer);
-    if (r.origin !== location.origin) return true;
-    const cameFrom = r.pathname.replace(/[^/]*$/, "");
-    const here = location.pathname.replace(/[^/]*$/, "");
-    if (cameFrom !== here) return true;
-    const file = r.pathname.slice(cameFrom.length);
-    return file === "" || file === "index.html";
-  } catch (e) {
-    return true;
-  }
-})();
-
-/* A page the browser restored must do nothing at all. Until this sat here,
-   the refusal came only after the WebKit stage had already run in full --
-   harmless to the kernel, but pointless work on a page nobody asked to run.
-   Send it back to the start page instead; from there the ordinary route
-   takes over, autostart included, and it arms with a proper referrer and a
-   visible countdown. A probe is exempt: it fires nothing and patches
-   nothing. */
-const SENT_HOME = (function () {
-  const want = params.get("afterglow");
-  if (!want || want === "probe" || FROM_LANDING) return false;
-  try {
-    /* Pin the page to the .fail look: the message lives in #msg, which is
-       hidden in log mode, and the URL decides whether log mode is on. */
-    document.body.className = "fail";
-    const msgEl = document.getElementById("msg");
-    if (msgEl) {
-      msgEl.textContent =
-        "Restored by the browser. Nothing has been run -- " +
-        "going back to the start page.";
-    }
-  } catch (e) {}
-  /* replace(), not assign(): the refused page must not stay in the history,
-     or stepping back lands straight on it again. */
-  setTimeout(function () {
-    try {
-      location.replace("index.html");
-    } catch (e) {}
-  }, 1500);
-  return true;
-})();
+const FROM_LANDING = true;
+const SENT_HOME = false;
 
 const PROBE_MODE = params.get("probe") === "1";
 
@@ -222,7 +177,7 @@ if (ramBox) {
 
 /* Not when the page is on its way home: log mode hides #msg, which is
    where that notice sits. */
-if (SHOW_LOG && !SENT_HOME && document.body) document.body.className = "log";
+// Body stays in Playbox theme
 /* `ran` says whether the kernel stage was entered. A failure before that
    costs nothing and a reload is enough; a failure after it may leave the
    handles armed, and then only a cold start is safe. */
@@ -236,15 +191,24 @@ function finishUI(ok, ran) {
       localStorage.removeItem("ExploitLoaded");
     } catch (eStore) {}
   }
-  if (SHOW_LOG || !document.body) return;
-  const m = document.getElementById("msg");
-  if (m)
-    m.textContent = ok
-      ? "DONE"
-      : ran
-        ? "Restart your console"
-        : "Refresh the page and run again";
-  document.body.className = ok ? "done" : "fail";
+  const m = document.getElementById("msgs") || document.getElementById("msg");
+  if (m) {
+    if (ok) {
+      if (!m.innerHTML.includes("Loaded")) {
+        m.innerHTML = "GoldHEN v2.4b18.12 Loaded ...";
+      }
+      m.style.color = "#00ff88";
+      m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
+    } else if (ran) {
+      m.innerHTML = "Exploit Failed! Please Restart Your Console...";
+      m.style.color = "#ff5566";
+      m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+    } else {
+      m.innerHTML = "Exploit Failed! Reopen Browser & Try Again...";
+      m.style.color = "#ff5566";
+      m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+    }
+  }
 }
 function mark(tag, detail) {
   lastMark = Date.now();
@@ -281,9 +245,24 @@ function trace(tag, detail) {
   if (VERBOSE) mark(tag, detail);
 }
 function state(t, c) {
-  if (!SHOW_LOG || !stateEl) return;
-  stateEl.textContent = t;
-  stateEl.className = c || "";
+  const m = document.getElementById("msgs");
+  if (m) {
+    m.innerHTML = t;
+    if (c === "ok") {
+      m.style.color = "#00ff88";
+      m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
+    } else if (c === "bad") {
+      m.style.color = "#ff5566";
+      m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+    } else {
+      m.style.color = "#ffd700";
+      m.style.textShadow = "0 0 15px rgba(255, 215, 0, 0.4)";
+    }
+  }
+  if (stateEl) {
+    stateEl.textContent = t;
+    stateEl.className = c || "";
+  }
 }
 function check(name, ok, detail) {
   if (ok) {
@@ -336,63 +315,9 @@ let mainMf = null,
     mark("FW", key || "(not a PS4 UA)");
     if (!off) {
       try {
-        document.body.classList.add("log");
+        clearInterval(watchdog);
       } catch (e) {}
-
-      state("not a PS4 browser - debug mode", "warn");
-
-      mark(
-        "NONPS4-DEBUG",
-        "ua=" + (navigator.userAgent || "unknown"),
-      );
-
-      try {
-        mark(
-          "NONPS4-OFFSETS",
-          "supported=" + Object.keys(PS4).join(","),
-        );
-      } catch (e) {
-        mark("NONPS4-OFFSETS", "error=" + String(e));
-      }
-
-      try {
-        const off14 = PS4["14.00"];
-
-        if (off14) {
-          mark(
-            "NONPS4-14",
-            "present " +
-            "webkit=" + off14.wk_expm1_builtin +
-            " poprdi=0x" + off14.wk_POP_RDI_RET.toString(16) +
-            " poprsi=0x" + off14.wk_POP_RSI_RET.toString(16) +
-            " poprdx=0x" + off14.wk_POP_RDX_RET.toString(16),
-          );
-        } else {
-          mark("NONPS4-14", "entry=missing");
-        }
-      } catch (e) {
-        mark("NONPS4-14", "error=" + String(e));
-      }
-
-      try {
-        const info = globalThis.__CORE_MEM_INFO;
-
-        if (info) {
-          mark(
-            "NONPS4-CORE",
-            "hx1400=" + info.hx1400 +
-            " memLevel=" + info.memLevel +
-            " slots=" + info.slots +
-            " drain=" + info.drainCount +
-            " est=" + info.estimatedBytes,
-          );
-        } else {
-          mark("NONPS4-CORE", "info=missing");
-        }
-      } catch (e) {
-        mark("NONPS4-CORE", "error=" + String(e));
-      }
-
+      state("Playbox Bengkulu - PS4 14.00 FW GoldHEN <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>", "warn");
       return;
     }
     const fwKey = key || "unknown";

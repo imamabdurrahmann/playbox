@@ -1,6 +1,6 @@
 CACHE MANIFEST
-# Version: 2026-11-03-v22-pure-auto-hen-no-doors
-# Updated: 2026-11-03-22-25
+# Version: 2026-11-04-v24-single-page-simple-auto-hen
+# Updated: 2026-11-04-00-30
 
 CACHE:
 ../
@@ -10,10 +10,7 @@ CACHE:
 ./
 index.html
 cache.html
-launch.js
 jb.html
-jb.html?log=1&afterglow=run&mode=goldhen
-jb.html?log=1&afterglow=run&payload=hen.bin
 jb.js
 core.js
 mem.js
@@ -22,8 +19,8 @@ ps4_offsets.js
 afterglow.js
 patchset-1400.bin
 patchset-1352.bin
-hen.bin
 goldhen.bin
+hen.bin
 
 NETWORK:
 *
