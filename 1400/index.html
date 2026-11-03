@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
+<link rel="stylesheet" href="../style.css">
+<script>
+var ua = navigator.userAgent;
+var isPS4 = /PlayStation 4/i.test(ua);
+
+function runHost() {
+    var devText = document.getElementById("detected-text");
+    var devBox = document.getElementById("device-info");
+    var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
+    
+    if (devText && devBox) {
+        if (match) {
+            devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
+            devText.style.color = "#00ffcc";
+            devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
+        } else {
+            devText.innerHTML = "&#128187; Non-PS4 Browser (Preview Mode)";
+            devText.style.color = "#ffd700";
+        }
+    }
+
+    if (!isPS4) {
+        var m = document.getElementById("msgs");
+        if (m) m.innerHTML = "Playbox Bengkulu - PS4 14.00 FW GoldHEN <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>";
+        return;
+    }
+
+    var isCached = false;
+    try {
+        if (localStorage.getItem('playbox_cached_1400') === '1') isCached = true;
+    } catch (e) {}
+
+    if (window.applicationCache && window.applicationCache.status !== 0) {
+        isCached = true;
+    }
+
+    if (!isCached) {
+        location.replace("cache.html");
+        return;
+    }
+
+    var m = document.getElementById("msgs");
+    if (m) m.innerHTML = "Memuat GoldHEN FW 14.00... Harap Tunggu";
+
+    setTimeout(function() {
+        location.replace("jb.html?log=1&mem=1&slots=9100000&drain=12&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1");
+    }, 400);
+}
+</script>
+</head>
+<body onload="runHost();">
+<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
+<div class="contact-box">
+    <div class="wa-badge">WhatsApp: 0821-7277-220</div>
+    <div class="ig-badge">Instagram: playbox_gamingps</div>
+</div>
+<div class="fw-title">PS4 14.00 FW GoldHEN Host (Offline)</div>
+<hr>
+<br>
+<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 5px auto 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+    <span id="detected-text" style="color: #00e5ff; font-weight: 600;">Detecting device...</span>
+</div>
+<br>
+<div id="menu">
+    <div style="padding: 15px 10px;">
+        <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Memeriksa Cache Offline...</h1>
+    </div>
+</div>
+<div class="credits-box">
+    <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
+    <span class="credits-sub">A special thanks to all the devs on the scene.</span>
+</div>
+</body>
+</html>

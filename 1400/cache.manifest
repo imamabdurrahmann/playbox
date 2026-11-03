@@ -1,0 +1,21 @@
+CACHE MANIFEST
+# Version: 2026-11-03-v1-fw1400-goldhen
+
+CACHE:
+../img.jpg
+../style.css
+index.html
+jb.html
+jb.js
+core.js
+mem.js
+int64.js
+ps4_offsets.js
+hx1400_port.js
+hx_kevent.js
+hx_tables.js
+hen.bin
+patches/1400.bin
+
+NETWORK:
+*
