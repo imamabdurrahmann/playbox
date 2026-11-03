@@ -1,6 +1,6 @@
 CACHE MANIFEST
-# Version: 2026-11-03-v17-afterglow-official-dynamic-memory
-# Updated: 2026-11-03-19-50
+# Version: 2026-11-03-v18-afterglow-offline-cache-installer
+# Updated: 2026-11-03-20-35
 
 CACHE:
 ../
@@ -9,6 +9,7 @@ CACHE:
 ../style.css
 ./
 index.html
+cache.html
 launch.js
 jb.html
 jb.html?log=1&afterglow=run&mode=goldhen

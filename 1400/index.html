@@ -70,6 +70,25 @@
   color: #00ff88;
   margin: 4px 0 0;
 }
+.btn-cache-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px;
+  background: rgba(0, 200, 255, 0.15);
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  border-radius: 8px;
+  color: #00ffcc;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn-cache-link:hover {
+  background: rgba(0, 200, 255, 0.25);
+  transform: scale(1.02);
+}
 </style>
 </head>
 <body>
@@ -93,6 +112,10 @@
     Powered by official Afterglow Engine (Dynamic Memory 3.2 MB)
   </p>
 
+  <div id="cache-status-box" style="margin: 12px 0 6px; font-size: 13px; color: #8cb4db;">
+    <span id="cache-status-text">&#128190; Status Cache: Memeriksa...</span>
+  </div>
+
   <form class="pick" id="pick">
     <div class="opts-row">
       <label class="opt">
@@ -114,6 +137,12 @@
     <p class="count" id="count"></p>
     <p class="count" id="cache" aria-live="polite"></p>
   </form>
+
+  <div style="margin-top: 14px;">
+    <a href="cache.html" class="btn-cache-link">
+      &#128190; Pasang / Update Offline Cache (0% - 100%)
+    </a>
+  </div>
 </div>
 
 <div class="credits-box">
@@ -122,13 +151,15 @@
 </div>
 
 <script>
+var ua = navigator.userAgent;
+var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
+var isPS4 = match !== null;
+
 function detectDevice() {
-  var ua = navigator.userAgent;
-  var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
   var devText = document.getElementById("detected-text");
   var devBox = document.getElementById("device-info");
   if (devText && devBox) {
-    if (match) {
+    if (isPS4) {
       devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
       devText.style.color = "#00ffcc";
       devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
@@ -140,6 +171,40 @@ function detectDevice() {
   }
 }
 detectDevice();
+
+function checkCacheInstalled() {
+  if (window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4)) {
+    return true;
+  }
+  try {
+    if (localStorage.getItem('playbox_cached_1400') === '1') return true;
+  } catch (e) {}
+  return false;
+}
+
+function updateCacheUI() {
+  var el = document.getElementById("cache-status-text");
+  if (!el) return;
+  if (checkCacheInstalled()) {
+    el.innerHTML = "<span style='color: #00ff88; font-weight: 700;'>&#10004; Offline Cache: Siap (Bisa Offline Tanpa Internet)</span>";
+  } else if (window.applicationCache && (window.applicationCache.status === 2 || window.applicationCache.status === 3)) {
+    el.innerHTML = "<span style='color: #ffd700;'>&#8635; Offline Cache: Mengunduh file...</span>";
+  } else {
+    el.innerHTML = "<span style='color: #8cb4db;'>Offline Cache: Belum Tersimpan di Konsol</span>";
+  }
+}
+
+// Redirect to cache installer on PS4 if not cached yet
+if (isPS4 && !checkCacheInstalled()) {
+  location.replace("cache.html");
+} else {
+  updateCacheUI();
+  if (window.applicationCache) {
+    window.applicationCache.addEventListener("cached", updateCacheUI);
+    window.applicationCache.addEventListener("updateready", updateCacheUI);
+    window.applicationCache.addEventListener("noupdate", updateCacheUI);
+  }
+}
 </script>
 <script src="launch.js"></script>
 </body>
