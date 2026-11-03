@@ -6,47 +6,31 @@
 <title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-.log-btn {
-  background: rgba(3, 14, 34, 0.85);
-  color: #8cb4db;
-  border: 1px solid rgba(0, 200, 255, 0.35);
-  border-radius: 20px;
-  padding: 6px 18px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-}
-.log-btn:hover {
-  color: #00e5ff;
-  border-color: #00e5ff;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
-}
 #wrap {
-  display: none;
-  width: 92%;
-  max-width: 900px;
-  margin: 15px auto 30px;
+  width: 94%;
+  max-width: 950px;
+  margin: 0 auto 15px;
   text-align: left;
 }
 #state {
-  font-size: 14px;
+  font-size: 22px;
   font-weight: 700;
   color: #ffd700;
-  margin-bottom: 6px;
+  text-align: center;
+  margin: 10px 0 10px;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
 #out {
   white-space: pre-wrap;
   font: 12px/1.45 Consolas, monospace;
   background: rgba(10, 15, 25, 0.95);
-  border: 1px solid rgba(0, 200, 255, 0.3);
+  border: 1px solid rgba(0, 200, 255, 0.35);
   border-radius: 8px;
   padding: 12px;
-  height: 260px;
+  height: 380px;
   overflow-y: auto;
   color: #c8ced8;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  box-shadow: 0 4px 25px rgba(0,0,0,0.7);
 }
 .ok, .safe { color: #00ff88; }
 .bad, .danger { color: #ff5566; }
@@ -59,40 +43,27 @@
   <div class="wa-badge">WhatsApp: 0821-7277-220</div>
   <div class="ig-badge">Instagram: playbox_gamingps</div>
 </div>
-<div class="fw-title">PS4 14.00 FW GoldHEN Host</div>
+<div class="fw-title">PS4 14.00 FW GoldHEN Host (Offline)</div>
 <hr>
-<br>
 
-<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 5px auto 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 6px 20px; font-size: 14px; margin: 5px auto 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
   <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
 </div>
-<br>
 
-<div id="menu">
-  <div style="padding: 15px 10px;">
-    <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Loading GoldHEN v2.4b18.13... Please Wait</h1>
-  </div>
+<div id="state" class="warn">Loading GoldHEN v2.4b18.13... Please Wait</div>
+<div id="msgs" style="display: none;"></div>
+
+<div id="wrap">
+  <div id="ramBox" style="display: inline-block; padding: 4px 10px; margin-bottom: 6px; font-family: Consolas, monospace; font-size: 12px; color: #00e5ff; background: rgba(3, 14, 34, 0.85); border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 6px;">RAM: checking...</div>
+  <div id="out"></div>
 </div>
 
-<div class="credits-box">
+<div class="credits-box" style="margin-top: 10px;">
   <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
   <span class="credits-sub">A special thanks to all the devs on the scene.</span>
 </div>
 
-<div style="text-align: center; margin-top: 20px;">
-  <button id="logToggleBtn" class="log-btn" onclick="toggleLog()">View Debug Log</button>
-</div>
-
-<div id="wrap">
-  <div id="ramBox" style="display: inline-block; padding: 4px 10px; margin-bottom: 8px; font-family: Consolas, monospace; font-size: 12px; color: #00e5ff; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 6px;">RAM: checking...</div>
-  <div id="state"></div>
-  <div id="out"></div>
-</div>
-
 <script>
-if (location.search) {
-  try { history.replaceState(null, null, 'jb.html'); } catch (e) {}
-}
 function detectDevice() {
   var ua = navigator.userAgent;
   var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
@@ -111,19 +82,6 @@ function detectDevice() {
   }
 }
 detectDevice();
-
-function toggleLog() {
-  var w = document.getElementById("wrap");
-  var b = document.getElementById("logToggleBtn");
-  if (!w) return;
-  if (w.style.display === "block") {
-    w.style.display = "none";
-    if (b) b.textContent = "View Debug Log";
-  } else {
-    w.style.display = "block";
-    if (b) b.textContent = "Hide Debug Log";
-  }
-}
 </script>
 <script type="module" src="jb.js"></script>
 </body>

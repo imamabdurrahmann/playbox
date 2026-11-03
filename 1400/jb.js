@@ -26,7 +26,7 @@ if (!params.has("goldhen")) params.set("goldhen", "1");
 if (!params.has("slots")) params.set("slots", "9100000");
 if (!params.has("drain")) params.set("drain", "12");
 if (!params.has("mem")) params.set("mem", "1");
-if (!params.has("log")) params.set("log", "0");
+if (!params.has("log")) params.set("log", "1");
 if (!params.has("telemetry")) params.set("telemetry", "0");
 
 const RUN_ID = Date.now().toString(36) + "-" + Math.floor(Math.random() * 0x100000).toString(16);
@@ -60,7 +60,7 @@ function terse(s) {
   return s;
 }
 
-const SHOW_LOG = params.get("log") === "1";
+const SHOW_LOG = params.get("log") !== "0";
 
 /* UPDATE_RAM_BOX */
 const ramBox =
@@ -171,13 +171,22 @@ function hostOk() {
     m.innerHTML = "GoldHEN v2.4b18.13 Loaded ...";
     m.style.color = "#00ff88";
   }
+  if (stateEl) {
+    stateEl.textContent = "GoldHEN v2.4b18.13 Loaded ...";
+    stateEl.className = "ok";
+  }
 }
 
 function hostFail() {
+  const msg = armedEver ? "Restart Console Required" : "Exploit Failed! Please Refresh ...";
   const m = document.getElementById("msgs") || document.getElementById("msg");
   if (m) {
-    m.innerHTML = armedEver ? "Restart Console Required" : "Exploit Failed! Please Refresh ...";
+    m.innerHTML = msg;
     m.style.color = "#ff5566";
+  }
+  if (stateEl) {
+    stateEl.textContent = msg;
+    stateEl.className = "bad";
   }
 }
 
@@ -186,6 +195,10 @@ function hostAlready() {
   if (m) {
     m.innerHTML = "GoldHEN is Already Loaded ...";
     m.style.color = "#00ff88";
+  }
+  if (stateEl) {
+    stateEl.textContent = "GoldHEN is Already Loaded ...";
+    stateEl.className = "ok";
   }
   const spin = document.getElementById("spin");
   if (spin) spin.style.display = "none";
