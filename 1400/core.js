@@ -24,7 +24,7 @@ const HX_MEM_LEVEL = (function () {
       new URLSearchParams(location.search).get("mem");
 
     const n =
-      parseInt(q || "2", 10);
+      parseInt(q || "1", 10);
 
     if (
       Number.isFinite(n) &&
@@ -35,7 +35,7 @@ const HX_MEM_LEVEL = (function () {
     }
   } catch (e) {}
 
-  return 2;
+  return 1;
 })();
 
 const HX_MEM_PROFILES = [
@@ -122,7 +122,7 @@ const CARRIER_SLOTS = (function () {
     const n = q ? parseInt(q, 10) : 0;
     if (n >= 100000 && n <= 40000000) return n;
   } catch (e) {}
-  return HX_MEM ? HX_MEM.slots : 12000000;
+  return 9100000;
 })();
 const CARRIER_BYTES = CARRIER_SLOTS * 8;
 const CAPTURE_DELAY_MS = 50;
@@ -146,8 +146,15 @@ const _g = (name, dflt) =>
   typeof _gOverride[name] === "number" ? _gOverride[name] : dflt;
 if (typeof _gOverride.drain === "number") {
   DRAIN_COUNT = _gOverride.drain;
-} else if (HX_MEM) {
-  DRAIN_COUNT = HX_MEM.drain;
+} else {
+  try {
+    const q = new URLSearchParams(location.search).get("drain");
+    const n = q ? parseInt(q, 10) : 0;
+    if (n > 0) DRAIN_COUNT = n;
+    else DRAIN_COUNT = 12;
+  } catch (e) {
+    DRAIN_COUNT = 12;
+  }
 }
 
 const DRAIN_SIZE = _g("drainsz", HX_MEM ? HX_MEM.drainsz : 0x10000);
