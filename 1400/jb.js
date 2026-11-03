@@ -227,6 +227,7 @@ if (SHOW_LOG && !SENT_HOME && document.body) document.body.className = "log";
    costs nothing and a reload is enough; a failure after it may leave the
    handles armed, and then only a cold start is safe. */
 function finishUI(ok, ran) {
+  try { clearInterval(watchdog); } catch (e) {}
   if (ok) {
     try {
       sessionStorage.setItem("playbox_goldhen_loaded", "1");
@@ -985,6 +986,7 @@ let mainMf = null,
       } catch (e) {}
       // Stop here. Without this the host's own chain would still run
       // afterwards -- afterglow IS the kernel stage, not a prelude to one.
+      try { clearInterval(watchdog); } catch (e) {}
       return;
     }
     mark("JB-END", "afterglow is the kernel stage -- without afterglow= nothing runs here");
