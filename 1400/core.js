@@ -24,7 +24,7 @@ const HX_MEM_LEVEL = (function () {
       new URLSearchParams(location.search).get("mem");
 
     const n =
-      parseInt(q || "1", 10);
+      parseInt(q || "2", 10);
 
     if (
       Number.isFinite(n) &&
@@ -35,7 +35,7 @@ const HX_MEM_LEVEL = (function () {
     }
   } catch (e) {}
 
-  return 1;
+  return 2;
 })();
 
 const HX_MEM_PROFILES = [
@@ -122,7 +122,7 @@ const CARRIER_SLOTS = (function () {
     const n = q ? parseInt(q, 10) : 0;
     if (n >= 100000 && n <= 40000000) return n;
   } catch (e) {}
-  return HX_MEM ? HX_MEM.slots : 3000000;
+  return HX_MEM ? HX_MEM.slots : 12000000;
 })();
 const CARRIER_BYTES = CARRIER_SLOTS * 8;
 const CAPTURE_DELAY_MS = 50;
@@ -475,7 +475,6 @@ function ceilingReached() {
 }
 
 function giveUp(reason) {
-  try { sessionStorage.removeItem(attemptKey); } catch (e) {}
   stopped = true;
   emit("CORE-GIVE-UP", `reason=${reason}-attempts=${attemptNumber}`);
   const reject = settleReject;
@@ -571,19 +570,31 @@ function scheduleSafeRetry(reason) {
   const nextAttempt = attemptNumber + 1;
   emit("AUTO-RETRY-SCHEDULED", `reason=${reason}-next-attempt=${nextAttempt}`);
   releaseAttemptAllocations();
-  try {
-    sessionStorage.setItem(attemptKey, String(nextAttempt));
-  } catch (e) {}
   setTimeout(
     () => {
-      try {
-        location.reload();
-      } catch (e) {
-        attemptNumber = nextAttempt;
-        startAttempt();
+      const candidateStillSafe =
+        !candidateEverReturned || (zeroHeaderMiss && !candidateMutationStarted);
+      if (
+        !retrySafe ||
+        !candidateStillSafe ||
+        candidateMutationStarted ||
+        stopped
+      ) {
+        emit(
+          "AUTO-RETRY-CANCELLED",
+          `reason=${reason}` +
+            `-retry-safe=${retrySafe}` +
+            `-candidate-safe=${candidateStillSafe}` +
+            `-candidate-mutated=${candidateMutationStarted}`,
+        );
+        failed();
+        return;
       }
+
+      attemptNumber = nextAttempt;
+      startAttempt();
     },
-    300,
+    Math.max(AUTO_RETRY_DELAY_MS, 750),
   );
 }
 
@@ -1611,16 +1622,10 @@ export function establishPrimitive(options) {
 
   running = true;
   stopped = false;
-  let curAttempt = 1;
+  attemptNumber = 1;
   try {
-    const s = parseInt(sessionStorage.getItem(attemptKey) || "1", 10);
-    if (Number.isFinite(s) && s > 0) curAttempt = s;
-  } catch (e) {}
-  if (attemptCeiling > 0 && curAttempt > attemptCeiling) {
-    try { sessionStorage.removeItem(attemptKey); } catch (e) {}
-    curAttempt = 1;
-  }
-  attemptNumber = curAttempt;
+    sessionStorage.removeItem(attemptKey);
+  } catch {}
 
   return new Promise((resolve, reject) => {
     settleResolve = resolve;
