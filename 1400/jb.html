@@ -1,103 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" manifest="cache.manifest">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
-<link rel="stylesheet" href="../style.css">
 <style>
-#wrap {
-  width: 94%;
-  max-width: 950px;
-  margin: 0 auto 15px;
+:root {
+  --bg: #0b0d10;
+  --panel: rgba(14, 17, 22, 0.95);
+  --sunk: rgba(17, 21, 27, 0.95);
+  --line: rgba(0, 200, 255, 0.35);
+  --fg: #c8ced8;
+  --bright: #e6ebf2;
+  --dim: #7c8798;
+  --faint: #4d5765;
+  --ok: #00ff88;
+  --bad: #ff5566;
+  --warn: #ffd700;
+  --sans: "Segoe UI", system-ui, sans-serif;
+  --mono: Consolas, "DejaVu Sans Mono", monospace;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.45 var(--sans);
+  text-align: center;
+}
+#brand {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+#brand b {
+  color: var(--bright);
+  font-size: 16px;
+  letter-spacing: 0.12em;
+}
+#ramBox {
+  overflow: hidden;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--sunk);
+  color: #00e5ff;
+  font: 11px/1.4 var(--mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#spin {
+  position: fixed;
+  top: calc(50% + 20px);
+  left: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border: 4px solid var(--line);
+  border-top-color: var(--ok);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#msg {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: none;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+#state, #out { display: none; }
+body.done #spin, body.fail #spin { display: none; }
+body.fail #msg { display: block; color: var(--bad); }
+body.done #msg { display: block; color: var(--ok); font-weight: 700; letter-spacing: 2px; }
+
+body.log {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+body.log #spin, body.log #msg { display: none; }
+body.log #wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 10px 18px 20px;
   text-align: left;
 }
-#state {
-  font-size: 22px;
+body.log #state {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 20px;
   font-weight: 700;
-  color: #ffd700;
   text-align: center;
-  margin: 8px 0 10px;
-  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
-#out {
-  white-space: pre-wrap;
-  font: 12px/1.45 Consolas, monospace;
-  background: rgba(10, 15, 25, 0.95);
-  border: 1px solid rgba(0, 200, 255, 0.35);
-  border-radius: 8px;
-  padding: 12px;
-  height: 380px;
+body.log #out {
+  display: block;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-  color: #c8ced8;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.7);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--sunk);
+  font: 12px/1.45 var(--mono);
+  white-space: pre-wrap;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
-.ok, .safe { color: #00ff88; }
-.bad, .danger { color: #ff5566; }
-.warn { color: #ffd700; }
+.notice {
+  margin: 1em 0;
+  padding: 0.7em 1em;
+  border: 2px solid #e66;
+  background: #2a1414;
+  color: #f99;
+  font: 700 18px/1.4 var(--sans);
+}
+.byline {
+  margin: 8px 0;
+  color: var(--faint);
+  font: 11px/1 var(--mono);
+  letter-spacing: 0.06em;
+}
+.ok { color: var(--ok); }
+.bad { color: var(--bad); }
+.warn { color: var(--warn); }
+code { color: #9fb3d0; }
 </style>
 </head>
 <body>
-<h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
-<div class="contact-box">
-  <div class="wa-badge">WhatsApp: 0821-7277-220</div>
-  <div class="ig-badge">Instagram: playbox_gamingps</div>
+<div id="brand">
+  <b>Playbox Bengkulu GoldHen PS4</b> &middot;
+  <span style="color: #00ffcc;">FW 14.00</span>
 </div>
-<div class="fw-title">PS4 14.00 FW GoldHEN Host (Offline)</div>
-<hr>
+<div id="ramBox">RAM: checking...</div>
 
-<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 6px 20px; font-size: 14px; margin: 5px auto 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
-  <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
-</div>
-
-<div id="state" class="warn">running the primitive...</div>
-<div id="msgs" style="display: none;"></div>
-
-<div id="already-loaded-box" style="display: none; text-align: center; margin: 10px 0;">
-  <button id="btn-rerun" onclick="rerunExploit()" style="background: rgba(0, 200, 255, 0.2); border: 1px solid #00e5ff; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);">
+<div id="already-loaded-box" style="display: none; text-align: center; margin: 12px 0;">
+  <button id="btn-rerun" onclick="rerunExploit()" style="background: rgba(0, 200, 255, 0.2); border: 1px solid #00e5ff; color: #fff; padding: 8px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);">
     &#128260; Re-Run Exploit (After PS4 Restart)
   </button>
 </div>
 
+<div id="spin"></div>
+<div id="msg">Restart your console</div>
 <div id="wrap">
-  <div id="ramBox" style="display: inline-block; padding: 4px 10px; margin-bottom: 6px; font-family: Consolas, monospace; font-size: 12px; color: #00e5ff; background: rgba(3, 14, 34, 0.85); border: 1px solid rgba(0, 200, 255, 0.3); border-radius: 6px;">RAM: checking...</div>
+  <div id="state" class="warn">running the primitive...</div>
   <div id="out"></div>
 </div>
-
-<div class="credits-box" style="margin-top: 10px;">
-  <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
-  <span class="credits-sub">A special thanks to all the devs on the scene.</span>
-</div>
+<p class="byline">Designed by Andree Garshia J &amp; Imam Abdurrahman &middot; Powered by Afterglow (well0nez/m0zz)</p>
 
 <script>
-function detectDevice() {
-  var ua = navigator.userAgent;
-  var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
-  var devText = document.getElementById("detected-text");
-  var devBox = document.getElementById("device-info");
-  if (devText && devBox) {
-    if (match) {
-      devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
-      devText.style.color = "#00ffcc";
-      devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
-    } else {
-      devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
-      devText.style.color = "#ffd700";
-      devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
-    }
-  }
-}
-detectDevice();
-
 function rerunExploit() {
   try {
     sessionStorage.removeItem("playbox_goldhen_loaded");
     localStorage.removeItem("playbox_goldhen_loaded");
-    sessionStorage.removeItem("jb1352-read-retry");
-    sessionStorage.removeItem("kv-kbase-retry");
   } catch (e) {}
-  var u = "jb.html?force=1&log=1&mem=1&slots=9100000&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1";
-  location.href = u;
+  location.href = "jb.html?force=1&log=1&afterglow=run&mode=goldhen";
 }
 
 var urlParams = new URLSearchParams(window.location.search);
@@ -110,6 +172,7 @@ try {
 } catch (e) {}
 
 if (isAlreadyLoaded) {
+  document.body.className = "log";
   var stateEl = document.getElementById("state");
   if (stateEl) {
     stateEl.textContent = "GoldHEN is Already Loaded ...";
@@ -125,7 +188,6 @@ if (isAlreadyLoaded) {
   var outEl = document.getElementById("out");
   if (outEl) {
     outEl.textContent = "[+] GoldHEN is already active in kernel memory!\n" +
-      "[+] GoldHEN version: v2.4b18.13\n" +
       "[+] Homebrew, debug settings, and features are already available.\n" +
       "[+] You can press the PS button to exit the browser and launch your games.\n\n" +
       "------------------------------------------------------------\n" +

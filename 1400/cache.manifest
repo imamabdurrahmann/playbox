@@ -1,6 +1,6 @@
 CACHE MANIFEST
-# Version: 2026-11-03-v16-raw13-exact-match
-# Updated: 2026-11-03-19-30
+# Version: 2026-11-03-v17-afterglow-official-dynamic-memory
+# Updated: 2026-11-03-19-50
 
 CACHE:
 ../
@@ -9,22 +9,20 @@ CACHE:
 ../style.css
 ./
 index.html
-cache.html
+launch.js
 jb.html
-jb.html?log=1&mem=1&slots=9100000&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1
+jb.html?log=1&afterglow=run&mode=goldhen
+jb.html?log=1&afterglow=run&payload=hen.bin
 jb.js
 core.js
 mem.js
 int64.js
 ps4_offsets.js
-hx1400_port.js
-hx_kevent.js
-hx_tables.js
+afterglow.js
+patchset-1400.bin
+patchset-1352.bin
 hen.bin
-payload.bin
 goldhen.bin
-patches/1400.bin
-1400.bin
 
 NETWORK:
 *

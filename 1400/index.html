@@ -1,90 +1,146 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html class="landing" lang="en" manifest="cache.manifest">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host (Afterglow)</title>
 <link rel="stylesheet" href="../style.css">
-<script>
-var ua = navigator.userAgent;
-var isPS4 = /PlayStation 4/i.test(ua);
-
-function updateStatus(msg, isError) {
-    var m = document.getElementById("msgs");
-    if (m) {
-        m.innerHTML = msg;
-        m.style.color = isError ? "#ff5566" : "#ffd700";
-    }
+<style>
+.afterglow-panel {
+  max-width: 580px;
+  margin: 15px auto 25px;
+  background: rgba(10, 15, 25, 0.94);
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  border-radius: 12px;
+  padding: 22px 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
 }
-
-function runHost() {
-    var devText = document.getElementById("detected-text");
-    var devBox = document.getElementById("device-info");
-    var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
-    
-    if (devText && devBox) {
-        if (match) {
-            devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
-            devText.style.color = "#00ffcc";
-            devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
-        } else {
-            devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
-            devText.style.color = "#ffd700";
-            devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
-        }
-    }
-
-    if (!isPS4) {
-        updateStatus("Playbox Bengkulu - PS4 14.00 FW GoldHEN <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>");
-        return;
-    }
-
-    var isCached = false;
-    try {
-        if (localStorage.getItem('playbox_cached_1400') === '1') isCached = true;
-        if (localStorage.getItem('playbox_cached_any') === '1') isCached = true;
-    } catch (e) {}
-
-    if (window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4)) {
-        isCached = true;
-    }
-
-    if (!isCached) {
-        updateStatus("Installing Offline Cache FW 14.00...");
-        location.replace("cache.html");
-        return;
-    }
-
-    updateStatus("Loading GoldHEN v2.4b18.13... Please Wait");
-
-    setTimeout(function() {
-        var u = "jb.html?log=1&mem=1&slots=9100000&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1";
-        location.replace(u);
-    }, 150);
+.pick {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  margin-top: 15px;
 }
-</script>
+.opts-row {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+.opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #c8ced8;
+  font-weight: 600;
+}
+.opt input[type="radio"], .opt input[type="checkbox"] {
+  accent-color: #00e5ff;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.btn-start {
+  background: linear-gradient(135deg, #0088cc, #00e5ff);
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 10px 36px;
+  cursor: pointer;
+  margin-top: 6px;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+  transition: transform 0.15s ease;
+}
+.btn-start:hover {
+  transform: scale(1.04);
+}
+.count {
+  font-family: Consolas, monospace;
+  font-size: 14px;
+  color: #ffd700;
+  margin: 6px 0 0;
+}
+#cache {
+  font-size: 13px;
+  color: #00ff88;
+  margin: 4px 0 0;
+}
+</style>
 </head>
-<body onload="runHost();">
+<body>
 <h1 class="brand-title">Playbox Bengkulu GoldHen PS4</h1>
 <div class="contact-box">
-    <div class="wa-badge">WhatsApp: 0821-7277-220</div>
-    <div class="ig-badge">Instagram: playbox_gamingps</div>
+  <div class="wa-badge">WhatsApp: 0821-7277-220</div>
+  <div class="ig-badge">Instagram: playbox_gamingps</div>
 </div>
-<div class="fw-title">PS4 14.00 FW GoldHEN Host</div>
+<div class="fw-title">PS4 14.00 FW Host (Afterglow Engine)</div>
 <hr>
-<br>
-<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 5px auto 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
-    <span id="detected-text" style="color: #00e5ff; font-weight: 600;">Detecting device...</span>
+
+<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 6px 20px; font-size: 14px; margin: 10px auto; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+  <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
 </div>
-<br>
-<div id="menu">
-    <div style="padding: 15px 10px;">
-        <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0;">Checking Offline Cache...</h1>
+
+<div class="afterglow-panel">
+  <p style="margin: 0 0 8px; font-size: 17px; color: #e6ebf2; font-weight: 700; letter-spacing: 0.5px;">
+    PlayStation 4 Kernel Exploit &middot; FW 14.00 / 13.52
+  </p>
+  <p style="margin: 0; font-size: 13px; color: #7c8798;">
+    Powered by official Afterglow Engine (Dynamic Memory 3.2 MB)
+  </p>
+
+  <form class="pick" id="pick">
+    <div class="opts-row">
+      <label class="opt">
+        <input type="radio" name="payload" value="goldhen" checked>
+        <span style="color: #00ffcc;">GoldHEN v2.4b18.12</span>
+      </label>
+      <label class="opt">
+        <input type="radio" name="payload" value="hen">
+        <span>ps4-hen</span>
+      </label>
     </div>
+
+    <label class="opt" style="font-size: 14px; margin-top: 2px;">
+      <input type="checkbox" id="auto" checked>
+      <span style="color: #ffd700;">Autostart</span>
+    </label>
+
+    <button class="btn-start" type="submit">&#9658; START</button>
+    <p class="count" id="count"></p>
+    <p class="count" id="cache" aria-live="polite"></p>
+  </form>
 </div>
+
 <div class="credits-box">
-    <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
-    <span class="credits-sub">A special thanks to all the devs on the scene.</span>
+  <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
+  <span class="credits-sub">A special thanks to well0nez, m0zz, and all scene devs.</span>
 </div>
+
+<script>
+function detectDevice() {
+  var ua = navigator.userAgent;
+  var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
+  var devText = document.getElementById("detected-text");
+  var devBox = document.getElementById("device-info");
+  if (devText && devBox) {
+    if (match) {
+      devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + match[1] + ")";
+      devText.style.color = "#00ffcc";
+      devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
+    } else {
+      devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
+      devText.style.color = "#ffd700";
+      devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
+    }
+  }
+}
+detectDevice();
+</script>
+<script src="launch.js"></script>
 </body>
 </html>
