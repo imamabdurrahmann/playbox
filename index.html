@@ -57,21 +57,10 @@ function detectDevice() {
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
             
-            var isHenLoaded = false;
             try {
-                if (localStorage.getItem('ExploitLoaded') === 'yes' || sessionStorage.getItem('ExploitLoaded') === 'yes' || localStorage.getItem('playbox_goldhen_loaded') === '1' || sessionStorage.getItem('playbox_goldhen_loaded') === '1') {
-                    isHenLoaded = true;
-                }
+                localStorage.removeItem('playbox_goldhen_loaded');
+                localStorage.removeItem('ExploitLoaded');
             } catch (e) {}
-
-            if (isHenLoaded) {
-                var msgEl = document.getElementById("msgs");
-                if (msgEl) {
-                    msgEl.innerHTML = "GoldHEN is Already Loaded ...";
-                    msgEl.style.color = "#00ff88";
-                }
-                return;
-            }
             
             if (fwNum === 14.00) {
                 var cd = 2;

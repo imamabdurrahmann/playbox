@@ -231,9 +231,9 @@ function finishUI(ok, ran) {
   if (ok) {
     try {
       sessionStorage.setItem("playbox_goldhen_loaded", "1");
-      localStorage.setItem("playbox_goldhen_loaded", "1");
       sessionStorage.setItem("ExploitLoaded", "yes");
-      localStorage.setItem("ExploitLoaded", "yes");
+      localStorage.removeItem("playbox_goldhen_loaded");
+      localStorage.removeItem("ExploitLoaded");
     } catch (eStore) {}
   }
   if (SHOW_LOG || !document.body) return;
@@ -897,9 +897,9 @@ let mainMf = null,
         if (uidNow === 0) {
           try {
             sessionStorage.setItem("playbox_goldhen_loaded", "1");
-            localStorage.setItem("playbox_goldhen_loaded", "1");
             sessionStorage.setItem("ExploitLoaded", "yes");
-            localStorage.setItem("ExploitLoaded", "yes");
+            localStorage.removeItem("playbox_goldhen_loaded");
+            localStorage.removeItem("ExploitLoaded");
           } catch (eStore) {}
           mark("JB-ALREADY", "GoldHEN already active in kernel (uid=0) - race skipped");
           state("GoldHEN is Already Loaded ...", "ok");
@@ -940,9 +940,9 @@ let mainMf = null,
           if (agRes && agRes.already) {
             try {
               sessionStorage.setItem("playbox_goldhen_loaded", "1");
-              localStorage.setItem("playbox_goldhen_loaded", "1");
               sessionStorage.setItem("ExploitLoaded", "yes");
-              localStorage.setItem("ExploitLoaded", "yes");
+              localStorage.removeItem("playbox_goldhen_loaded");
+              localStorage.removeItem("ExploitLoaded");
             } catch (eStore) {}
             mark("JB-ALREADY", "kernel already open -- GoldHEN active");
             state("GoldHEN is Already Loaded ...", "ok");
@@ -960,9 +960,9 @@ let mainMf = null,
           } else if (agRes) {
             try {
               sessionStorage.setItem("playbox_goldhen_loaded", "1");
-              localStorage.setItem("playbox_goldhen_loaded", "1");
               sessionStorage.setItem("ExploitLoaded", "yes");
-              localStorage.setItem("ExploitLoaded", "yes");
+              localStorage.removeItem("playbox_goldhen_loaded");
+              localStorage.removeItem("ExploitLoaded");
             } catch (eStore) {}
             state("GoldHEN v2.4b18.12 Loaded ...", "ok");
             agOk = true;

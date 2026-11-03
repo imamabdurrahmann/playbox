@@ -139,12 +139,6 @@ code { color: #9fb3d0; }
 </div>
 <div id="ramBox">RAM: checking...</div>
 
-<div id="already-loaded-box" style="display: none; text-align: center; margin: 12px 0;">
-  <button id="btn-rerun" onclick="rerunExploit()" style="background: rgba(0, 200, 255, 0.2); border: 1px solid #00e5ff; color: #fff; padding: 8px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);">
-    &#128260; Re-Run Exploit (After PS4 Restart)
-  </button>
-</div>
-
 <div id="spin"></div>
 <div id="msg">Restart your console</div>
 <div id="wrap">
@@ -154,57 +148,11 @@ code { color: #9fb3d0; }
 <p class="byline">Designed by Andree Garshia J &amp; Imam Abdurrahman &middot; Powered by Afterglow (well0nez/m0zz)</p>
 
 <script type="module">
-function rerunExploit() {
-  try {
-    sessionStorage.removeItem("playbox_goldhen_loaded");
-    localStorage.removeItem("playbox_goldhen_loaded");
-    sessionStorage.removeItem("ExploitLoaded");
-    localStorage.removeItem("ExploitLoaded");
-  } catch (e) {}
-  location.href = "jb.html?force=1&log=1&afterglow=run&mode=goldhen";
-}
-window.rerunExploit = rerunExploit;
-
-var urlParams = new URLSearchParams(window.location.search);
-var forceRun = urlParams.get("force") === "1";
-var isAlreadyLoaded = false;
 try {
-  if (!forceRun && (
-    sessionStorage.getItem("playbox_goldhen_loaded") === "1" ||
-    localStorage.getItem("playbox_goldhen_loaded") === "1" ||
-    sessionStorage.getItem("ExploitLoaded") === "yes" ||
-    localStorage.getItem("ExploitLoaded") === "yes"
-  )) {
-    isAlreadyLoaded = true;
-  }
+  localStorage.removeItem("playbox_goldhen_loaded");
+  localStorage.removeItem("ExploitLoaded");
 } catch (e) {}
-
-if (isAlreadyLoaded) {
-  document.body.className = "log";
-  var stateEl = document.getElementById("state");
-  if (stateEl) {
-    stateEl.textContent = "GoldHEN is Already Loaded ...";
-    stateEl.className = "ok";
-  }
-  var btnBox = document.getElementById("already-loaded-box");
-  if (btnBox) btnBox.style.display = "block";
-  var ramBox = document.getElementById("ramBox");
-  if (ramBox) {
-    ramBox.textContent = "Status: GoldHEN Active";
-    ramBox.style.color = "#00ff88";
-  }
-  var outEl = document.getElementById("out");
-  if (outEl) {
-    outEl.textContent = "[+] GoldHEN is already active in kernel memory!\n" +
-      "[+] Homebrew, debug settings, and features are already available.\n" +
-      "[+] You can press the PS button to exit the browser and launch your games.\n\n" +
-      "------------------------------------------------------------\n" +
-      "If you fully powered off or restarted your PS4 and want to\n" +
-      "re-run the exploit fresh, click the Re-Run button above.";
-  }
-} else {
-  import("./jb.js");
-}
+import("./jb.js");
 </script>
 </body>
 </html>

@@ -6,113 +6,41 @@
 <title>Playbox Bengkulu - PS4 14.00 FW GoldHEN Host (Afterglow)</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-.afterglow-panel {
+.loader-box {
+  background: rgba(3, 14, 34, 0.88);
+  border: 1px solid rgba(0, 200, 255, 0.45);
+  border-radius: 20px;
+  padding: 35px 25px;
   max-width: 580px;
-  margin: 15px auto 25px;
-  background: rgba(10, 15, 25, 0.94);
-  border: 1px solid rgba(0, 200, 255, 0.4);
-  border-radius: 12px;
-  padding: 22px 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
+  width: 90%;
+  margin: 30px auto;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.75);
   backdrop-filter: blur(10px);
-}
-.pick {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  align-items: center;
-  margin-top: 15px;
-}
-.opts-row {
-  display: flex;
-  gap: 24px;
-  justify-content: center;
-}
-.opt {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  color: #c8ced8;
-  font-weight: 600;
-}
-.opt input[type="radio"], .opt input[type="checkbox"] {
-  accent-color: #00e5ff;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-.btn-start {
-  background: linear-gradient(135deg, #0088cc, #00e5ff);
-  border: none;
-  border-radius: 8px;
-  color: #000;
-  font-size: 17px;
-  font-weight: 700;
-  padding: 10px 36px;
-  cursor: pointer;
-  margin-top: 6px;
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-  transition: transform 0.15s ease;
-}
-.btn-start:hover {
-  transform: scale(1.04);
-}
-.count {
-  font-family: Consolas, monospace;
-  font-size: 14px;
-  color: #ffd700;
-  margin: 6px 0 0;
-}
-#cache {
-  font-size: 13px;
-  color: #00ff88;
-  margin: 4px 0 0;
-}
-.btn-cache-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 18px;
-  background: rgba(0, 200, 255, 0.15);
-  border: 1px solid rgba(0, 200, 255, 0.4);
-  border-radius: 8px;
-  color: #00ffcc;
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
-  transition: transform 0.15s ease, background 0.15s ease;
-}
-.btn-cache-link:hover {
-  background: rgba(0, 200, 255, 0.25);
-  transform: scale(1.02);
-}
-#already-loaded-panel {
-  background: rgba(0, 36, 18, 0.92);
-  border: 2px solid #00ff88;
-  border-radius: 12px;
-  padding: 22px 20px;
-  margin: 15px 0;
-  box-shadow: 0 0 25px rgba(0, 255, 136, 0.35);
   text-align: center;
 }
-.btn-rerun {
-  background: rgba(0, 200, 255, 0.2);
-  border: 1px solid #00e5ff;
-  color: #fff;
-  padding: 9px 24px;
-  border-radius: 8px;
-  font-size: 14px;
+#msgs {
+  font-size: 24px;
+  color: #ffd700;
+  margin-bottom: 12px;
   font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
-  transition: transform 0.15s ease;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
-.btn-rerun:hover {
-  transform: scale(1.04);
+.sub {
+  font-size: 15px;
+  color: #8cb4db;
+  line-height: 1.6;
 }
+.spin-loader {
+  display: inline-block;
+  width: 42px;
+  height: 42px;
+  border: 4px solid rgba(0, 200, 255, 0.3);
+  border-top-color: #00ff88;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 15px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -128,57 +56,10 @@
   <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
 </div>
 
-<div class="afterglow-panel">
-  <p style="margin: 0 0 8px; font-size: 17px; color: #e6ebf2; font-weight: 700; letter-spacing: 0.5px;">
-    PlayStation 4 Kernel Exploit &middot; FW 14.00 / 13.52
-  </p>
-  <p style="margin: 0; font-size: 13px; color: #7c8798;">
-    Powered by official Afterglow Engine (Dynamic Memory 3.2 MB)
-  </p>
-
-  <div id="cache-status-box" style="margin: 12px 0 6px; font-size: 13px; color: #8cb4db;">
-    <span id="cache-status-text">&#128190; Status Cache: Memeriksa...</span>
-  </div>
-
-  <div id="already-loaded-panel" style="display: none;">
-    <h2 style="color: #00ff88; margin: 0 0 10px; font-size: 22px; text-shadow: 0 0 12px rgba(0, 255, 136, 0.6);">&#10004; GoldHEN is Already Loaded ...</h2>
-    <p style="color: #c8ced8; font-size: 14px; margin: 0 0 16px; line-height: 1.6;">
-      [+] GoldHEN sudah aktif di memori kernel PlayStation 4 kamu.<br>
-      [+] Homebrew, debug settings, dan game siap dimainkan.<br>
-      [+] Tekan tombol <b>PS</b> pada stik untuk keluar dari browser.
-    </p>
-    <button onclick="reRunExploit()" class="btn-rerun">
-      &#128260; Re-Run Exploit (Setelah PS4 Restart)
-    </button>
-  </div>
-
-  <form class="pick" id="pick">
-    <div class="opts-row">
-      <label class="opt">
-        <input type="radio" name="payload" value="goldhen" checked>
-        <span style="color: #00ffcc;">GoldHEN v2.4b18.12</span>
-      </label>
-      <label class="opt">
-        <input type="radio" name="payload" value="hen">
-        <span>ps4-hen</span>
-      </label>
-    </div>
-
-    <label class="opt" style="font-size: 14px; margin-top: 2px;">
-      <input type="checkbox" id="auto" checked>
-      <span style="color: #ffd700;">Autostart</span>
-    </label>
-
-    <button class="btn-start" type="submit">&#9658; START</button>
-    <p class="count" id="count"></p>
-    <p class="count" id="cache" aria-live="polite"></p>
-  </form>
-
-  <div style="margin-top: 14px;">
-    <a href="cache.html" class="btn-cache-link">
-      &#128190; Pasang / Update Offline Cache (0% - 100%)
-    </a>
-  </div>
+<div class="loader-box">
+  <div class="spin-loader"></div>
+  <h2 id="msgs">Memuat GoldHEN FW 14.00 Otomatis...</h2>
+  <div id="sub" class="sub">Mohon tunggu, exploit sedang dipersiapkan...</div>
 </div>
 
 <div class="credits-box">
@@ -190,6 +71,11 @@
 var ua = navigator.userAgent;
 var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
 var isPS4 = match !== null;
+
+try {
+  localStorage.removeItem("playbox_goldhen_loaded");
+  localStorage.removeItem("ExploitLoaded");
+} catch (e) {}
 
 function detectDevice() {
   var devText = document.getElementById("detected-text");
@@ -219,61 +105,17 @@ function checkCacheInstalled() {
   return false;
 }
 
-function checkGoldHenActive() {
-  try {
-    return sessionStorage.getItem("playbox_goldhen_loaded") === "1"
-        || localStorage.getItem("playbox_goldhen_loaded") === "1"
-        || sessionStorage.getItem("ExploitLoaded") === "yes"
-        || localStorage.getItem("ExploitLoaded") === "yes";
-  } catch (e) {
-    return false;
+function startExploit() {
+  if (isPS4 && !checkCacheInstalled() && window.applicationCache && window.applicationCache.status === 0) {
+    location.replace("cache.html");
+    return;
   }
+  setTimeout(function() {
+    location.replace("jb.html?log=1&afterglow=run&mode=goldhen");
+  }, 200);
 }
 
-function reRunExploit() {
-  try {
-    sessionStorage.removeItem("playbox_goldhen_loaded");
-    localStorage.removeItem("playbox_goldhen_loaded");
-    sessionStorage.removeItem("ExploitLoaded");
-    localStorage.removeItem("ExploitLoaded");
-  } catch (e) {}
-  location.href = "jb.html?force=1&log=1&afterglow=run&mode=goldhen";
-}
-window.reRunExploit = reRunExploit;
-
-var isAlreadyActive = checkGoldHenActive();
-
-function updateCacheUI() {
-  var el = document.getElementById("cache-status-text");
-  if (!el) return;
-  if (isAlreadyActive) {
-    el.innerHTML = "<span style='color: #00ff88; font-weight: 700;'>&#10004; Status: GoldHEN Active in Memory</span>";
-  } else if (checkCacheInstalled()) {
-    el.innerHTML = "<span style='color: #00ff88; font-weight: 700;'>&#10004; Offline Cache: Siap (Bisa Offline Tanpa Internet)</span>";
-  } else if (window.applicationCache && (window.applicationCache.status === 2 || window.applicationCache.status === 3)) {
-    el.innerHTML = "<span style='color: #ffd700;'>&#8635; Offline Cache: Mengunduh file...</span>";
-  } else {
-    el.innerHTML = "<span style='color: #8cb4db;'>Offline Cache: Belum Tersimpan di Konsol</span>";
-  }
-}
-
-if (isAlreadyActive) {
-  var alreadyPanel = document.getElementById("already-loaded-panel");
-  var pickForm = document.getElementById("pick");
-  if (alreadyPanel) alreadyPanel.style.display = "block";
-  if (pickForm) pickForm.style.display = "none";
-  updateCacheUI();
-} else if (isPS4 && !checkCacheInstalled()) {
-  location.replace("cache.html");
-} else {
-  updateCacheUI();
-  if (window.applicationCache) {
-    window.applicationCache.addEventListener("cached", updateCacheUI);
-    window.applicationCache.addEventListener("updateready", updateCacheUI);
-    window.applicationCache.addEventListener("noupdate", updateCacheUI);
-  }
-}
+startExploit();
 </script>
-<script src="launch.js"></script>
 </body>
 </html>
