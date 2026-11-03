@@ -1119,7 +1119,7 @@ let allDone = false,
     
     if (params.get("mini_only") === "1") {
       try {
-        const mini = await import("./hx_kevent.js?v=stage10s-1");
+        const mini = await import("./hx_kevent.js");
         const ok = await mini.runMini({
           p: p, sc: sc, callAddr: callAddr, bufAddr: bufAddr, errno: errno,
           webkitBase: webkitBase, libkernelBase: libkernelBase, G: G,
@@ -1145,7 +1145,7 @@ let allDone = false,
 
     if (params.get("hx1400") === "1") {
       try {
-        const hx = await import("./hx1400_port.js?v=stage10s-1");
+        const hx = await import("./hx1400_port.js");
         if (!hx || typeof hx.runHx1400 !== "function") {
           mark(
             "HX1400-BAD-MODULE",
@@ -1204,7 +1204,7 @@ let allDone = false,
               return;
             }
             try { sessionStorage.removeItem("kv-kbase-retry"); } catch (e) {}
-            const kvb = await import("./hx_kevent.js?v=stage10s-1");
+            const kvb = await import("./hx_kevent.js");
             const kvOk = await kvb.runKevent({
               p: p, sc: sc, callAddr: callAddr, bufAddr: bufAddr, errno: errno,
               webkitBase: webkitBase, libkernelBase: libkernelBase, G: G,
@@ -1218,7 +1218,15 @@ let allDone = false,
               kbase: globalThis.__HX_KBASE,
             });
             allDone = true;
-            finishUI(kvOk === true);
+            let uidEnd = -1;
+            try { if (typeof sc === 'function' && SYS && SYS.getuid) uidEnd = sc(SYS.getuid).i32; } catch (e) {}
+            if (kvOk === true || uidEnd === 0) {
+              payloadRunning = true;
+              jailbroken = true;
+              finishUI(true);
+            } else {
+              finishUI(false);
+            }
             return;
           } catch (kvError) {
             mark(
@@ -1228,6 +1236,15 @@ let allDone = false,
                 (kvError && kvError.stack ? String(kvError.stack).slice(0, 400) : "no-stack"),
             );
             allDone = true;
+            let uidCatch = -1;
+            try { if (typeof sc === 'function' && SYS && SYS.getuid) uidCatch = sc(SYS.getuid).i32; } catch (e) {}
+            if (uidCatch === 0) {
+              payloadRunning = true;
+              jailbroken = true;
+              finishUI(true);
+            } else {
+              finishUI(false);
+            }
             return;
           }
         }
@@ -4560,6 +4577,9 @@ const pid = sc(SYS.getpid).i32;
         (allDone ? "" : "  INCOMPLETE"),
     );
     try {
+      let uidFinal = -1;
+      try { if (typeof sc === 'function' && SYS && SYS.getuid) uidFinal = sc(SYS.getuid).i32; } catch (e) {}
+      if (uidFinal === 0) { payloadRunning = true; jailbroken = true; }
       if (!alreadyLoaded) finishUI(payloadRunning);
     } catch (eUI) {}
   }
