@@ -48,7 +48,7 @@
         height: 46px;
         margin: -23px 0 0 -23px;
         border: 4px solid #1e2732;
-        border-top-color: #7fd0a0;
+        border-top-color: #00ff88;
         border-radius: 50%;
         animation: spin 0.9s linear infinite;
       }
@@ -84,6 +84,10 @@
       }
       body.fail #msg {
         display: block;
+      }
+            body.done #loadingStatus,
+      body.fail #loadingStatus {
+        display: none;
       }
       body.done #msg {
         display: block;
@@ -171,7 +175,7 @@
     </style>
   </head>
   <body>
-    <div id="ramBox">RAM: checking...</div>
+    <div id="ramBox" style="display: none;">RAM: checking...</div>
     <div id="brand" style="text-align: center; padding: 10px 10px; background: rgba(14, 17, 22, 0.95); border-bottom: 1px solid #1e2732;">
       <h1 class="brand-title" style="margin: 4px 0; font-size: 20px;">Playbox Bengkulu GoldHen PS4</h1>
       <div class="contact-box" style="margin-bottom: 6px;">
@@ -180,16 +184,37 @@
       </div>
       <div class="fw-title" style="font-size: 13px; margin: 4px 0; color: #00ff88;">PS4 14.00 FW GoldHEN Host (Offline)</div>
     </div>
+    <div id="loadingStatus" style="position: fixed; top: calc(50% - 65px); left: 0; right: 0; text-align: center; font-size: 21px; color: #ffd700; font-weight: 700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">Memuat GoldHEN FW 14.00... Harap Tunggu</div>
     <div id="spin"></div>
     <div id="msg">Restart your console</div>
-    <div id="wrap">
+    <div id="wrap" style="display: none;">
       <div id="state"></div>
       <div id="out"></div>
     </div>
-    <div class="credits-box" style="margin: 12px auto; font-size: 11px; text-align: center;">
+    <div style="position: fixed; bottom: 45px; left: 0; right: 0; text-align: center;">
+      <button id="logToggleBtn" onclick="toggleLog()" style="background: rgba(30,39,50,0.6); color: #7c8798; border: 1px solid #1e2732; border-radius: 20px; padding: 4px 14px; font-size: 11px; cursor: pointer;">Lihat Detail Log</button>
+    </div>
+    <div class="credits-box" style="margin: 12px auto; font-size: 11px; text-align: center; position: fixed; bottom: 5px; left: 0; right: 0;">
       <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span><br>
       <span class="credits-sub" style="font-size: 10px; color: #8cb4db;">A special thanks to all the devs on the scene.</span>
     </div>
+    <script>
+      function toggleLog() {
+        var w = document.getElementById("wrap");
+        var b = document.getElementById("logToggleBtn");
+        var r = document.getElementById("ramBox");
+        if (!w) return;
+        if (w.style.display === "block") {
+          w.style.display = "none";
+          if (r) r.style.display = "none";
+          if (b) b.textContent = "Lihat Detail Log";
+        } else {
+          w.style.display = "block";
+          if (r) r.style.display = "block";
+          if (b) b.textContent = "Sembunyikan Log";
+        }
+      }
+    </script>
     <script type="module">
       import "./jb.js";
     </script>

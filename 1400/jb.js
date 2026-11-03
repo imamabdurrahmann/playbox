@@ -26,7 +26,7 @@ if (!params.has("goldhen")) params.set("goldhen", "1");
 if (!params.has("slots")) params.set("slots", "9100000");
 if (!params.has("drain")) params.set("drain", "12");
 if (!params.has("mem")) params.set("mem", "1");
-if (!params.has("log")) params.set("log", "1");
+if (!params.has("log")) params.set("log", "0");
 if (!params.has("telemetry")) params.set("telemetry", "0");
 
 const RUN_ID = Date.now().toString(36) + "-" + Math.floor(Math.random() * 0x100000).toString(16);
@@ -167,12 +167,16 @@ if (SHOW_LOG && document.body) document.body.className = "log";
 function finishUI(ok) {
   if (SHOW_LOG || !document.body) return;
   const m = document.getElementById("msg");
-  if (m)
-    m.textContent = ok
-      ? "DONE"
-      : armedEver
-        ? "Restart your console"
-        : "Refresh the page and run again";
+  if (m) {
+    if (ok) {
+      m.innerHTML = '<span style="color: #00ff88; font-size: 22px; font-weight: 700; text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);">GoldHEN v2.4b18.13 Loaded! &#10004;</span><br><br>' +
+                    '<span style="color: #8cb4db; font-size: 15px;">Tekan tombol <b>PS</b> pada stik &amp; selamat bermain!</span>';
+    } else {
+      m.innerHTML = '<span style="color: #ff5566; font-size: 20px; font-weight: 700;">' +
+                    (armedEver ? 'Restart Konsol Diperlukan' : 'Gagal Memuat. Silakan Refresh Browser') +
+                    '</span><br><br><span style="color: #ffd700; font-size: 14px;">Buka kembali browser untuk mencoba lagi.</span>';
+    }
+  }
   document.body.className = ok ? "done" : "fail";
 }
 function mark(tag, detail, synchronous = false) {
