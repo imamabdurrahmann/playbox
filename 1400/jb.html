@@ -158,6 +158,8 @@ function rerunExploit() {
   try {
     sessionStorage.removeItem("playbox_goldhen_loaded");
     localStorage.removeItem("playbox_goldhen_loaded");
+    sessionStorage.removeItem("ExploitLoaded");
+    localStorage.removeItem("ExploitLoaded");
   } catch (e) {}
   location.href = "jb.html?force=1&log=1&afterglow=run&mode=goldhen";
 }
@@ -167,7 +169,12 @@ var urlParams = new URLSearchParams(window.location.search);
 var forceRun = urlParams.get("force") === "1";
 var isAlreadyLoaded = false;
 try {
-  if (!forceRun && (sessionStorage.getItem("playbox_goldhen_loaded") === "1" || localStorage.getItem("playbox_goldhen_loaded") === "1")) {
+  if (!forceRun && (
+    sessionStorage.getItem("playbox_goldhen_loaded") === "1" ||
+    localStorage.getItem("playbox_goldhen_loaded") === "1" ||
+    sessionStorage.getItem("ExploitLoaded") === "yes" ||
+    localStorage.getItem("ExploitLoaded") === "yes"
+  )) {
     isAlreadyLoaded = true;
   }
 } catch (e) {}

@@ -231,6 +231,8 @@ function finishUI(ok, ran) {
     try {
       sessionStorage.setItem("playbox_goldhen_loaded", "1");
       localStorage.setItem("playbox_goldhen_loaded", "1");
+      sessionStorage.setItem("ExploitLoaded", "yes");
+      localStorage.setItem("ExploitLoaded", "yes");
     } catch (eStore) {}
   }
   if (SHOW_LOG || !document.body) return;
@@ -895,6 +897,8 @@ let mainMf = null,
           try {
             sessionStorage.setItem("playbox_goldhen_loaded", "1");
             localStorage.setItem("playbox_goldhen_loaded", "1");
+            sessionStorage.setItem("ExploitLoaded", "yes");
+            localStorage.setItem("ExploitLoaded", "yes");
           } catch (eStore) {}
           mark("JB-ALREADY", "GoldHEN already active in kernel (uid=0) - race skipped");
           state("GoldHEN is Already Loaded ...", "ok");
@@ -936,6 +940,8 @@ let mainMf = null,
             try {
               sessionStorage.setItem("playbox_goldhen_loaded", "1");
               localStorage.setItem("playbox_goldhen_loaded", "1");
+              sessionStorage.setItem("ExploitLoaded", "yes");
+              localStorage.setItem("ExploitLoaded", "yes");
             } catch (eStore) {}
             state("GoldHEN v2.4b18.12 Loaded ...", "ok");
           }

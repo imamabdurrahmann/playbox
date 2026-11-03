@@ -165,4 +165,16 @@ form.addEventListener("change", function (ev) {
 
 restore();
 cacheNote();
-if (autoBox.checked) startClock();
+var isExploitAlreadyActive = (function () {
+  try {
+    return (
+      sessionStorage.getItem("playbox_goldhen_loaded") === "1" ||
+      localStorage.getItem("playbox_goldhen_loaded") === "1" ||
+      sessionStorage.getItem("ExploitLoaded") === "yes" ||
+      localStorage.getItem("ExploitLoaded") === "yes"
+    );
+  } catch (e) {
+    return false;
+  }
+})();
+if (!isExploitAlreadyActive && autoBox.checked) startClock();

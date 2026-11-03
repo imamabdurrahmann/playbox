@@ -89,6 +89,30 @@
   background: rgba(0, 200, 255, 0.25);
   transform: scale(1.02);
 }
+#already-loaded-panel {
+  background: rgba(0, 36, 18, 0.92);
+  border: 2px solid #00ff88;
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin: 15px 0;
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.35);
+  text-align: center;
+}
+.btn-rerun {
+  background: rgba(0, 200, 255, 0.2);
+  border: 1px solid #00e5ff;
+  color: #fff;
+  padding: 9px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.3);
+  transition: transform 0.15s ease;
+}
+.btn-rerun:hover {
+  transform: scale(1.04);
+}
 </style>
 </head>
 <body>
@@ -114,6 +138,18 @@
 
   <div id="cache-status-box" style="margin: 12px 0 6px; font-size: 13px; color: #8cb4db;">
     <span id="cache-status-text">&#128190; Status Cache: Memeriksa...</span>
+  </div>
+
+  <div id="already-loaded-panel" style="display: none;">
+    <h2 style="color: #00ff88; margin: 0 0 10px; font-size: 22px; text-shadow: 0 0 12px rgba(0, 255, 136, 0.6);">&#10004; GoldHEN is Already Loaded ...</h2>
+    <p style="color: #c8ced8; font-size: 14px; margin: 0 0 16px; line-height: 1.6;">
+      [+] GoldHEN sudah aktif di memori kernel PlayStation 4 kamu.<br>
+      [+] Homebrew, debug settings, dan game siap dimainkan.<br>
+      [+] Tekan tombol <b>PS</b> pada stik untuk keluar dari browser.
+    </p>
+    <button onclick="reRunExploit()" class="btn-rerun">
+      &#128260; Re-Run Exploit (Setelah PS4 Restart)
+    </button>
   </div>
 
   <form class="pick" id="pick">
@@ -178,14 +214,41 @@ function checkCacheInstalled() {
   }
   try {
     if (localStorage.getItem('playbox_cached_1400') === '1') return true;
+    if (localStorage.getItem('playbox_cached_any') === '1') return true;
   } catch (e) {}
   return false;
 }
 
+function checkGoldHenActive() {
+  try {
+    return sessionStorage.getItem("playbox_goldhen_loaded") === "1"
+        || localStorage.getItem("playbox_goldhen_loaded") === "1"
+        || sessionStorage.getItem("ExploitLoaded") === "yes"
+        || localStorage.getItem("ExploitLoaded") === "yes";
+  } catch (e) {
+    return false;
+  }
+}
+
+function reRunExploit() {
+  try {
+    sessionStorage.removeItem("playbox_goldhen_loaded");
+    localStorage.removeItem("playbox_goldhen_loaded");
+    sessionStorage.removeItem("ExploitLoaded");
+    localStorage.removeItem("ExploitLoaded");
+  } catch (e) {}
+  location.href = "jb.html?force=1&log=1&afterglow=run&mode=goldhen";
+}
+window.reRunExploit = reRunExploit;
+
+var isAlreadyActive = checkGoldHenActive();
+
 function updateCacheUI() {
   var el = document.getElementById("cache-status-text");
   if (!el) return;
-  if (checkCacheInstalled()) {
+  if (isAlreadyActive) {
+    el.innerHTML = "<span style='color: #00ff88; font-weight: 700;'>&#10004; Status: GoldHEN Active in Memory</span>";
+  } else if (checkCacheInstalled()) {
     el.innerHTML = "<span style='color: #00ff88; font-weight: 700;'>&#10004; Offline Cache: Siap (Bisa Offline Tanpa Internet)</span>";
   } else if (window.applicationCache && (window.applicationCache.status === 2 || window.applicationCache.status === 3)) {
     el.innerHTML = "<span style='color: #ffd700;'>&#8635; Offline Cache: Mengunduh file...</span>";
@@ -194,8 +257,13 @@ function updateCacheUI() {
   }
 }
 
-// Redirect to cache installer on PS4 if not cached yet
-if (isPS4 && !checkCacheInstalled()) {
+if (isAlreadyActive) {
+  var alreadyPanel = document.getElementById("already-loaded-panel");
+  var pickForm = document.getElementById("pick");
+  if (alreadyPanel) alreadyPanel.style.display = "block";
+  if (pickForm) pickForm.style.display = "none";
+  updateCacheUI();
+} else if (isPS4 && !checkCacheInstalled()) {
   location.replace("cache.html");
 } else {
   updateCacheUI();
