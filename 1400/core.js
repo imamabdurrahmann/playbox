@@ -122,7 +122,7 @@ const CARRIER_SLOTS = (function () {
     const n = q ? parseInt(q, 10) : 0;
     if (n >= 100000 && n <= 40000000) return n;
   } catch (e) {}
-  return 9100000;
+  return HX_MEM ? HX_MEM.slots : 3000000;
 })();
 const CARRIER_BYTES = CARRIER_SLOTS * 8;
 const CAPTURE_DELAY_MS = 50;
@@ -475,6 +475,7 @@ function ceilingReached() {
 }
 
 function giveUp(reason) {
+  try { sessionStorage.removeItem(attemptKey); } catch (e) {}
   stopped = true;
   emit("CORE-GIVE-UP", `reason=${reason}-attempts=${attemptNumber}`);
   const reject = settleReject;
@@ -570,31 +571,19 @@ function scheduleSafeRetry(reason) {
   const nextAttempt = attemptNumber + 1;
   emit("AUTO-RETRY-SCHEDULED", `reason=${reason}-next-attempt=${nextAttempt}`);
   releaseAttemptAllocations();
+  try {
+    sessionStorage.setItem(attemptKey, String(nextAttempt));
+  } catch (e) {}
   setTimeout(
     () => {
-      const candidateStillSafe =
-        !candidateEverReturned || (zeroHeaderMiss && !candidateMutationStarted);
-      if (
-        !retrySafe ||
-        !candidateStillSafe ||
-        candidateMutationStarted ||
-        stopped
-      ) {
-        emit(
-          "AUTO-RETRY-CANCELLED",
-          `reason=${reason}` +
-            `-retry-safe=${retrySafe}` +
-            `-candidate-safe=${candidateStillSafe}` +
-            `-candidate-mutated=${candidateMutationStarted}`,
-        );
-        failed();
-        return;
+      try {
+        location.reload();
+      } catch (e) {
+        attemptNumber = nextAttempt;
+        startAttempt();
       }
-
-      attemptNumber = nextAttempt;
-      startAttempt();
     },
-    Math.max(AUTO_RETRY_DELAY_MS, 750),
+    300,
   );
 }
 
@@ -1622,10 +1611,16 @@ export function establishPrimitive(options) {
 
   running = true;
   stopped = false;
-  attemptNumber = 1;
+  let curAttempt = 1;
   try {
-    sessionStorage.removeItem(attemptKey);
-  } catch {}
+    const s = parseInt(sessionStorage.getItem(attemptKey) || "1", 10);
+    if (Number.isFinite(s) && s > 0) curAttempt = s;
+  } catch (e) {}
+  if (attemptCeiling > 0 && curAttempt > attemptCeiling) {
+    try { sessionStorage.removeItem(attemptKey); } catch (e) {}
+    curAttempt = 1;
+  }
+  attemptNumber = curAttempt;
 
   return new Promise((resolve, reject) => {
     settleResolve = resolve;

@@ -1,6 +1,6 @@
 CACHE MANIFEST
-# Version: 2026-11-03-v14-already-loaded-instant-guard
-# Updated: 2026-11-03-19-05
+# Version: 2026-11-03-v15-clean-reload-low-memory
+# Updated: 2026-11-03-19-20
 
 CACHE:
 ../
@@ -11,7 +11,7 @@ CACHE:
 index.html
 cache.html
 jb.html
-jb.html?log=1&mem=1&slots=9100000&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1
+jb.html?log=1&mem=1&slots=3000000&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1
 jb.js
 core.js
 mem.js

@@ -23,7 +23,7 @@ if (!params.has("stage8")) params.set("stage8", "1");
 if (!params.has("stage9")) params.set("stage9", "1");
 if (!params.has("stage10")) params.set("stage10", "1");
 if (!params.has("goldhen")) params.set("goldhen", "1");
-if (!params.has("slots")) params.set("slots", "9100000");
+if (!params.has("slots")) params.set("slots", "3000000");
 if (!params.has("mem")) params.set("mem", "1");
 if (!params.has("log")) params.set("log", "1");
 if (!params.has("telemetry")) params.set("telemetry", "0");
