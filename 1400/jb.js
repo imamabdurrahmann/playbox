@@ -935,8 +935,28 @@ let mainMf = null,
           /* set before the call, not after: a throw inside the chain can
              still have fired a shot, and that is the case `ran` is for */
           agRan = true;
-          agOk = !!(await ag.runAfterglow(agCtx));
-          if (agOk) {
+          const agRes = await ag.runAfterglow(agCtx);
+          if (agRes && agRes.already) {
+            try {
+              sessionStorage.setItem("playbox_goldhen_loaded", "1");
+              localStorage.setItem("playbox_goldhen_loaded", "1");
+              sessionStorage.setItem("ExploitLoaded", "yes");
+              localStorage.setItem("ExploitLoaded", "yes");
+            } catch (eStore) {}
+            mark("JB-ALREADY", "kernel already open -- GoldHEN active");
+            state("GoldHEN is Already Loaded ...", "ok");
+            agOk = true;
+            finishUI(true, false);
+            try {
+              const btnBox = document.getElementById("already-loaded-box");
+              if (btnBox) btnBox.style.display = "block";
+              const ramBox = document.getElementById("ramBox");
+              if (ramBox) {
+                ramBox.textContent = "Status: GoldHEN Active";
+                ramBox.style.color = "#00ff88";
+              }
+            } catch (eUI) {}
+          } else if (agRes) {
             try {
               sessionStorage.setItem("playbox_goldhen_loaded", "1");
               localStorage.setItem("playbox_goldhen_loaded", "1");
@@ -944,6 +964,10 @@ let mainMf = null,
               localStorage.setItem("ExploitLoaded", "yes");
             } catch (eStore) {}
             state("GoldHEN v2.4b18.12 Loaded ...", "ok");
+            agOk = true;
+            finishUI(true, false);
+          } else {
+            finishUI(false, agRan);
           }
         }
       } catch (agError) {
