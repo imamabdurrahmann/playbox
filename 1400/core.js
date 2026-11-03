@@ -14,7 +14,7 @@ const NATIVE_EXECUTABLE_BYTES = 0x38;
 const HOLDER_BYTES = 0x40;
 
 const HX1400_LIGHT_CORE =
-  new URLSearchParams(location.search).get("hx1400") !== "0";
+  new URLSearchParams(location.search).get("hx1400") === "1";
 
 const HX_MEM_LEVEL = (function () {
   if (!HX1400_LIGHT_CORE) return 0;
@@ -146,15 +146,8 @@ const _g = (name, dflt) =>
   typeof _gOverride[name] === "number" ? _gOverride[name] : dflt;
 if (typeof _gOverride.drain === "number") {
   DRAIN_COUNT = _gOverride.drain;
-} else {
-  try {
-    const q = new URLSearchParams(location.search).get("drain");
-    const n = q ? parseInt(q, 10) : 0;
-    if (n > 0) DRAIN_COUNT = n;
-    else DRAIN_COUNT = 12;
-  } catch (e) {
-    DRAIN_COUNT = 12;
-  }
+} else if (HX_MEM) {
+  DRAIN_COUNT = HX_MEM.drain;
 }
 
 const DRAIN_SIZE = _g("drainsz", HX_MEM ? HX_MEM.drainsz : 0x10000);

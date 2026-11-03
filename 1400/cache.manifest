@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version: 2026-11-03-v10-live-terminal
+# Version: 2026-11-03-v11-upstream-drain48-match
 
 CACHE:
 ../
@@ -10,6 +10,7 @@ CACHE:
 index.html
 cache.html
 jb.html
+jb.html?log=1&mem=1&slots=9100000&hx1400=1&kv=1&fam=0&telemetry=0&stage3=1&stage4=1&stage5=1&stage6=1&stage7=1&stage8=1&stage9=1&stage10=1&goldhen=1
 jb.js
 core.js
 mem.js

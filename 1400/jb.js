@@ -24,11 +24,9 @@ if (!params.has("stage9")) params.set("stage9", "1");
 if (!params.has("stage10")) params.set("stage10", "1");
 if (!params.has("goldhen")) params.set("goldhen", "1");
 if (!params.has("slots")) params.set("slots", "9100000");
-if (!params.has("drain")) params.set("drain", "12");
 if (!params.has("mem")) params.set("mem", "1");
 if (!params.has("log")) params.set("log", "1");
 if (!params.has("telemetry")) params.set("telemetry", "0");
-
 const RUN_ID = Date.now().toString(36) + "-" + Math.floor(Math.random() * 0x100000).toString(16);
 const PROBE_MODE = params.get("probe") === "1";
 const STOP_BEFORE_DOUBLE = params.get("stop") === "beforedouble";
@@ -163,59 +161,16 @@ if (ramBox) {
   );
 }
 
-let alreadyLoaded = false;
-
-function hostOk() {
-  const m = document.getElementById("msgs") || document.getElementById("msg");
-  if (m) {
-    m.innerHTML = "GoldHEN v2.4b18.13 Loaded ...";
-    m.style.color = "#00ff88";
-  }
-  if (stateEl) {
-    stateEl.textContent = "GoldHEN v2.4b18.13 Loaded ...";
-    stateEl.className = "ok";
-  }
-}
-
-function hostFail() {
-  const msg = armedEver ? "Restart Console Required" : "Exploit Failed! Please Refresh ...";
-  const m = document.getElementById("msgs") || document.getElementById("msg");
-  if (m) {
-    m.innerHTML = msg;
-    m.style.color = "#ff5566";
-  }
-  if (stateEl) {
-    stateEl.textContent = msg;
-    stateEl.className = "bad";
-  }
-}
-
-function hostAlready() {
-  const m = document.getElementById("msgs") || document.getElementById("msg");
-  if (m) {
-    m.innerHTML = "GoldHEN is Already Loaded ...";
-    m.style.color = "#00ff88";
-  }
-  if (stateEl) {
-    stateEl.textContent = "GoldHEN is Already Loaded ...";
-    stateEl.className = "ok";
-  }
-  const spin = document.getElementById("spin");
-  if (spin) spin.style.display = "none";
-  const ls = document.getElementById("loadingStatus");
-  if (ls) ls.style.display = "none";
-  if (document.body) document.body.className = "done";
-}
-
 if (SHOW_LOG && document.body) document.body.className = "log";
 function finishUI(ok) {
-  if (ok) hostOk();
-  else hostFail();
-  const spin = document.getElementById("spin");
-  if (spin) spin.style.display = "none";
-  const ls = document.getElementById("loadingStatus");
-  if (ls) ls.style.display = "none";
   if (SHOW_LOG || !document.body) return;
+  const m = document.getElementById("msg");
+  if (m)
+    m.textContent = ok
+      ? "DONE"
+      : armedEver
+        ? "Restart your console"
+        : "Refresh the page and run again";
   document.body.className = ok ? "done" : "fail";
 }
 function mark(tag, detail, synchronous = false) {
@@ -238,7 +193,7 @@ function mark(tag, detail, synchronous = false) {
     );
   }
 
-  if (outEl) {
+  if (SHOW_LOG && outEl) {
     outEl.textContent =
       lines.join("\n");
 
@@ -308,6 +263,7 @@ let mainMf = null,
 let pinRestore = null;
 
 let jbRestoreHook = null;
+let alreadyLoaded = false;
 let allDone = false,
   jailbroken = false,
   kpatched = false,
@@ -1160,39 +1116,10 @@ let allDone = false,
       );
     }
 
-    // Check if GoldHEN / root privilege is already active on this console
-    try {
-      const SETUID = 23;
-      if (!stubAddr.has(SETUID)) {
-        for (let o = 0; o < (off.k_scan_stage1 || 0x20000); o += 16) {
-          const v = p.read8(libkernelBase.add32(o));
-          if ((v.low & 0x00ffffff) !== 0xc0c748 || v.hi >>> 24 !== 0x49) continue;
-          const num = ((v.low >>> 24) | ((v.hi & 0x00ffffff) << 8)) >>> 0;
-          if (num === SETUID) {
-            stubAddr.set(SETUID, libkernelBase.add32(o));
-            break;
-          }
-        }
-      }
-      const uidNow = sc(SYS.getuid).i32;
-      const suRv = stubAddr.has(SETUID) ? sc(SETUID, 0).i32 : -1;
-      mark("JB-PROBE", "getuid=" + uidNow + " setuid=" + suRv);
-      if (uidNow === 0 || suRv === 0) {
-        alreadyLoaded = true;
-        jailbroken = true;
-        payloadRunning = true;
-        allDone = true;
-        mark("JB-ALREADY", "GoldHEN already active in kernel (uid=" + uidNow + ", su=" + suRv + ") - race skipped");
-        hostAlready();
-        return;
-      }
-    } catch (probeErr) {
-      mark("JB-PROBE-ERR", String(probeErr));
-    }
-
+    
     if (params.get("mini_only") === "1") {
       try {
-        const mini = await import("./hx_kevent.js");
+        const mini = await import("./hx_kevent.js?v=stage10s-1");
         const ok = await mini.runMini({
           p: p, sc: sc, callAddr: callAddr, bufAddr: bufAddr, errno: errno,
           webkitBase: webkitBase, libkernelBase: libkernelBase, G: G,
@@ -1218,7 +1145,7 @@ let allDone = false,
 
     if (params.get("hx1400") === "1") {
       try {
-        const hx = await import("./hx1400_port.js");
+        const hx = await import("./hx1400_port.js?v=stage10s-1");
         if (!hx || typeof hx.runHx1400 !== "function") {
           mark(
             "HX1400-BAD-MODULE",
@@ -1226,6 +1153,24 @@ let allDone = false,
           );
           allDone = true;
           finishUI(false);
+          return;
+        }
+
+        const uidNow = sc(SYS.getuid).i32;
+        const suRv = stubAddr.has(SETUID) ? sc(SETUID, 0).i32 : -1;
+        mark("JB-PROBE", "getuid=" + uidNow + " setuid=" + suRv);
+        if (uidNow === 0 || suRv === 0) {
+          alreadyLoaded = true;
+          jailbroken = true;
+          payloadRunning = true;
+          allDone = true;
+          mark("JB-ALREADY", "GoldHEN already active in kernel (uid=" + uidNow + ", su=" + suRv + ") - race skipped");
+          state("GoldHEN is Already Loaded ...", "ok");
+          const m = document.getElementById("msgs") || document.getElementById("msg");
+          if (m) {
+            m.innerHTML = "GoldHEN is Already Loaded ...";
+            m.style.color = "#7fd0a0";
+          }
           return;
         }
 
@@ -1259,7 +1204,7 @@ let allDone = false,
               return;
             }
             try { sessionStorage.removeItem("kv-kbase-retry"); } catch (e) {}
-            const kvb = await import("./hx_kevent.js");
+            const kvb = await import("./hx_kevent.js?v=stage10s-1");
             const kvOk = await kvb.runKevent({
               p: p, sc: sc, callAddr: callAddr, bufAddr: bufAddr, errno: errno,
               webkitBase: webkitBase, libkernelBase: libkernelBase, G: G,
@@ -1364,7 +1309,6 @@ const pid = sc(SYS.getpid).i32;
         const uidNow = sc(SYS.getuid).i32;
         mark("JB-PROBE", "setuid=" + suRv + " uid=" + uidNow);
         if (suRv === 0 && uidNow === 0) {
-          alreadyLoaded = true;
           jailbroken = true;
           mark(
             "JB-ALREADY",
@@ -1380,7 +1324,6 @@ const pid = sc(SYS.getpid).i32;
               " armings=0 reused=1",
           );
           allDone = true;
-          hostAlready();
           return;
         }
       }
