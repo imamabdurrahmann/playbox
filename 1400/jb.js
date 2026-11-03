@@ -958,6 +958,31 @@ let allDone = false,
     }
     const sc = (num, ...a) => callAddr(stubAddr.get(num), a);
     closeFd = (fd) => sc(SYS.close, fd).i32;
+
+    try {
+      if (stubAddr.has(SYS.getuid)) {
+        const earlyUid = sc(SYS.getuid).i32;
+        const earlySu = stubAddr.has(SETUID) ? sc(SETUID, 0).i32 : -1;
+        if (earlyUid === 0 || earlySu === 0) {
+          alreadyLoaded = true;
+          jailbroken = true;
+          payloadRunning = true;
+          allDone = true;
+          try {
+            sessionStorage.setItem("playbox_goldhen_loaded", "1");
+            localStorage.setItem("playbox_goldhen_loaded", "1");
+          } catch (eStore) {}
+          mark("JB-EARLY-ALREADY", "GoldHEN already active in kernel (uid=" + earlyUid + ", su=" + earlySu + ")");
+          state("GoldHEN is Already Loaded ...", "ok");
+          const m = document.getElementById("msgs") || document.getElementById("msg");
+          if (m) {
+            m.innerHTML = "GoldHEN is Already Loaded ...";
+            m.style.color = "#7fd0a0";
+          }
+          return;
+        }
+      }
+    } catch (eEarly) {}
     function errno() {
       const r = callAddr(errorFn, []);
       const a = new int64(r.lo, r.hi);
@@ -1164,6 +1189,10 @@ let allDone = false,
           jailbroken = true;
           payloadRunning = true;
           allDone = true;
+          try {
+            sessionStorage.setItem("playbox_goldhen_loaded", "1");
+            localStorage.setItem("playbox_goldhen_loaded", "1");
+          } catch (eStore) {}
           mark("JB-ALREADY", "GoldHEN already active in kernel (uid=" + uidNow + ", su=" + suRv + ") - race skipped");
           state("GoldHEN is Already Loaded ...", "ok");
           const m = document.getElementById("msgs") || document.getElementById("msg");
@@ -1223,6 +1252,11 @@ let allDone = false,
             if (kvOk === true || uidEnd === 0) {
               payloadRunning = true;
               jailbroken = true;
+              try {
+                sessionStorage.setItem("playbox_goldhen_loaded", "1");
+                localStorage.setItem("playbox_goldhen_loaded", "1");
+              } catch (eStore) {}
+              state("GoldHEN v2.4b18.13 Loaded ...", "ok");
               finishUI(true);
             } else {
               finishUI(false);
@@ -1241,6 +1275,11 @@ let allDone = false,
             if (uidCatch === 0) {
               payloadRunning = true;
               jailbroken = true;
+              try {
+                sessionStorage.setItem("playbox_goldhen_loaded", "1");
+                localStorage.setItem("playbox_goldhen_loaded", "1");
+              } catch (eStore) {}
+              state("GoldHEN v2.4b18.13 Loaded ...", "ok");
               finishUI(true);
             } else {
               finishUI(false);
@@ -4579,7 +4618,15 @@ const pid = sc(SYS.getpid).i32;
     try {
       let uidFinal = -1;
       try { if (typeof sc === 'function' && SYS && SYS.getuid) uidFinal = sc(SYS.getuid).i32; } catch (e) {}
-      if (uidFinal === 0) { payloadRunning = true; jailbroken = true; }
+      if (uidFinal === 0) {
+        payloadRunning = true;
+        jailbroken = true;
+        try {
+          sessionStorage.setItem("playbox_goldhen_loaded", "1");
+          localStorage.setItem("playbox_goldhen_loaded", "1");
+        } catch (eStore) {}
+        state("GoldHEN v2.4b18.13 Loaded ...", "ok");
+      }
       if (!alreadyLoaded) finishUI(payloadRunning);
     } catch (eUI) {}
   }
