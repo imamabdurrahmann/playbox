@@ -14,7 +14,7 @@ const NATIVE_EXECUTABLE_BYTES = 0x38;
 const HOLDER_BYTES = 0x40;
 
 const HX1400_LIGHT_CORE =
-  new URLSearchParams(location.search).get("hx1400") === "1";
+  new URLSearchParams(location.search).get("hx1400") !== "0";
 
 const HX_MEM_LEVEL = (function () {
   if (!HX1400_LIGHT_CORE) return 0;
