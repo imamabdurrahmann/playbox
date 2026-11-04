@@ -317,7 +317,7 @@ let mainMf = null,
       try {
         clearInterval(watchdog);
       } catch (e) {}
-      state("Playbox Bengkulu - PS4 14.00 FW GoldHEN <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>", "warn");
+      state("Playbox Bengkulu - PS4 13.52 - 14.00 FW GoldHEN <span style='font-size:15px;color:#ffd700;'>(Preview PC)</span>", "warn");
       return;
     }
     const fwKey = key || "unknown";
