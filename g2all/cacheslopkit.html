@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html manifest="slopkit.manifest">
 <head>
 <meta charset="UTF-8">
@@ -29,6 +29,24 @@
     color: #8cb4db;
     line-height: 1.6;
 }
+.progress-bar-wrap {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(0, 20, 40, 0.8);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 12px;
+    height: 16px;
+    margin: 20px auto;
+    overflow: hidden;
+    position: relative;
+}
+.progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #0077ff, #00ffcc);
+    box-shadow: 0 0 12px rgba(0, 255, 204, 0.8);
+    transition: width 0.25s ease;
+}
 </style>
 </head>
 <body>
@@ -42,7 +60,10 @@
 
 <div class="cache-box">
     <h2 id="msgs">Mengunduh Cache Offline... 0%</h2>
-    <div id="sub" class="sub">Mohon tunggu hingga proses 100% selesai. Jangan matikan konsol.</div>
+    <div class="progress-bar-wrap">
+        <div id="progFill" class="progress-bar-fill"></div>
+    </div>
+    <div id="sub" class="sub">Mohon tunggu hingga proses selesai. Cache akan disimpan di konsol untuk penggunaan offline.</div>
 </div>
 
 <div class="credits-box">
@@ -65,38 +86,43 @@ function setCachedFlag() {
 function DLProgress(e) {
     var percent = (e.total > 0) ? Math.round((e.loaded / e.total) * 100) : 0;
     var m = document.getElementById("msgs");
-    if (m && !isCompleted) m.innerHTML = "Mengunduh Cache: " + percent + "%";
+    var f = document.getElementById("progFill");
+    if (m && !isCompleted) m.innerHTML = "Mengunduh Cache Offline... " + percent + "%";
+    if (f) f.style.width = percent + "%";
 }
 
 function DisplayCacheProgress() {
     isCompleted = true;
     setCachedFlag();
     var m = document.getElementById("msgs");
+    var f = document.getElementById("progFill");
     var s = document.getElementById("sub");
     if (m) {
-        m.innerHTML = "Cache Terpasang Sukses! &#10004;";
+        m.innerHTML = "Cache Offline Berhasil Dipasang! &#10004;";
         m.style.color = "#00ff88";
     }
+    if (f) f.style.width = "100%";
     if (s) {
-        s.innerHTML = '<b style="color: #ffd700; font-size: 16px;">TUTUP BROWSER SEKARANG!</b><br><br>'
-            + '1. Tekan tombol <b>PS</b> pada stik & tutup browser.<br>'
-            + '2. Masuk ke <b>Settings &gt; Network</b> & matikan internet.<br>'
-            + '3. Buka browser kembali & GoldHEN akan berjalan otomatis 100% offline!<br><br>'
-            + '<a href="index.html" onclick="setCachedFlag()" class="btn" style="display:inline-block; margin-top:10px; padding:10px 20px; font-weight:700; text-decoration:none;">Jalankan Exploit Sekarang &raquo;</a>';
+        s.innerHTML = "Memuat GoldHEN otomatis... Mohon tunggu";
     }
+    setTimeout(function() {
+        window.location.replace("index.html");
+    }, 800);
 }
 
 function autoLaunchExploit() {
     isCompleted = true;
     setCachedFlag();
     var m = document.getElementById("msgs");
+    var f = document.getElementById("progFill");
     var s = document.getElementById("sub");
     if (m) {
         m.innerHTML = "Cache Offline Siap! &#10004;";
         m.style.color = "#00ff88";
     }
+    if (f) f.style.width = "100%";
     if (s) {
-        s.innerHTML = "Memuat Exploit Otomatis... Mohon Tunggu";
+        s.innerHTML = "Memuat GoldHEN otomatis... Mohon tunggu";
     }
     setTimeout(function() {
         window.location.replace("index.html");
@@ -108,21 +134,9 @@ if (window.applicationCache) {
     window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onnoupdate = function(e) { autoLaunchExploit(); };
-    
-    // If cache is already active and idle on page load
-    if (window.applicationCache.status === 1 || window.applicationCache.status === 4) {
-        autoLaunchExploit();
-    }
-    
-    window.applicationCache.onerror = function(e) {
-        if (!isCompleted && window.applicationCache.status === 0) {
-            var m = document.getElementById("msgs");
-            if (m) {
-                m.innerHTML = "Gagal Memasang Cache! Clear Browser Data & Coba Lagi...";
-                m.style.color = "#ff5566";
-            }
-        }
-    };
+    window.applicationCache.onerror = function(e) { autoLaunchExploit(); };
+} else {
+    autoLaunchExploit();
 }
 </script>
 </body>

@@ -5,6 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Playbox Bengkulu - PS4 13.02 - 14.00 FW GoldHEN Host</title>
 <link rel="stylesheet" href="../style.css">
+<style>
+.status-card {
+    background: rgba(3, 14, 34, 0.88);
+    border: 1px solid rgba(0, 200, 255, 0.4);
+    border-radius: 20px;
+    padding: 35px 20px;
+    max-width: 620px;
+    width: 90%;
+    margin: 30px auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+}
+#msgs {
+    font-size: 26px;
+    color: #ffd700;
+    margin: 0;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    font-weight: 700;
+}
+</style>
 <script>
 function redirectCorrectRoom(fwN) {
     if (fwN >= 13.02 && fwN <= 14.00) return "../1400/index.html";
@@ -17,23 +37,31 @@ function redirectCorrectRoom(fwN) {
 var ua = navigator.userAgent;
 var isPS4 = /PlayStation 4/i.test(ua);
 
-try {
-    localStorage.removeItem('playbox_goldhen_loaded');
-    localStorage.removeItem('ExploitLoaded');
-} catch (e) {}
+function checkCacheInstalled() {
+    if (window.applicationCache && (window.applicationCache.status === 1 || window.applicationCache.status === 4)) {
+        return true;
+    }
+    try {
+        if (localStorage.getItem('playbox_cached_1400') === '1' || localStorage.getItem('playbox_cached_any') === '1') return true;
+    } catch (e) {}
+    return false;
+}
 
 function runHost() {
     var devText = document.getElementById("detected-text");
     var devBox = document.getElementById("device-info");
+    var m = document.getElementById("msgs");
     var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
+    
     if (match) {
         var detectedFwNum = parseFloat(match[1]);
         if (detectedFwNum < 13.02) {
             if (devText) devText.innerHTML = "&#127918; FW " + match[1] + " Dialihkan ke Host Multi FW...";
-            setTimeout(function() { window.location.replace(redirectCorrectRoom(detectedFwNum)); }, 1200);
+            setTimeout(function() { window.location.replace(redirectCorrectRoom(detectedFwNum)); }, 500);
             return;
         }
     }
+    
     if (devText && devBox) {
         if (isPS4) {
             devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + (match ? match[1] : "13.02 - 14.00") + ")";
@@ -45,9 +73,18 @@ function runHost() {
             devBox.style.borderColor = "rgba(255, 215, 0, 0.4)";
         }
     }
-    if (isPS4 && window.applicationCache && window.applicationCache.status === 0) {
+    
+    if (isPS4 && !checkCacheInstalled()) {
         window.location.replace("cache.html");
         return;
+    }
+
+    if (sessionStorage.getItem("playbox_goldhen_loaded") === "1") {
+        if (m) {
+            m.innerHTML = "GoldHEN is Already Loaded ...";
+            m.style.color = "#00ff88";
+            m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
+        }
     }
 }
 </script>
@@ -65,10 +102,8 @@ function runHost() {
     <span id="detected-text" style="color: #00e5ff; font-weight: 600;">Detecting device...</span>
 </div>
 <br>
-<div id="menu">
-    <div style="padding: 15px 10px;">
-        <h1 id="msgs" style="font-size: 24px; color: #ffd700; margin: 0; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">Loading GoldHEN v2.4b18.12... Please Wait</h1>
-    </div>
+<div class="status-card">
+    <h1 id="msgs">Loading GoldHEN v2.4b18.12... Please Wait</h1>
 </div>
 <br>
 <div class="credits-box">

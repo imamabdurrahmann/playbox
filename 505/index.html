@@ -1,72 +1,33 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html manifest="cache.manifest">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playbox Bengkulu - PS4 5.05 FW GoldHEN Dedicated Host</title>
+<title>Playbox Bengkulu - PS4 5.05 FW GoldHEN Host</title>
 <link rel="stylesheet" href="../style.css">
 <style>
-.stage-card {
+.status-card {
     background: rgba(3, 14, 34, 0.88);
     border: 1px solid rgba(0, 200, 255, 0.4);
     border-radius: 20px;
-    padding: 24px 20px;
+    padding: 35px 20px;
     max-width: 620px;
     width: 90%;
-    margin: 15px auto;
+    margin: 30px auto;
     box-shadow: 0 10px 40px rgba(0,0,0,0.6);
     backdrop-filter: blur(8px);
 }
-.pick-row {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin: 14px 0;
+#msgs {
+    font-size: 26px;
+    color: #ffd700;
+    margin: 0;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    font-weight: 700;
 }
-.opt-label {
-    background: rgba(0, 40, 80, 0.6);
-    border: 1px solid rgba(0, 229, 255, 0.3);
-    border-radius: 12px;
-    padding: 10px 18px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #e0f7fc;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.25s ease;
-    user-select: none;
-}
-.opt-label:hover {
-    border-color: #00ffcc;
-    background: rgba(0, 70, 130, 0.7);
-    box-shadow: 0 0 12px rgba(0,229,255,0.4);
-}
-.opt-label input[type="radio"], .opt-label input[type="checkbox"] {
-    accent-color: #00ffcc;
-    cursor: pointer;
-}
-.step-item {
+.sub-status {
     font-size: 14px;
     color: #8cb4db;
-    margin: 6px 0;
-    transition: color 0.3s;
-}
-.step-item.active {
-    color: #ffd700;
-    font-weight: 700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-.step-item.done {
-    color: #00ff88;
-    font-weight: 600;
-}
-.extra-tools {
-    display: none;
     margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(0, 229, 255, 0.2);
 }
 </style>
 <script src="exploit.js"></script>
@@ -80,135 +41,51 @@
 <div class="fw-title">PS4 5.05 FW GoldHEN Dedicated Host</div>
 <hr>
 
-<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 5px auto 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
-    <span id="detected-text" style="color: #00e5ff; font-weight: 600;">Detecting device...</span>
+<div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 15px auto 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
+    <span id="detected-text" style="color: #00ffcc; font-weight: 600;">Detecting device...</span>
 </div>
 <br>
 
-<div id="cache-status" style="font-size: 13px; color: #8cb4db; margin-bottom: 10px;">
-    <span id="cache-text">Memeriksa status cache offline...</span>
-</div>
-
-<div class="stage-card">
-    <div id="stage-landing">
-        <h2 id="msgs" style="font-size: 21px; color: #ffd700; margin: 0 0 12px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">
-            Pilih Payload &amp; Mulai Exploit
-        </h2>
-        
-        <div class="pick-row">
-            <label class="opt-label">
-                <input type="radio" name="payloadChoice" value="goldhen_2.4b18.12" checked>
-                <span><b>GoldHEN v2.4b18.12</b> (Terbaru)</span>
-            </label>
-            <label class="opt-label">
-                <input type="radio" name="payloadChoice" value="goldhen_2.3">
-                <span>GoldHEN v2.3 (Stabil)</span>
-            </label>
-            <label class="opt-label">
-                <input type="radio" name="payloadChoice" value="binloader">
-                <span>Bin Loader (Port 9020)</span>
-            </label>
-        </div>
-
-        <div style="margin: 15px 0 10px;">
-            <label class="opt-label" style="font-size: 13px; padding: 6px 14px;">
-                <input type="checkbox" id="autoCheck" checked>
-                <span>Autostart otomatis (3 detik)</span>
-            </label>
-        </div>
-
-        <div style="margin-top: 15px;">
-            <button id="btnStart" class="btn btn-multi" onclick="userTriggerStart();" style="padding: 10px 28px; font-weight: 700; font-size: 15px;">
-                Mulai Exploit
-            </button>
-            <button id="btnCancel" class="btn" onclick="cancelAutostart();" style="display: none; padding: 10px 22px; margin-left: 8px;">
-                Batal
-            </button>
-        </div>
-
-        <div style="margin-top: 18px;">
-            <button class="btn" onclick="toggleExtraTools();" style="padding: 6px 16px; font-size: 12px; opacity: 0.85;">
-                &#9881; Utility &amp; Tools Lainnya &#9662;
-            </button>
-        </div>
-
-        <div id="extraTools" class="extra-tools">
-            <button class="btn" onclick="runExtraBin('dumper.bin', 'Game Dumper')">Game Dumper</button>
-            <button class="btn" onclick="runExtraBin('ftp.bin', 'FTP Server')">FTP Server</button>
-            <button class="btn" onclick="runExtraBin('app2usb.bin', 'App2USB')">App2USB</button>
-            <button class="btn" onclick="runExtraBin('backup.bin', 'DB Backup')">DB Backup</button>
-            <button class="btn" onclick="runExtraBin('restore.bin', 'DB Restore')">DB Restore</button>
-            <button class="btn" onclick="runExtraBin('disable-updates.bin', 'Disable Updates')">Disable Updates</button>
-            <button class="btn" onclick="runExtraBin('enable-updates.bin', 'Enable Updates')">Enable Updates</button>
-            <button class="btn" onclick="runExtraBin('ps4debug100.bin', 'PS4 Debug')">PS4 Debug</button>
-            <button class="btn" onclick="runExtraBin('todex.bin', 'ToDex')">ToDex</button>
-        </div>
-    </div>
-
-    <div id="stage-runner" style="display: none;">
-        <h2 id="runnerMsg" style="font-size: 22px; color: #ffd700; margin: 0 0 15px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);">
-            Menyiapkan Eksploitasi...
-        </h2>
-        
-        <div id="stepList" style="text-align: left; max-width: 420px; margin: 0 auto;">
-            <div id="step1" class="step-item">&#9679; [1/3] Mempersiapkan WebKit Heap &amp; Memory Leak...</div>
-            <div id="step2" class="step-item">&#9679; [2/3] Memicu Kernel Privilege Escalation (BPF)...</div>
-            <div id="step3" class="step-item">&#9679; [3/3] Menyuntikkan Payload ke Kernel...</div>
-        </div>
-
-        <div id="runnerActions" style="margin-top: 20px; display: none;">
-            <button class="btn" onclick="location.reload();" style="padding: 8px 20px;">
-                Muat Ulang Halaman
-            </button>
-        </div>
-    </div>
+<div class="status-card">
+    <h1 id="msgs">Loading GoldHEN v2.4b18.12... Please Wait</h1>
+    <div id="subStatus" class="sub-status">Menyiapkan WebKit exploit...</div>
 </div>
 
 <div class="credits-box">
     <span class="credits-title">Designed by: <span class="credits-names">Andree Garshia J and Imam Abdurrahman</span></span>
-    <span class="credits-sub">A special thanks to qwertyoruiopz, Specter, Flatz, SiSTR0, well0nez, and all scene devs.</span>
+    <span class="credits-sub">A special thanks to Leeful, SiSTR0, and all scene devs.</span>
 </div>
 
 <script>
 var ua = navigator.userAgent;
 var match = ua.match(/PlayStation 4[ /]([\d.]+)/i);
 var isPS4 = match !== null;
-var fw = isPS4 ? match[1] : "PC Preview";
+var fw = isPS4 ? match[1] : "5.05";
+var fwNum = parseFloat(fw);
 
-var autoTimer = null;
-var cdSec = 3;
-var hasStarted = false;
-var watchdogTimer = null;
-var chosenPayload = "goldhen_2.4b18.12";
 var PLfile = "goldhen_2.4b18.12.bin";
-var isCustomPayload = false;
 var PLName = "GoldHEN v2.4b18.12";
-
-try {
-    sessionStorage.removeItem("playbox_goldhen_loaded");
-    localStorage.removeItem("playbox_goldhen_loaded");
-} catch(e) {}
+var watchdogTimer = null;
 
 function redirectCorrectRoom(fwN) {
-    if (fwN >= 13.50 && fwN <= 14.00) return "../1400/index.html";
+    if (fwN >= 13.02 && fwN <= 14.00) return "../1400/index.html";
     if (fwN >= 6.70 && fwN <= 6.72) return "../672goldhen/index.html";
     if (fwN == 9.00) return "../900goldhen/index.html";
     if (fwN >= 5.00 && fwN <= 5.07) return "../505/index.html";
     return "../g2all/index.html";
 }
+
 function detectDev() {
     var devText = document.getElementById("detected-text");
     var devBox = document.getElementById("device-info");
     if (devText && devBox) {
         if (isPS4) {
             if (fwNum < 5.00 || fwNum > 5.07) {
-                devText.innerHTML = "&#9888; Konsol Terdeteksi FW " + fw + "! Dialihkan ke Host yang sesuai...";
-                devText.style.color = "#ffd700";
-                devBox.style.borderColor = "rgba(255, 215, 0, 0.6)";
-                setTimeout(function() { window.location.replace(redirectCorrectRoom(fwNum)); }, 1200);
+                devText.innerHTML = "&#9888; FW " + fw + " dialihkan ke host yang sesuai...";
+                setTimeout(function() { window.location.replace(redirectCorrectRoom(fwNum)); }, 800);
                 return;
             }
-            devText.innerHTML = "&#127918; Konsol Terdeteksi: PlayStation 4 (FW " + fw + ")";
+            devText.innerHTML = "&#127918; Konsol Terdeteksi: PlayStation 4 (FW 5.05)";
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
         } else {
@@ -220,233 +97,72 @@ function detectDev() {
 }
 detectDev();
 
+// Offline AppCache Handler
 var appCache = (function () {
     try { return window.applicationCache || null; } catch (e) { return null; }
 })();
 
-function updateCacheText() {
-    var ct = document.getElementById("cache-text");
-    if (!ct || !appCache) return;
-    try {
-        if (appCache.status === appCache.CHECKING) {
-            ct.innerHTML = "&#9881; Memeriksa pembaruan cache offline...";
-            ct.style.color = "#ffd700";
-        } else if (appCache.status === appCache.DOWNLOADING) {
-            ct.innerHTML = "&#128190; Mengunduh file cache offline... Mohon tunggu";
-            ct.style.color = "#00e5ff";
-        } else if (appCache.status === appCache.UPDATEREADY) {
-            ct.innerHTML = "&#10004; Cache versi baru siap! Buka ulang halaman untuk memperbarui";
-            ct.style.color = "#00ff88";
-        } else if (appCache.status === appCache.IDLE) {
-            ct.innerHTML = "&#10004; Cache Offline Aktif &amp; Siap Digunakan Tanpa Internet";
-            ct.style.color = "#00ff88";
-        } else if (appCache.status === appCache.UNCACHED) {
-            ct.innerHTML = "&#9888; Cache belum terpasang (Menjalankan via online)";
-            ct.style.color = "#8cb4db";
-        }
-    } catch(e) {}
-}
-
 if (appCache) {
-    var cEvents = ["checking", "downloading", "progress", "cached", "noupdate", "updateready", "error", "obsolete"];
-    for (var i = 0; i < cEvents.length; i++) {
-        try { appCache.addEventListener(cEvents[i], updateCacheText, false); } catch (e) {}
-    }
-    updateCacheText();
-}
-
-function toggleExtraTools() {
-    var d = document.getElementById("extraTools");
-    if (d) d.style.display = (d.style.display === "block") ? "none" : "block";
-}
-
-function getSelectedPayload() {
-    var radios = document.getElementsByName("payloadChoice");
-    for (var i = 0; i < radios.length; i++) {
-        if (radios[i].checked) return radios[i].value;
-    }
-    return "goldhen_2.4b18.12";
-}
-
-function cancelAutostart() {
-    if (autoTimer) {
-        clearInterval(autoTimer);
-        autoTimer = null;
-    }
-    var m = document.getElementById("msgs");
-    if (m) m.innerHTML = "Pilih Payload &amp; Klik Mulai Exploit";
-    var cb = document.getElementById("btnCancel");
-    if (cb) cb.style.display = "none";
-    var chk = document.getElementById("autoCheck");
-    if (chk) chk.checked = false;
-}
-
-function startCountdown() {
-    if (!isPS4) return;
-    if (fwNum < 5.00 || fwNum > 5.07) return;
-    var chk = document.getElementById("autoCheck");
-    if (!chk || !chk.checked) return;
-    
-    cdSec = 3;
-    var btnCancel = document.getElementById("btnCancel");
-    if (btnCancel) btnCancel.style.display = "inline-block";
-    
-    function render() {
-        var m = document.getElementById("msgs");
-        if (m) {
-            m.innerHTML = "Memulai otomatis dalam <span style='color:#00ffcc;font-size:24px;font-weight:700;'>" + cdSec + "</span> detik...";
+    appCache.addEventListener("progress", function (e) {
+        var s = document.getElementById("subStatus");
+        if (s && e.total > 0) {
+            var pct = Math.round((e.loaded / e.total) * 100);
+            s.innerHTML = "Memasang Cache Offline FW 5.05: " + pct + "% (" + e.loaded + "/" + e.total + ")";
+            s.style.color = "#00e5ff";
         }
-    }
-    render();
-    
-    autoTimer = setInterval(function() {
-        cdSec--;
-        if (cdSec <= 0) {
-            clearInterval(autoTimer);
-            autoTimer = null;
-            userTriggerStart();
-        } else {
-            render();
-        }
-    }, 1000);
-}
-
-function userTriggerStart() {
-    if (hasStarted) return;
-    hasStarted = true;
-    if (autoTimer) {
-        clearInterval(autoTimer);
-        autoTimer = null;
-    }
-    
-    if (!isCustomPayload) {
-        chosenPayload = getSelectedPayload();
-    if (chosenPayload === "goldhen_2.4b18.12") {
-        PLfile = "goldhen_2.4b18.12.bin";
-        PLName = "GoldHEN v2.4b18.12";
-    } else if (chosenPayload === "goldhen_2.3") {
-        PLfile = "goldhen_2.3_505.bin";
-        PLName = "GoldHEN v2.3";
-    } else {
-        PLfile = "";
-        PLName = "Bin Loader";
-    }
-    }
-    
-    document.getElementById("stage-landing").style.display = "none";
-    document.getElementById("stage-runner").style.display = "block";
-    
-    var rMsg = document.getElementById("runnerMsg");
-    if (rMsg) rMsg.innerHTML = "Menjalankan " + PLName + "... Mohon Tunggu";
-    
-    watchdogTimer = setTimeout(function() {
-        var rMsg = document.getElementById("runnerMsg");
-        if (rMsg) {
-            rMsg.innerHTML = "Eksploitasi Tertahan! Buka Ulang Browser (Tanpa Restart)";
-            rMsg.style.color = "#ff5566";
-            rMsg.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
-        }
-        var act = document.getElementById("runnerActions");
-        if (act) act.style.display = "block";
-    }, 60000);
-    
-    setTimeout(function() {
-        try {
-            if (typeof exploit === "function") {
-                exploit();
-            } else {
-                window.onExploitFail("Skrip exploit.js belum termuat sempurna");
-            }
-        } catch (e) {
-            window.onExploitFail("Gagal memanggil exploit: " + e);
-        }
-    }, 200);
-}
-
-function runExtraBin(bin, name) {
-    isCustomPayload = true;
-    if (autoTimer) {
-        clearInterval(autoTimer);
-        autoTimer = null;
-    }
-    PLfile = bin;
-    PLName = name;
-    userTriggerStart();
+    }, false);
+    appCache.addEventListener("cached", function () {
+        var s = document.getElementById("subStatus");
+        if (s) { s.innerHTML = "Cache Offline Berhasil Dipasang! Siap digunakan kapan saja."; s.style.color = "#00ff88"; }
+    }, false);
+    appCache.addEventListener("updateready", function () {
+        try { appCache.swapCache(); } catch(e) {}
+    }, false);
 }
 
 window.onExploitProgress = function(step, text) {
-    if (watchdogTimer) {
-        clearTimeout(watchdogTimer);
-        watchdogTimer = setTimeout(function() {
-            var rMsg = document.getElementById("runnerMsg");
-            if (rMsg) {
-                rMsg.innerHTML = "Eksploitasi Tertahan! Buka Ulang Browser (Tanpa Restart)";
-                rMsg.style.color = "#ff5566";
-            }
-            var act = document.getElementById("runnerActions");
-            if (act) act.style.display = "block";
-        }, 45000);
-    }
-    var s1 = document.getElementById("step1");
-    var s2 = document.getElementById("step2");
-    var s3 = document.getElementById("step3");
-    var rMsg = document.getElementById("runnerMsg");
-    
-    if (step === 1) {
-        if (s1) { s1.className = "step-item active"; s1.innerHTML = "&#9658; [1/3] " + text; }
-        if (rMsg) rMsg.innerHTML = text;
-    } else if (step === 1.5) {
-        if (s1) { s1.className = "step-item done"; s1.innerHTML = "&#10004; [1/3] WebKit Primitive Siap"; }
-        if (s2) { s2.className = "step-item active"; s2.innerHTML = "&#9658; " + text; }
-        if (rMsg) rMsg.innerHTML = text;
-    } else if (step === 2) {
-        if (s1) s1.className = "step-item done";
-        if (s2) { s2.className = "step-item active"; s2.innerHTML = "&#9658; [2/3] " + text; }
-        if (rMsg) rMsg.innerHTML = text;
-    } else if (step === 3) {
-        if (s1) s1.className = "step-item done";
-        if (s2) { s2.className = "step-item done"; s2.innerHTML = "&#10004; [2/3] Kernel Pwn Berhasil"; }
-        if (s3) { s3.className = "step-item active"; s3.innerHTML = "&#9658; [3/3] " + text; }
-        if (rMsg) rMsg.innerHTML = text;
-    }
+    var s = document.getElementById("subStatus");
+    if (s) s.innerHTML = text;
 };
 
 window.onExploitFail = function(msg) {
-    if (watchdogTimer) { clearTimeout(watchdogTimer); watchdogTimer = null; }
-    var rMsg = document.getElementById("runnerMsg");
-    if (rMsg) {
-        rMsg.innerHTML = "Eksploitasi Gagal! Silakan Buka Ulang Browser";
-        rMsg.style.color = "#ff5566";
-        rMsg.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+    if (watchdogTimer) clearTimeout(watchdogTimer);
+    var m = document.getElementById("msgs");
+    if (m) {
+        m.innerHTML = "Exploit Gagal! Silakan Restart Konsol.";
+        m.style.color = "#ff5252";
+        m.style.textShadow = "0 0 15px rgba(255, 82, 82, 0.6)";
     }
-    var s3 = document.getElementById("step3");
-    if (s3) {
-        s3.className = "step-item active";
-        s3.style.color = "#ff5566";
-        s3.innerHTML = "&#10008; Detail: " + (msg || "Memori tidak stabil");
+    var s = document.getElementById("subStatus");
+    if (s) {
+        s.innerHTML = msg || "Silakan buka ulang browser.";
+        s.style.color = "#ff8888";
     }
-    var act = document.getElementById("runnerActions");
-    if (act) act.style.display = "block";
 };
 
-function success() {
-    if (watchdogTimer) { clearTimeout(watchdogTimer); watchdogTimer = null; }
-    if (!isCustomPayload && (chosenPayload === "binloader" || !PLfile)) {
-        var rMsg = document.getElementById("runnerMsg");
-        if (rMsg) {
-            rMsg.innerHTML = "BinLoader Aktif! Kirim payload melalui Port 9020";
-            rMsg.style.color = "#00ff88";
-            rMsg.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
-        }
-        var s3 = document.getElementById("step3");
-        if (s3) { s3.className = "step-item done"; s3.innerHTML = "&#10004; [3/3] Port 9020 Siap Menerima Payload"; }
-        return;
+function allset() {
+    if (watchdogTimer) clearTimeout(watchdogTimer);
+    try { sessionStorage.setItem("playbox_goldhen_loaded", "1"); } catch(e) {}
+    var m = document.getElementById("msgs");
+    if (m) {
+        m.innerHTML = "GoldHEN v2.4b18.12 Loaded ...";
+        m.style.color = "#00ff88";
+        m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
     }
+    var s = document.getElementById("subStatus");
+    if (s) {
+        s.innerHTML = "GoldHEN aktif! Selamat bermain.";
+        s.style.color = "#00ff88";
+    }
+}
+
+function success() {
     load_payload();
 }
 
 function load_payload() {
-    window.onExploitProgress(3, "Mengunduh &amp; Menyuntikkan " + PLName + "...");
+    var s = document.getElementById("subStatus");
+    if (s) s.innerHTML = "Mengunduh &amp; Menyuntikkan " + PLName + "...";
     var req = new XMLHttpRequest();
     req.open('GET', PLfile);
     req.responseType = "arraybuffer";
@@ -454,7 +170,7 @@ function load_payload() {
     req.onreadystatechange = function () {
         if (req.readyState === 4) {
             if (req.status !== 200 && req.status !== 0) {
-                window.onExploitFail("Payload " + PLfile + " tidak dapat dimuat (HTTP " + req.status + ")");
+                window.onExploitFail("Payload " + PLfile + " gagal dimuat (HTTP " + req.status + ")");
                 return;
             }
             try {
@@ -489,29 +205,50 @@ function load_payload() {
     };
 }
 
-function allset() {
-    try {
-        sessionStorage.setItem("playbox_goldhen_loaded", "1");
-    } catch(e) {}
-    
-    var rMsg = document.getElementById("runnerMsg");
-    if (rMsg) {
-        rMsg.innerHTML = "&#10004; " + PLName + " Berhasil Diaktifkan!";
-        rMsg.style.color = "#00ff88";
-        rMsg.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
+function runHost() {
+    var m = document.getElementById("msgs");
+    var s = document.getElementById("subStatus");
+
+    // Check if GoldHEN already loaded
+    if (sessionStorage.getItem("playbox_goldhen_loaded") === "1" || localStorage.getItem("ExploitLoaded") === "yes") {
+        if (m) {
+            m.innerHTML = "GoldHEN is Already Loaded ...";
+            m.style.color = "#00ff88";
+            m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
+        }
+        if (s) {
+            s.innerHTML = "GoldHEN sudah aktif sebelumnya. Tidak perlu menjalankan ulang.";
+            s.style.color = "#00ff88";
+        }
+        return;
     }
-    var s3 = document.getElementById("step3");
-    if (s3) {
-        s3.className = "step-item done";
-        s3.innerHTML = "&#10004; [3/3] " + PLName + " Berhasil Dijalankan! Selamat Bermain.";
+
+    if (!isPS4) {
+        if (m) { m.innerHTML = "Preview Mode (PC / Laptop)"; m.style.color = "#00e5ff"; }
+        if (s) { s.innerHTML = "Buka melalui browser PlayStation 4 FW 5.05 untuk eksekusi."; }
+        return;
     }
-    var act = document.getElementById("runnerActions");
-    if (act) act.style.display = "block";
+
+    if (m) {
+        m.innerHTML = "Loading GoldHEN v2.4b18.12... Please Wait";
+        m.style.color = "#ffd700";
+    }
+    if (s) s.innerHTML = "Mempersiapkan WebKit UAF...";
+
+    watchdogTimer = setTimeout(function () {
+        window.onExploitFail("Exploit berjalan lebih lama dari biasanya. Jika konsol freeze, silakan restart.");
+    }, 60000);
+
+    setTimeout(function() {
+        try {
+            exploit();
+        } catch(e) {
+            window.onExploitFail("Gagal saat memicu WebKit: " + e);
+        }
+    }, 250);
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    startCountdown();
-});
+window.addEventListener("DOMContentLoaded", runHost);
 </script>
 </body>
 </html>

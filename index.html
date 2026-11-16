@@ -21,7 +21,7 @@
     <span id="detected-text" style="color: #00e5ff; font-weight: 600;">Detecting device...</span>
 </div>
 <br>
-<div id=menu>
+<div id="menu">
 <h1 style="font-size: 17px; color: #00e5ff; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin: 0 0 18px 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);">Select Your Firmware</h1>
 <button class="btn btn-multi" onmouseover="msgs.innerHTML='PS4 GoldHEN Host for 5.05 and 7.00 to 13.00 FW - (Auto Exploit Selection)'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host'" onclick="location.replace('g2all/index.html')"> GoldHEN Multi FW </button>
 <button class="btn btn-multi" style="border-color:#00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4);" onmouseover="msgs.innerHTML='PS4 13.02 - 14.00 FW GoldHEN Host (Afterglow Engine - Dedicated Offline Cache)'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host'" onclick="location.replace('1400/index.html')"> 13.02 - 14.00 FW GoldHEN </button>
@@ -45,7 +45,7 @@ var activeRedirectTimer = null;
 
 function cancelRedirect() {
     if (activeRedirectTimer) {
-        clearInterval(activeRedirectTimer);
+        clearTimeout(activeRedirectTimer);
         activeRedirectTimer = null;
     }
     var msgEl = document.getElementById("msgs");
@@ -54,23 +54,13 @@ function cancelRedirect() {
 
 function startRedirect(destUrl, labelText) {
     cancelRedirect();
-    var cd = 2;
     var msgEl = document.getElementById("msgs");
-    var renderCd = function() {
-        if (msgEl) {
-            msgEl.innerHTML = labelText + " in " + cd + " seconds... <button onclick='cancelRedirect();' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Cancel</button>";
-        }
-    };
-    renderCd();
-    activeRedirectTimer = setInterval(function() {
-        cd--;
-        if (cd < 0) {
-            cancelRedirect();
-            location.replace(destUrl);
-        } else {
-            renderCd();
-        }
-    }, 1000);
+    if (msgEl) {
+        msgEl.innerHTML = labelText + "... <span style='font-size:14px;color:#00ff88;'>Mengarahkan otomatis</span>";
+    }
+    activeRedirectTimer = setTimeout(function() {
+        location.replace(destUrl);
+    }, 400);
 }
 
 function detectDevice() {
@@ -89,21 +79,16 @@ function detectDevice() {
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
             
-            try {
-                localStorage.removeItem('playbox_goldhen_loaded');
-                localStorage.removeItem('ExploitLoaded');
-            } catch (e) {}
-            
             if (fwNum >= 13.02 && fwNum <= 14.00) {
-                startRedirect('1400/index.html', "Loading 13.02 - 14.00 GoldHEN FW " + fw);
+                startRedirect('1400/index.html', "Membuka GoldHEN 13.02 - 14.00 (FW " + fw + ")");
             } else if (fwNum >= 5.00 && fwNum <= 5.07) {
-                startRedirect('505/index.html', "Loading 5.05 GoldHEN Host");
+                startRedirect('505/index.html', "Membuka 5.05 GoldHEN Host");
             } else if (fwNum >= 6.70 && fwNum <= 6.72) {
-                startRedirect('672goldhen/index.html', "Loading 6.72 GoldHEN Host");
+                startRedirect('672goldhen/index.html', "Membuka 6.72 GoldHEN Host");
             } else if (fwNum == 9.00) {
-                startRedirect('900goldhen/index.html', "Loading 9.00 GoldHEN Host");
+                startRedirect('900goldhen/index.html', "Membuka 9.00 GoldHEN Host");
             } else if ((fwNum >= 7.00 && fwNum <= 8.52) || (fwNum > 9.00 && fwNum <= 9.60) || (fwNum >= 10.00 && fwNum <= 13.00)) {
-                startRedirect('g2all/index.html', "Loading GoldHEN Multi FW");
+                startRedirect('g2all/index.html', "Membuka GoldHEN Multi FW (FW " + fw + ")");
             }
         } else {
             devText.innerHTML = "&#128187; Device Detected: PC / Laptop (Preview Mode)";
