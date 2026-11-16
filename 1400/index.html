@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playbox Bengkulu - PS4 13.50 - 14.02 FW GoldHEN Host</title>
+<title>Playbox Bengkulu - PS4 13.02 - 14.02 FW GoldHEN Host</title>
 <link rel="stylesheet" href="../style.css">
 <style>
 .status-card {
@@ -27,7 +27,7 @@
 </style>
 <script>
 function redirectCorrectRoom(fwN) {
-    if (fwN >= 13.50 && fwN <= 14.02) return "../1400/index.html";
+    if (fwN >= 13.02 && fwN <= 14.02) return "../1400/index.html";
     if (fwN >= 6.70 && fwN <= 6.72) return "../672goldhen/index.html";
     if (fwN == 9.00) return "../900goldhen/index.html";
     if (fwN >= 5.00 && fwN <= 5.07) return "../505/index.html";
@@ -55,7 +55,7 @@ function runHost() {
     
     if (match) {
         var detectedFwNum = parseFloat(match[1]);
-        if (detectedFwNum < 13.50) {
+        if (detectedFwNum < 13.02) {
             if (devText) devText.innerHTML = "&#127918; FW " + match[1] + " Dialihkan ke Host Multi FW...";
             setTimeout(function() { window.location.replace(redirectCorrectRoom(detectedFwNum)); }, 500);
             return;
@@ -64,7 +64,7 @@ function runHost() {
     
     if (devText && devBox) {
         if (isPS4) {
-            devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + (match ? match[1] : "13.50 - 14.02") + ")";
+            devText.innerHTML = "&#127918; Console Detected: PlayStation 4 (Firmware " + (match ? match[1] : "13.02 - 14.02") + ")";
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
         } else {
@@ -95,7 +95,7 @@ function runHost() {
     <div class="wa-badge">WhatsApp: 0821-7277-220</div>
     <div class="ig-badge">Instagram: playbox_gamingps</div>
 </div>
-<div class="fw-title">PS4 13.50 - 14.02 FW GoldHEN Host</div>
+<div class="fw-title">PS4 13.02 - 14.02 FW GoldHEN Host</div>
 <hr>
 <br>
 <div id="device-info" style="display: inline-block; background: rgba(3, 14, 34, 0.8); border: 1px solid rgba(0, 200, 255, 0.35); border-radius: 25px; padding: 8px 24px; font-size: 15px; margin: 5px auto 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(8px);">
