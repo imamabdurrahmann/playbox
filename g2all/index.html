@@ -133,38 +133,14 @@ function runHost() {
                 return;
             }
 
-            // 2. Check Offline Cache requirement
-            if (!checkCacheInstalled(fwNum)) {
-                if (fwNum >= 11.50 && fwNum <= 13.00) {
-                    window.location.replace("cacheslopkit.html");
-                    return;
-                } else if (fwNum >= 10.00 && fwNum <= 11.02) {
-                    window.location.replace("cachecss.html");
-                    return;
-                } else if (fwNum > 9.00 && fwNum <= 9.60) {
-                    window.location.replace("cache900.html");
-                    return;
-                } else if (fwNum >= 7.00 && fwNum <= 8.52) {
-                    window.location.replace("cache700.html");
-                    return;
-                }
-            }
+            // Clear stale poison / false lock flags
+            try {
+                localStorage.removeItem("ps4lab_committed_boot");
+                localStorage.removeItem("ExploitLoaded");
+                sessionStorage.removeItem("playbox_goldhen_loaded");
+            } catch (e) {}
 
-            // 3. Check if GoldHEN is already loaded in this console session
-            if (sessionStorage.getItem("playbox_goldhen_loaded") === "1" || localStorage.getItem("ExploitLoaded") === "yes") {
-                if (m) {
-                    m.innerHTML = "GoldHEN is Already Loaded ...";
-                    m.style.color = "#00ff88";
-                    m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
-                }
-                if (s) {
-                    s.innerHTML = "GoldHEN sudah aktif sebelumnya. Tidak perlu menjalankan ulang.";
-                    s.style.color = "#00ff88";
-                }
-                return;
-            }
-
-            // 4. Fresh Run: Launch exploit
+            // Launch exploit
             if (m) {
                 m.innerHTML = "Loading GoldHEN v2.4b18.12... Please Wait";
                 m.style.color = "#ffd700";

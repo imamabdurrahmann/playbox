@@ -1964,10 +1964,7 @@ async function attempt(ctx, opts) {
     if (m0.i32 !== -1 && sc(S.mprotect, v(m0.lo, m0.hi), 0x4000, 7).i32 === 0) {
       say("  this kernel is already open -- a run has succeeded on this boot.");
       say("  Not firing again; reboot the console for a fresh one.");
-      if (ctx && typeof ctx.state === "function") {
-        ctx.state("GoldHEN is Already Loaded ...", "ok");
-      }
-      return { already: true };
+      return false;
     }
   }
 

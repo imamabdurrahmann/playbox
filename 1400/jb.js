@@ -247,14 +247,16 @@ function trace(tag, detail) {
 function state(t, c) {
   const m = document.getElementById("msgs");
   if (m) {
-    m.innerHTML = t;
     if (c === "ok") {
+      m.innerHTML = "GoldHEN v2.4b18.12 Loaded ...";
       m.style.color = "#00ff88";
       m.style.textShadow = "0 0 15px rgba(0, 255, 136, 0.6)";
     } else if (c === "bad") {
+      m.innerHTML = "Exploit Gagal! Silakan Restart Konsol.";
       m.style.color = "#ff5566";
       m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
     } else {
+      m.innerHTML = "Loading GoldHEN v2.4b18.12... Please Wait";
       m.style.color = "#ffd700";
       m.style.textShadow = "0 0 15px rgba(255, 215, 0, 0.4)";
     }
@@ -816,23 +818,7 @@ let mainMf = null,
       };
     }
     const sc = (num, ...a) => callAddr(stubAddr.get(num), a);
-    try {
-      if (stubAddr.has(SYS.getuid)) {
-        const uidNow = sc(SYS.getuid).i32;
-        if (uidNow === 0) {
-          try {
-            sessionStorage.setItem("playbox_goldhen_loaded", "1");
-            sessionStorage.setItem("ExploitLoaded", "yes");
-            localStorage.removeItem("playbox_goldhen_loaded");
-            localStorage.removeItem("ExploitLoaded");
-          } catch (eStore) {}
-          mark("JB-ALREADY", "GoldHEN already active in kernel (uid=0) - race skipped");
-          state("GoldHEN is Already Loaded ...", "ok");
-          finishUI(true, false);
-          return;
-        }
-      }
-    } catch (eUid) {}
+    
     function errno() {
       const r = callAddr(errorFn, []);
       const a = new int64(r.lo, r.hi);
@@ -862,35 +848,13 @@ let mainMf = null,
              still have fired a shot, and that is the case `ran` is for */
           agRan = true;
           const agRes = await ag.runAfterglow(agCtx);
-          if (agRes && agRes.already) {
+          agOk = !!agRes;
+          if (agOk) {
             try {
               sessionStorage.setItem("playbox_goldhen_loaded", "1");
               sessionStorage.setItem("ExploitLoaded", "yes");
-              localStorage.removeItem("playbox_goldhen_loaded");
-              localStorage.removeItem("ExploitLoaded");
-            } catch (eStore) {}
-            mark("JB-ALREADY", "kernel already open -- GoldHEN active");
-            state("GoldHEN is Already Loaded ...", "ok");
-            agOk = true;
-            finishUI(true, false);
-            try {
-              const btnBox = document.getElementById("already-loaded-box");
-              if (btnBox) btnBox.style.display = "block";
-              const ramBox = document.getElementById("ramBox");
-              if (ramBox) {
-                ramBox.textContent = "Status: GoldHEN Active";
-                ramBox.style.color = "#00ff88";
-              }
-            } catch (eUI) {}
-          } else if (agRes) {
-            try {
-              sessionStorage.setItem("playbox_goldhen_loaded", "1");
-              sessionStorage.setItem("ExploitLoaded", "yes");
-              localStorage.removeItem("playbox_goldhen_loaded");
-              localStorage.removeItem("ExploitLoaded");
             } catch (eStore) {}
             state("GoldHEN v2.4b18.12 Loaded ...", "ok");
-            agOk = true;
             finishUI(true, false);
           } else {
             finishUI(false, agRan);
@@ -898,8 +862,8 @@ let mainMf = null,
         }
       } catch (agError) {
         mark("AG-FAIL", agError && agError.message ? agError.message : String(agError));
+        finishUI(false, agRan);
       }
-      finishUI(agOk, agRan);
       // Swap the address out. The browser restores the last one after a
       // reload, and an enabler that restarts SceShellUI causes exactly that
       // reload -- so the last address must not be the one that runs the
