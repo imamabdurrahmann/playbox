@@ -98,11 +98,27 @@ function setCachedFlag() {
 }
 
 function DLProgress(e) {
-    var percent = (e.total > 0) ? Math.round((e.loaded / e.total) * 100) : 0;
+    if (isCompleted) return;
+    var current = e.loaded || 0;
+    var total = e.total || 0;
+    var percent = (total > 0) ? Math.round((current / total) * 100) : 0;
     var m = document.getElementById("msgs");
     var b = document.getElementById("prog-bar");
-    if (m && !isCompleted) m.innerHTML = "Mengunduh Cache Offline... " + percent + "%";
-    if (b) b.style.width = percent + "%";
+    var s = document.getElementById("sub");
+    
+    if (m) {
+        m.innerHTML = (total > 0)
+            ? "Mengunduh Cache Offline... " + percent + "% (" + current + "/" + total + ")"
+            : "Mengunduh Cache Offline... " + percent + "%";
+        m.style.color = "#ffd700";
+    }
+    if (b) {
+        b.style.width = percent + "%";
+        b.style.background = "linear-gradient(90deg, #0088cc, #00ff88)";
+    }
+    if (s && total > 0) {
+        s.innerHTML = "Menyimpan file sistem ke memori konsol: <b>" + current + "</b> dari <b>" + total + "</b> file selesai diunduh.";
+    }
 }
 
 function DisplayCacheProgress() {
@@ -112,10 +128,13 @@ function DisplayCacheProgress() {
     var b = document.getElementById("prog-bar");
     var s = document.getElementById("sub");
     if (m) {
-        m.innerHTML = "Cache Offline Berhasil Dipasang! &#10004;";
+        m.innerHTML = "Cache Offline Berhasil Dipasang (100%)! &#10004;";
         m.style.color = "#00ff88";
     }
-    if (b) b.style.width = "100%";
+    if (b) {
+        b.style.width = "100%";
+        b.style.background = "linear-gradient(90deg, #0088cc, #00ff88)";
+    }
     if (s) {
         s.innerHTML = '<div style="background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(0, 255, 136, 0.45); border-radius: 12px; padding: 18px 20px; margin: 18px auto; text-align: left; max-width: 480px; box-shadow: 0 4px 20px rgba(0,0,0,0.6);">'
             + '<div style="color: #ffd700; font-size: 16px; font-weight: 700; margin-bottom: 10px; text-align: center;">&#9888; TUTUP BROWSER &amp; MATIKAN WIFI SEKARANG &#9888;</div>'
@@ -131,35 +150,57 @@ function DisplayCacheProgress() {
     }
 }
 
-function autoLaunchExploit() {
+function cacheAlreadyVerified() {
     isCompleted = true;
     setCachedFlag();
     var m = document.getElementById("msgs");
     var b = document.getElementById("prog-bar");
     var s = document.getElementById("sub");
     if (m) {
-        m.innerHTML = "Cache Offline Siap! &#10004;";
+        m.innerHTML = "Cache Offline Sudah Terpasang (100%)! &#10004;";
         m.style.color = "#00ff88";
     }
-    if (b) b.style.width = "100%";
+    if (b) {
+        b.style.width = "100%";
+        b.style.background = "linear-gradient(90deg, #0088cc, #00ff88)";
+    }
     if (s) {
-        s.innerHTML = "Memuat GoldHEN otomatis... Mohon tunggu";
+        s.innerHTML = "Semua file offline di konsol telah terverifikasi lengkap. Membuka GoldHEN otomatis...";
     }
     setTimeout(function() {
         window.location.replace("index.html");
-    }, 400);
+    }, 600);
+}
+
+function handleCacheError(e) {
+    if (isCompleted) return;
+    var m = document.getElementById("msgs");
+    var b = document.getElementById("prog-bar");
+    var s = document.getElementById("sub");
+    if (m) {
+        m.innerHTML = "Gagal Memasang Cache Offline!";
+        m.style.color = "#ff5566";
+        m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+    }
+    if (b) {
+        b.style.background = "linear-gradient(90deg, #ff4444, #cc0000)";
+    }
+    if (s) {
+        s.innerHTML = '<span style="color:#ff8888;">Proses unduh terputus atau file belum lengkap. Cache BELUM terpasang 100%.</span><br><br>'
+            + '<button onclick="location.reload();" class="btn btn-multi" style="padding: 8px 24px; font-size: 14px;">Coba Unduh Ulang &raquo;</button>';
+    }
 }
 
 if (window.applicationCache) {
     window.applicationCache.addEventListener("progress", DLProgress, false);
     window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
-    window.applicationCache.onnoupdate = function(e) { autoLaunchExploit(); };
-    window.applicationCache.onerror = function(e) { autoLaunchExploit(); };
+    window.applicationCache.onnoupdate = function(e) { cacheAlreadyVerified(); };
+    window.applicationCache.onerror = function(e) { handleCacheError(e); };
     
-    // If cache is already active and idle on page load
+    // If cache is already active and verified in this session
     if (window.applicationCache.status === 1 || window.applicationCache.status === 4) {
-        autoLaunchExploit();
+        cacheAlreadyVerified();
     }
 } else {
     var m = document.getElementById("msgs");
@@ -171,7 +212,7 @@ if (window.applicationCache) {
     if (s) {
         s.innerHTML = 'Browser desktop modern menonaktifkan ApplicationCache.<br>'
             + 'Di konsol PlayStation 4, cache akan terpasang 100% otomatis.<br><br>'
-            + '<a href="index.html" class="btn-launch">Kembali ke Menu 12.00 - 14.02 &raquo;</a>';
+            + '<a href="index.html" class="btn-launch">Kembali ke Menu 13.02 - 14.02 &raquo;</a>';
     }
 }
 </script>

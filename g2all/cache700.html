@@ -84,11 +84,26 @@ function setCachedFlag() {
 }
 
 function DLProgress(e) {
-    var percent = (e.total > 0) ? Math.round((e.loaded / e.total) * 100) : 0;
+    if (isCompleted) return;
+    var current = e.loaded || 0;
+    var total = e.total || 0;
+    var percent = (total > 0) ? Math.round((current / total) * 100) : 0;
     var m = document.getElementById("msgs");
     var f = document.getElementById("progFill");
-    if (m && !isCompleted) m.innerHTML = "Mengunduh Cache Offline... " + percent + "%";
-    if (f) f.style.width = percent + "%";
+    var s = document.getElementById("sub");
+    if (m) {
+        m.innerHTML = (total > 0)
+            ? "Mengunduh Cache Offline... " + percent + "% (" + current + "/" + total + ")"
+            : "Mengunduh Cache Offline... " + percent + "%";
+        m.style.color = "#ffd700";
+    }
+    if (f) {
+        f.style.width = percent + "%";
+        f.style.background = "linear-gradient(90deg, #0077ff, #00ffcc)";
+    }
+    if (s && total > 0) {
+        s.innerHTML = "Menyimpan file ke memori konsol: <b>" + current + "</b> dari <b>" + total + "</b> file selesai diunduh.";
+    }
 }
 
 function DisplayCacheProgress() {
@@ -141,7 +156,22 @@ if (window.applicationCache) {
     window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onnoupdate = function(e) { autoLaunchExploit(); };
-    window.applicationCache.onerror = function(e) { autoLaunchExploit(); };
+    window.applicationCache.onerror = function(e) {
+        if (isCompleted) return;
+        var m = document.getElementById("msgs");
+        var f = document.getElementById("progFill");
+        var s = document.getElementById("sub");
+        if (m) {
+            m.innerHTML = "Gagal Memasang Cache Offline!";
+            m.style.color = "#ff5566";
+            m.style.textShadow = "0 0 15px rgba(255, 85, 102, 0.6)";
+        }
+        if (f) f.style.background = "linear-gradient(90deg, #ff4444, #cc0000)";
+        if (s) {
+            s.innerHTML = '<span style="color:#ff8888;">Proses unduh terputus atau file belum lengkap. Cache BELUM terpasang 100%.</span><br><br>'
+                + '<button onclick="location.reload();" class="btn btn-multi" style="padding: 8px 24px; font-size: 14px;">Coba Unduh Ulang &raquo;</button>';
+        }
+    };
 } else {
     autoLaunchExploit();
 }
