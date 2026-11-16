@@ -117,11 +117,18 @@ function DisplayCacheProgress() {
     }
     if (b) b.style.width = "100%";
     if (s) {
-        s.innerHTML = "Memuat GoldHEN otomatis... Mohon tunggu";
+        s.innerHTML = '<div style="background: rgba(0, 0, 0, 0.55); border: 1px solid rgba(0, 255, 136, 0.45); border-radius: 12px; padding: 18px 20px; margin: 18px auto; text-align: left; max-width: 480px; box-shadow: 0 4px 20px rgba(0,0,0,0.6);">'
+            + '<div style="color: #ffd700; font-size: 16px; font-weight: 700; margin-bottom: 10px; text-align: center;">&#9888; TUTUP BROWSER &amp; MATIKAN WIFI SEKARANG &#9888;</div>'
+            + '<div style="color: #e0f7fc; font-size: 14px; line-height: 1.8;">'
+            + '<b>1.</b> Tekan tombol <b>PS</b> pada stik &amp; <b>Tutup Browser</b>.<br>'
+            + '<b>2.</b> Masuk ke <b>Pengaturan (Settings) &gt; Jaringan (Network)</b> lalu <b>Hilangkan centang \'Hubungkan ke Internet\' (Matikan WiFi)</b>.<br>'
+            + '<b>3.</b> Buka kembali <b>Browser PS4</b> &amp; GoldHEN akan berjalan otomatis secara <b>100% OFFLINE</b>!'
+            + '</div>'
+            + '</div>'
+            + '<div style="margin-top: 15px;">'
+            + '<a href="index.html" class="btn btn-multi" style="display:inline-block; padding: 10px 24px; font-weight: 700; font-size: 14px; text-decoration: none; border-color: #00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.35);">Jalankan GoldHEN Sekarang (Tanpa Tutup Browser) &raquo;</a>'
+            + '</div>';
     }
-    setTimeout(function() {
-        window.location.replace("index.html");
-    }, 800);
 }
 
 function autoLaunchExploit() {
@@ -136,11 +143,11 @@ function autoLaunchExploit() {
     }
     if (b) b.style.width = "100%";
     if (s) {
-        s.innerHTML = "Membuka GoldHEN otomatis... Mohon tunggu";
+        s.innerHTML = "Memuat GoldHEN otomatis... Mohon tunggu";
     }
     setTimeout(function() {
         window.location.replace("index.html");
-    }, 800);
+    }, 400);
 }
 
 if (window.applicationCache) {
@@ -148,21 +155,12 @@ if (window.applicationCache) {
     window.applicationCache.oncached = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onupdateready = function(e) { DisplayCacheProgress(); };
     window.applicationCache.onnoupdate = function(e) { autoLaunchExploit(); };
+    window.applicationCache.onerror = function(e) { autoLaunchExploit(); };
     
     // If cache is already active and idle on page load
     if (window.applicationCache.status === 1 || window.applicationCache.status === 4) {
         autoLaunchExploit();
     }
-    
-    window.applicationCache.onerror = function(e) {
-        if (!isCompleted && window.applicationCache.status === 0) {
-            var m = document.getElementById("msgs");
-            if (m) {
-                m.innerHTML = "Gagal Mengunduh Cache! Periksa Koneksi Internet...";
-                m.style.color = "#ff5566";
-            }
-        }
-    };
 } else {
     var m = document.getElementById("msgs");
     var s = document.getElementById("sub");

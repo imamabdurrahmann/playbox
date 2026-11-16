@@ -45,7 +45,7 @@ var activeRedirectTimer = null;
 
 function cancelRedirect() {
     if (activeRedirectTimer) {
-        clearTimeout(activeRedirectTimer);
+        clearInterval(activeRedirectTimer);
         activeRedirectTimer = null;
     }
     var msgEl = document.getElementById("msgs");
@@ -54,13 +54,23 @@ function cancelRedirect() {
 
 function startRedirect(destUrl, labelText) {
     cancelRedirect();
+    var seconds = 3;
     var msgEl = document.getElementById("msgs");
-    if (msgEl) {
-        msgEl.innerHTML = labelText + "... <span style='font-size:14px;color:#00ff88;'>Mengarahkan otomatis</span>";
+    function updateCountdown() {
+        if (msgEl) {
+            msgEl.innerHTML = labelText + " dalam <b style='color:#00ff88;font-size:20px;'>" + seconds + "</b> detik... <button onclick='cancelRedirect();' class='btn' style='padding:3px 12px;font-size:12px;margin-left:10px;'>Batal</button>";
+        }
     }
-    activeRedirectTimer = setTimeout(function() {
-        location.replace(destUrl);
-    }, 400);
+    updateCountdown();
+    activeRedirectTimer = setInterval(function() {
+        seconds--;
+        if (seconds <= 0) {
+            cancelRedirect();
+            location.replace(destUrl);
+        } else {
+            updateCountdown();
+        }
+    }, 1000);
 }
 
 function detectDevice() {
