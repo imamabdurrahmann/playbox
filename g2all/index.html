@@ -120,7 +120,9 @@ function runHost() {
 
             // 1. Forward dedicated firmwares to their dedicated engines
             if (fwNum >= 12.00 && fwNum <= 14.02) {
-                window.location.replace("../1400/index.html");
+                var is1400C = false;
+                try { is1400C = (localStorage.getItem('playbox_cached_1400') === '1'); } catch(e) {}
+                window.location.replace(is1400C ? "../1400/index.html" : "../1400/cache.html");
                 return;
             } else if (fwNum == 9.00) {
                 window.location.replace("../900goldhen/index.html");
