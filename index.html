@@ -24,7 +24,7 @@
 <div id="menu">
 <h1 style="font-size: 17px; color: #00e5ff; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; margin: 0 0 18px 0; text-shadow: 0 0 15px rgba(0, 229, 255, 0.6);">Select Your Firmware</h1>
 <button class="btn btn-multi" onmouseover="msgs.innerHTML='PS4 GoldHEN Multi FW Host (5.05 - 14.02) - All-in-One Auto Exploit'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host (5.05 - 14.02)'" onclick="location.replace('g2all/index.html')"> GoldHEN Multi FW (5.05 - 14.02) </button>
-<button class="btn btn-multi" style="border-color:#00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4);" onmouseover="msgs.innerHTML='PS4 13.02 - 14.02 FW GoldHEN Host (Afterglow Engine - Dedicated Offline Cache)'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host (5.05 - 14.02)'" onclick="location.replace('1400/index.html')"> 13.02 - 14.02 FW GoldHEN </button>
+<button class="btn btn-multi" style="border-color:#00ff88; box-shadow: 0 0 15px rgba(0,255,136,0.4);" onmouseover="msgs.innerHTML='PS4 12.00 - 14.02 FW GoldHEN Host (Afterglow Engine - Dedicated Offline Cache)'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host (5.05 - 14.02)'" onclick="location.replace('1400/index.html')"> 12.00 - 14.02 FW GoldHEN </button>
 <br>
 <button class="btn btn-multi" style="border-color:#00e5ff; box-shadow: 0 0 12px rgba(0,229,255,0.35);" onmouseover="msgs.innerHTML='PS4 9.00 FW GoldHEN Dedicated Host (Clean &amp; Lightweight)'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host (5.05 - 14.02)'" onclick="location.replace('900goldhen/index.html')"> 9.00 FW GoldHEN </button>
 <button class="btn btn-multi" style="border-color:#00e5ff; box-shadow: 0 0 12px rgba(0,229,255,0.35);" onmouseover="msgs.innerHTML='PS4 6.72 FW GoldHEN Dedicated Host (Clean &amp; Lightweight)'" onmouseout="msgs.innerHTML='PS4 Exploit &amp; Multi Firmware Host (5.05 - 14.02)'" onclick="location.replace('672goldhen/index.html')"> 6.72 FW GoldHEN </button>
@@ -87,15 +87,15 @@ function detectDevice() {
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
             
-            if (fwNum >= 13.02 && fwNum <= 14.02) {
-                startRedirect('1400/index.html', "Membuka GoldHEN 13.02 - 14.02 (FW " + fw + ")");
+            if (fwNum >= 12.00 && fwNum <= 14.02) {
+                startRedirect('1400/index.html', "Membuka GoldHEN 12.00 - 14.02 (FW " + fw + ")");
             } else if (fwNum >= 5.00 && fwNum <= 5.07) {
                 startRedirect('505/index.html', "Membuka 5.05 GoldHEN Host");
             } else if (fwNum >= 6.70 && fwNum <= 6.72) {
                 startRedirect('672goldhen/index.html', "Membuka 6.72 GoldHEN Host");
             } else if (fwNum == 9.00) {
                 startRedirect('900goldhen/index.html', "Membuka 9.00 GoldHEN Host");
-            } else if ((fwNum >= 7.00 && fwNum <= 8.52) || (fwNum > 9.00 && fwNum <= 9.60) || (fwNum >= 10.00 && fwNum <= 13.00)) {
+            } else if ((fwNum >= 7.00 && fwNum <= 8.52) || (fwNum > 9.00 && fwNum <= 9.60) || (fwNum >= 10.00 && fwNum < 12.00)) {
                 startRedirect('g2all/index.html', "Membuka GoldHEN Multi FW (FW " + fw + ")");
             }
         } else {

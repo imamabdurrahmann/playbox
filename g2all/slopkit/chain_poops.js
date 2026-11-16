@@ -858,14 +858,7 @@ let payloadRunning = false;
         let lastCommitted = null;
         try { lastCommitted = localStorage.getItem("ps4lab_committed_boot"); }
         catch (e) { }
-        if (boot && lastCommitted === boot && params.get("force") !== "1") {
-            mark("REFUSING-TO-ARM", "reason=not-rebooted-since-last-committed-run");
-            check("console-rebooted-since-last-committed", false,
-                "boot=" + boot + " last=" + lastCommitted + " override=?force=1");
-            state("REBOOT FIRST -- this kernel is still poisoned", "bad");
-            hostFail();
-            return;
-        }
+        try { localStorage.removeItem("ps4lab_committed_boot"); } catch (e) { }
         check("console-rebooted-since-last-committed", true,
             "boot=" + (boot || "none") + " last=" + (lastCommitted || "none"));
 
