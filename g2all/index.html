@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -236,12 +236,27 @@ function detectDevice() {
             devText.style.color = "#00ffcc";
             devBox.style.borderColor = "rgba(0, 255, 204, 0.5)";
 
-            if (fwNum >= 13.50 && fwNum <= 14.00) {
+            if (fwNum >= 13.02 && fwNum <= 14.00) {
                 targetEngine = "afterglow_1400";
-                if (notice) notice.innerHTML = "Firmware " + fwVersion + " cocok dengan Host Afterglow Dedicated.";
+                if (notice) notice.innerHTML = "Firmware " + fwVersion + " dialihkan ke Host 13.02 - 14.00 Dedicated.";
                 setTimeout(function() { window.location.replace("../1400/index.html"); }, 600);
                 return;
-            } else if (fwNum >= 11.50 && fwNum <= 13.04) {
+            } else if (fwNum == 9.00) {
+                targetEngine = "900goldhen";
+                if (notice) notice.innerHTML = "Firmware 9.00 dialihkan ke Host 9.00 Dedicated (ChendoChap + USB Prompt).";
+                setTimeout(function() { window.location.replace("../900goldhen/index.html"); }, 600);
+                return;
+            } else if (fwNum >= 6.70 && fwNum <= 6.72) {
+                targetEngine = "672goldhen";
+                if (notice) notice.innerHTML = "Firmware 6.72 dialihkan ke Host 6.72 Dedicated.";
+                setTimeout(function() { window.location.replace("../672goldhen/index.html"); }, 600);
+                return;
+            } else if (fwNum >= 5.00 && fwNum <= 5.07) {
+                targetEngine = "505";
+                if (notice) notice.innerHTML = "Firmware 5.05 dialihkan ke Host 5.05 Dedicated.";
+                setTimeout(function() { window.location.replace("../505/index.html"); }, 600);
+                return;
+            } else if (fwNum >= 11.50 && fwNum <= 13.00) {
                 targetEngine = "slopkit";
                 if (notice) notice.innerHTML = "Engine Terpilih: <b>Slopkit / Afterglow</b> (FW 11.50 - 13.00)";
                 if (picker) picker.style.display = "flex";
@@ -249,15 +264,12 @@ function detectDevice() {
                 targetEngine = "css";
                 if (notice) notice.innerHTML = "Engine Terpilih: <b>WebKit CSS Exploit</b> (FW 10.00 - 11.02)";
                 if (picker) picker.style.display = "flex";
-            } else if (fwNum >= 9.00 && fwNum <= 9.60) {
+            } else if (fwNum > 9.00 && fwNum <= 9.60) {
                 targetEngine = "900";
-                if (notice) notice.innerHTML = "Engine Terpilih: <b>psfree WebKit</b> (FW 9.00 - 9.60)";
+                if (notice) notice.innerHTML = "Engine Terpilih: <b>psfree WebKit</b> (FW 9.01 - 9.60)";
             } else if (fwNum >= 7.00 && fwNum <= 8.52) {
                 targetEngine = "700";
                 if (notice) notice.innerHTML = "Engine Terpilih: <b>psfree WebKit</b> (FW 7.00 - 8.52)";
-            } else if (fwNum >= 5.00 && fwNum <= 5.07) {
-                targetEngine = "505";
-                if (notice) notice.innerHTML = "Engine Terpilih: <b>WebKit UAF</b> (FW 5.05)";
             } else {
                 targetEngine = "unknown";
                 if (notice) notice.innerHTML = "<span style='color:#ff5566;'>Firmware " + fwVersion + " tidak didukung oleh Multi-Host.</span>";
@@ -372,7 +384,7 @@ window.onExploitDone = function(msg) {
     setStep(4, true);
     var rm = document.getElementById("runnerMsg");
     if (rm) {
-        rm.innerHTML = "<span style='color:#00ff88;text-shadow:0 0 15px rgba(0,255,136,0.6);'>✔ " + msg + "</span>";
+        rm.innerHTML = "<span style='color:#00ff88;text-shadow:0 0 15px rgba(0,255,136,0.6);'>? " + msg + "</span>";
     }
     var ra = document.getElementById("runnerActions");
     if (ra) ra.style.display = "block";
@@ -431,39 +443,45 @@ function userTriggerStart() {
 
     // Give browser GC a moment to settle memory
     setTimeout(function() {
+        if (fwNum >= 13.02 && fwNum <= 14.00) {
+            window.location.replace("../1400/index.html");
+            return;
+        } else if (fwNum == 9.00) {
+            window.location.replace("../900goldhen/index.html");
+            return;
+        } else if (fwNum >= 6.70 && fwNum <= 6.72) {
+            window.location.replace("../672goldhen/index.html");
+            return;
+        } else if (fwNum >= 5.00 && fwNum <= 5.07) {
+            window.location.replace("../505/index.html");
+            return;
+        }
+
         if (isPS4 && !checkCacheInstalled(fwNum)) {
             // Check if need cache install first
-            if (fwNum == 5.05 || fwNum == 5.07) {
-                window.location.replace("cache505.html");
-                return;
-            } else if (fwNum >= 7.00 && fwNum <= 8.52) {
+            if (fwNum >= 7.00 && fwNum <= 8.52) {
                 window.location.replace("cache700.html");
                 return;
-            } else if (fwNum >= 9.00 && fwNum <= 9.60) {
+            } else if (fwNum > 9.00 && fwNum <= 9.60) {
                 window.location.replace("cache900.html");
                 return;
             } else if (fwNum >= 10.00 && fwNum <= 11.02) {
                 window.location.replace("cachecss.html");
                 return;
-            } else if (fwNum >= 11.50 && fwNum <= 13.04) {
+            } else if (fwNum >= 11.50 && fwNum <= 13.00) {
                 window.location.replace("cacheslopkit.html");
                 return;
             }
         }
 
         // Execute runner based on FW
-        if (fwNum == 5.05 || fwNum == 5.07) {
-            var script = document.createElement('script');
-            script.src = "505/exploit.js";
-            script.onerror = onScriptError;
-            document.head.appendChild(script);
-        } else if (fwNum >= 7.00 && fwNum <= 8.52) {
+        if (fwNum >= 7.00 && fwNum <= 8.52) {
             var script = document.createElement('script');
             script.type = 'module';
             script.src = "700/alert.js";
             script.onerror = onScriptError;
             document.head.appendChild(script);
-        } else if (fwNum >= 9.00 && fwNum <= 9.60) {
+        } else if (fwNum > 9.00 && fwNum <= 9.60) {
             var script = document.createElement('script');
             script.type = 'module';
             script.src = "900/alert.js";
@@ -490,12 +508,6 @@ function userTriggerStart() {
             var script = document.createElement('script');
             script.type = 'module';
             script.src = "slopkit/chain_poops.js";
-            script.onerror = onScriptError;
-            document.head.appendChild(script);
-        } else if (fwNum >= 13.02 && fwNum <= 13.04) {
-            var script = document.createElement('script');
-            script.type = 'module';
-            script.src = "slopkit/jb.js";
             script.onerror = onScriptError;
             document.head.appendChild(script);
         } else {

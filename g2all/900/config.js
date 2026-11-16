@@ -67,10 +67,9 @@ export function set_target(value) {
 }
 
 function get_target_from_ua(useragent) {
-  const pattern = /^Mozilla\/5\.0 \(?(?:PlayStation; )?PlayStation (4|5)[ \/]([0-9]{1,2}\.[0-9]{2})\)? AppleWebKit\/[0-9.]+ \(KHTML, like Gecko\)(?: Version\/[0-9.]+ Safari\/[0-9.]+)?$/;
-  const match = pattern.exec(useragent);
+  const match = useragent.match(/PlayStation (4|5)[ \/]([0-9]{1,2}\.[0-9]{2})/i);
   if (!match) {
-    return;
+    return null;
   }
 
   if (match[1] == "4") {
@@ -81,4 +80,9 @@ function get_target_from_ua(useragent) {
 }
 
 export let target = null;
-set_target(get_target_from_ua(navigator.userAgent));
+const detected_target = get_target_from_ua(navigator.userAgent);
+if (detected_target !== null && detected_target !== undefined) {
+  try {
+    set_target(detected_target);
+  } catch (e) {}
+}
