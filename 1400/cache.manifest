@@ -1,6 +1,6 @@
 CACHE MANIFEST
-# Version: 2026-11-05-v28-complete-1302-1400
-# Updated: 2026-11-05-11-25
+# Version: 2026-11-16-v29-complete-1350-1402
+# Updated: 2026-11-16-14-42
 
 CACHE:
 ../
@@ -17,6 +17,7 @@ mem.js
 int64.js
 ps4_offsets.js
 afterglow.js
+patchset-1402.bin
 patchset-1400.bin
 patchset-1352.bin
 patchset-1302.bin
